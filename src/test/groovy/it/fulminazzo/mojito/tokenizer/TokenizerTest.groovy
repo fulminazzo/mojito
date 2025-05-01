@@ -18,6 +18,24 @@ class TokenizerTest extends Specification {
         return new Tokenizer(input)
     }
 
+    def 'test that tokenizer updates itself after pushback'() {
+        given:
+        def tokenizer = generateTokenizer('1 < 2')
+
+        and:
+        for (i in 0..2) tokenizer.next()
+
+        and:
+        tokenizer.pushback('1', '<', '2')
+
+        when:
+        def token = tokenizer.next()
+
+        then:
+        token == NUMBER_VALUE
+        tokenizer.lastRead() == '1'
+    }
+
     def 'test tokenizer hasNext method exception'() {
         given:
         def tokenizer = generateExceptionTokenizer()
