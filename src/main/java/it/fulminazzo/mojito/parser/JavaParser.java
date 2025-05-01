@@ -879,21 +879,21 @@ public class JavaParser extends Parser {
 
         // Generics start
         List<String> buffer = new LinkedList<>();
-        do {
-            next();
-            buffer.add(tokenizer.lastRead());
-        } while (lastToken() == SPACE);
+        buffer.add(readSpaces());
 
+        buffer.add(tokenizer.lastRead());
         if (lastToken() == LESS_THAN) {
-            do {
-                next();
+            buffer.add(readSpaces());
+            while (lastToken() == LITERAL) {
                 buffer.add(tokenizer.lastRead());
+                buffer.add(readSpaces());
                 if (lastToken() == COMMA) {
-                    next();
                     buffer.add(tokenizer.lastRead());
-                }
-            } while (lastToken() == LITERAL || lastToken() == SPACE);
+                    buffer.add(readSpaces());
+                } else break;
+            }
 
+            buffer.add(tokenizer.lastRead());
             if (lastToken() == GREATER_THAN) {
                 //TODO: Generics
                 throw new IllegalArgumentException("To be implemented");
@@ -919,6 +919,21 @@ public class JavaParser extends Parser {
         } catch (NodeException e) {
             throw ParserException.invalidValueProvided(this, literal);
         }
+    }
+
+    /**
+     * Reads all the available spaces after the next token.
+     *
+     * @return all the read spaces
+     */
+    protected @NotNull String readSpaces() {
+        StringBuilder builder = new StringBuilder();
+        next();
+        while (lastToken() == SPACE) {
+            builder.append(getTokenizer().lastRead());
+            next();
+        }
+        return builder.toString();
     }
 
     /**
