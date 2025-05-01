@@ -228,11 +228,11 @@ class JavaParserTest extends Specification {
 
         where:
         code            | expected
-        'int i = 1;i++' | "At line -1, column -1: Expecting '${Assignment.simpleName}' but got " +
+        'int i = 1;i++' | "At line 1, column 13: Expecting '${Assignment.simpleName}' but got " +
                 "${new Increment(Literal.of('i'), false)} instead."
-        'i++'           | "At line -1, column -1: Expecting '${Assignment.simpleName}' but got " +
+        'i++'           | "At line 1, column 3: Expecting '${Assignment.simpleName}' but got " +
                 "${new Increment(Literal.of('i'), false)} instead."
-        'i = 1'         | "At line -1, column -1: Expecting '${Assignment.simpleName}' but got " +
+        'i = 1'         | "At line 1, column 5: Expecting '${Assignment.simpleName}' but got " +
                 "${new ReAssign(Literal.of('i'), new NumberValueLiteral('1'))} instead."
         ';'             | "At line 1, column 1: Unexpected token: ${TokenType.SEMICOLON}"
         ''              | 'At line 0, column 0: Unexpected end of input. Last read token: EOF ()'

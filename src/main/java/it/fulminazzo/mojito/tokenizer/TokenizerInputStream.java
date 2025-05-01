@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * A wrapper for a generic {@link InputStream}.
@@ -15,7 +14,7 @@ import java.util.Queue;
 @RequiredArgsConstructor
 class TokenizerInputStream extends InputStream {
     private final @NotNull InputStream inputStream;
-    private final @NotNull Queue<Integer> buffer = new LinkedList<>();
+    private final @NotNull LinkedList<Integer> buffer = new LinkedList<>();
 
     @Override
     public int read() throws IOException {
@@ -34,20 +33,23 @@ class TokenizerInputStream extends InputStream {
     }
 
     /**
-     * Clears any previously cached data in the buffer.
-     */
-    public void flush() {
-        this.buffer.clear();
-    }
-
-    /**
-     * Allows to push the given data back to the stream.
-     * It will be then returned after the next {@link #read()}.
+     * Pushes the given string of data to the internal buffer.
+     * They will be then read FIRST, as they have precedence over
+     * other buffered data.
      *
      * @param data the data
      */
     public void push(final @NotNull String data) {
-        push(data.getBytes());
+        byte[] chars = data.getBytes();
+        for (int i = chars.length - 1; i >= 0; i--)
+            this.buffer.addFirst((int) chars[i]);
+    }
+
+    /**
+     * Clears any previously cached data in the buffer.
+     */
+    public void flush() {
+        this.buffer.clear();
     }
 
     @Override

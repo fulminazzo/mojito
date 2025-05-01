@@ -31,7 +31,7 @@ class TokenizerTest extends Specification {
 
         then:
         tokenizer.line() == 2
-        tokenizer.column() == 2
+        tokenizer.column() == 3
     }
 
     def 'test that tokenizer updates itself after pushback'() {
