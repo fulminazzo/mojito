@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
@@ -178,8 +177,9 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
 
         String[] tmp = string.split("\n");
         int finalLine = line() - tmp.length + 1;
+        int finalColumn = column() - tmp[0].length();
         resetLines(finalLine);
-        this.lines.put(finalLine, column() - tmp[0].length());
+        this.lines.put(finalLine, finalColumn);
     }
 
     private char updateLineCount(int c) {
