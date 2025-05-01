@@ -862,7 +862,7 @@ public class JavaParser extends Parser {
     }
 
     /**
-     * LITERAL := {@link TokenType#LITERAL}
+     * LITERAL := {@link TokenType#LITERAL} (< (LITERAL, )* (LITERAL)? >)?
      *
      * @return the node
      */
