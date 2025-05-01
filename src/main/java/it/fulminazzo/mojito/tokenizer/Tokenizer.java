@@ -4,7 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 /**
@@ -18,8 +20,7 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
     private final @NotNull TokenizerInputStream input;
     private @NotNull TokenType lastToken = TokenType.EOF;
     private @NotNull String lastRead = "";
-    private int line = -1;
-    private int column = -1;
+    private final @NotNull TreeMap<Integer, Integer> lines;
 
     /**
      * Instantiates a new Tokenizer.
@@ -28,6 +29,8 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
      */
     public Tokenizer(final @NotNull InputStream input) {
         this.input = new TokenizerInputStream(input);
+        this.lines = new TreeMap<>();
+        this.lines.put(1, 0);
     }
 
     /**
@@ -118,8 +121,6 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
      */
     public @NotNull TokenType next(final @NotNull String regex) {
         try {
-            if (this.line == -1) this.line = 1;
-            if (this.column == -1) this.column = 0;
             String read = "";
             while (this.input.available() > 0) {
                 read += updateLineCount(this.input.read());
@@ -134,8 +135,8 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
     private @NotNull TokenType readTokenType(@NotNull String read,
                                              final @NotNull String regex) throws IOException {
         while (this.input.available() > 0) {
-            int previousLine = this.line;
-            int previousColumn = this.column;
+            int previousLine = line();
+            int previousColumn = column();
             char c = updateLineCount(this.input.read());
             read += c;
             String subString = read.substring(0, read.length() - 1);
@@ -147,8 +148,8 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
                     if (previous == TokenType.NUMBER_VALUE || previous == TokenType.LITERAL)
                         continue;
                 }
-                this.line = previousLine;
-                this.column = previousColumn;
+                resetLines(previousLine);
+                this.lines.put(previousLine, previousColumn);
                 this.input.push(read.substring(read.length() - 1));
                 return isTokenType(subString) ? updateTokenType(subString) : TokenType.NONE;
             }
@@ -161,12 +162,37 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
         return Pattern.compile(regex).matcher(read).matches();
     }
 
+    /**
+     * Pushes the given data back into the internal {@link InputStream}.
+     * It will then be read with the next {@link #next()} method call.
+     * <br>
+     * WARNING: this might cause inconsistencies with the expected input.
+     * Use this method only to push back previously read data.
+     *
+     * @param data the data
+     */
+    public void pushback(final String @NotNull ... data) {
+        String string = String.join("", data);
+        this.input.flush();
+        this.input.push(string);
+
+        String[] tmp = string.split("\n");
+        int finalLine = line() - tmp.length + 1;
+        resetLines(finalLine);
+        this.lines.put(finalLine, column() - tmp[0].length());
+    }
+
     private char updateLineCount(int c) {
         if (c == '\n') {
-            this.line++;
-            this.column = 0;
-        } else this.column++;
+            this.lines.put(line() + 1, 0);
+        } else this.lines.put(line(), column() + 1);
         return (char) c;
+    }
+
+    private void resetLines(int line) {
+        int lastLine = line();
+        for (int i = line; i <= lastLine; i++) this.lines.remove(i);
+        if (this.lines.isEmpty()) this.lines.put(1, 0);
     }
 
     private @NotNull TokenType updateTokenType(final @NotNull String read) {
@@ -178,8 +204,6 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
     private @NotNull TokenType eof() {
         this.lastRead = "";
         this.lastToken = TokenType.EOF;
-        this.line = -1;
-        this.column = -1;
         return this.lastToken;
     }
 
@@ -224,7 +248,7 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
      * @return the line
      */
     public int line() {
-        return this.line;
+        return this.lines.lastEntry().getKey();
     }
 
     /**
@@ -234,7 +258,7 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
      * @return the column
      */
     public int column() {
-        return this.column;
+        return this.lines.lastEntry().getValue();
     }
 
 }
