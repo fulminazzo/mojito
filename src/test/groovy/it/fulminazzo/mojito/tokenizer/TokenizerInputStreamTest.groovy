@@ -84,6 +84,24 @@ class TokenizerInputStreamTest extends Specification {
         new String(arr) == 'World?! hello!'
     }
 
+    def 'test that tokenizer input stream read byte array bound throws exception for values: #offset, #length'() {
+        given:
+        def arr = new byte[1]
+
+        when:
+        this.stream.read(arr, offset, length)
+
+        then:
+        thrown(IndexOutOfBoundsException)
+
+        where:
+        offset | length
+        -1     | 2
+        2      | -1
+        -1     | -1
+        2      | 2
+    }
+
     def 'test that tokenizer input stream skip works'() {
         when:
         def skipped = this.stream.skip(4)
