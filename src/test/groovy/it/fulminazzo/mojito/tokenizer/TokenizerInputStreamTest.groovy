@@ -80,7 +80,7 @@ class TokenizerInputStreamTest extends Specification {
         def read = this.stream.read(arr, 5, 5)
 
         then:
-        read == 3
+        read == 5
         new String(arr) == 'World?! hello!'
     }
 
