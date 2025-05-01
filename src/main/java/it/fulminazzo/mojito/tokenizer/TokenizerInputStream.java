@@ -34,6 +34,13 @@ class TokenizerInputStream extends InputStream {
     }
 
     /**
+     * Clears any previously cached data in the buffer.
+     */
+    public void flush() {
+        this.buffer.clear();
+    }
+
+    /**
      * Allows to push the given data back to the stream.
      * It will be then returned after the next {@link #read()}.
      *
