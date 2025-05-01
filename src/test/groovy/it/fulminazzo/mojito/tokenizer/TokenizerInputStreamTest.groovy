@@ -101,14 +101,19 @@ class TokenizerInputStreamTest extends Specification {
         this.stream.push('?!')
 
         when:
-        def skipped = this.stream.skip(6)
+        def skipped = this.stream.skip(bytes)
 
         and:
         def read = this.stream.read()
 
         then:
-        skipped == 6
-        read == 'o'.charAt(0)
+        skipped == bytes
+        read == expected.charAt(0)
+
+        where:
+        bytes || expected
+        6     || 'o'
+        1     || '!'
     }
 
     def 'test that tokenizer input stream available returns correct value'() {
