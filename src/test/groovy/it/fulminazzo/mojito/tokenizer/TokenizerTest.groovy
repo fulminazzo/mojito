@@ -23,7 +23,8 @@ class TokenizerTest extends Specification {
         def tokenizer = generateTokenizer('hello\nworld\nfriend')
 
         and:
-        while (tokenizer.lastToken() != EOF) tokenizer.next()
+        do tokenizer.next()
+        while (tokenizer.lastToken() != EOF)
 
         when:
         tokenizer.pushback('rld\nfriend')
