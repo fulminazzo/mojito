@@ -50,7 +50,15 @@ class TokenizerInputStream extends InputStream {
 
     @Override
     public int read(byte @NotNull [] bytes, int offset, int length) throws IOException {
-        return this.inputStream.read(bytes, offset, length);
+        if (offset < 0 || length < 0 || length > bytes.length - offset)
+            throw new IndexOutOfBoundsException(String.format(
+                    "Range [%1$s, %1$s + %2$s) out of bounds for length %3$s",
+                    offset, length, bytes.length));
+
+        int index = 0;
+        while (length > 0 && !this.buffer.isEmpty())
+            bytes[offset + index++] = (byte) (int) this.buffer.poll();
+        return index + this.inputStream.read(bytes, offset + index, length - index);
     }
 
     @Override
