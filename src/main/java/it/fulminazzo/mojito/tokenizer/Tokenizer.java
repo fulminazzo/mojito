@@ -197,8 +197,6 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
     private @NotNull TokenType eof() {
         this.lastRead = "";
         this.lastToken = TokenType.EOF;
-        this.lines.clear();
-        this.lines.put(-1, -1);
         return this.lastToken;
     }
 
