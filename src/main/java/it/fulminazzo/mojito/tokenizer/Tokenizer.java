@@ -15,7 +15,7 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
             TokenType.EOF, TokenType.NONE
     };
 
-    private final @NotNull InputStream input;
+    private final @NotNull TokenizerInputStream input;
     private @NotNull TokenType lastToken = TokenType.EOF;
     private @NotNull String lastRead = "";
     private @NotNull String previousRead = "";
@@ -28,7 +28,7 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
      * @param input the input stream
      */
     public Tokenizer(final @NotNull InputStream input) {
-        this.input = input;
+        this.input = new TokenizerInputStream(input);
     }
 
     /**
