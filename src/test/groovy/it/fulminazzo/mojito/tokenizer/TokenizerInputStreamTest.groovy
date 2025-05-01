@@ -77,11 +77,16 @@ class TokenizerInputStreamTest extends Specification {
         this.stream.push('?! ')
 
         when:
-        def read = this.stream.read(arr, 5, 5)
+        def read = this.stream.read(arr, 5, length)
 
         then:
-        read == 5
-        new String(arr) == 'World?! hello!'
+        read == length
+        new String(arr) == expected
+
+        where:
+        length || expected
+        5      || 'World?! hello!'
+        3      || 'World?! XXllo!'
     }
 
     def 'test that tokenizer input stream read byte array bound throws exception for values: #offset, #length'() {
