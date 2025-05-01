@@ -3,13 +3,15 @@ package it.fulminazzo.mojito.tokenizer
 import spock.lang.Specification
 
 class TokenizerInputStreamTest extends Specification {
+    private TokenizerInputStream stream
+
+    void setup() {
+        this.stream = new TokenizerInputStream(new ByteArrayInputStream('hello'.bytes))
+    }
 
     def 'test that tokenizer input stream works as a stream'() {
-        given:
-        def stream = new TokenizerInputStream(new ByteArrayInputStream('hello'.bytes))
-
         when:
-        def read = stream.read()
+        def read = this.stream.read()
 
         then:
         read == 'h'.charAt(0)
@@ -17,11 +19,10 @@ class TokenizerInputStreamTest extends Specification {
 
     def 'test that tokenizer input stream prioritizes push over stream'() {
         given:
-        def stream = new TokenizerInputStream(new ByteArrayInputStream('hello'.bytes))
+        this.stream.push(data)
 
         when:
-        stream.push(data)
-        def read = stream.read()
+        def read = this.stream.read()
 
         then:
         read == expected
