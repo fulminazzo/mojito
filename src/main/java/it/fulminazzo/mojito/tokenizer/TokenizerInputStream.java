@@ -43,4 +43,44 @@ class TokenizerInputStream extends InputStream {
         push(data.getBytes());
     }
 
+    @Override
+    public int read(byte @NotNull [] bytes) throws IOException {
+        return this.inputStream.read(bytes);
+    }
+
+    @Override
+    public int read(byte @NotNull [] bytes, int i, int i1) throws IOException {
+        return this.inputStream.read(bytes, i, i1);
+    }
+
+    @Override
+    public long skip(long l) throws IOException {
+        return this.inputStream.skip(l);
+    }
+
+    @Override
+    public int available() throws IOException {
+        return this.inputStream.available();
+    }
+
+    @Override
+    public void close() throws IOException {
+        this.inputStream.close();
+    }
+
+    @Override
+    public synchronized void mark(int i) {
+        this.inputStream.mark(i);
+    }
+
+    @Override
+    public synchronized void reset() throws IOException {
+        this.inputStream.reset();
+    }
+
+    @Override
+    public boolean markSupported() {
+        return this.inputStream.markSupported();
+    }
+
 }
