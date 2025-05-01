@@ -867,9 +867,19 @@ public class JavaParser extends Parser {
      * @return the node
      */
     protected @NotNull Literal parseLiteral() {
-        final String literal = getTokenizer().lastRead();
+        Literal l = parseLiteralNoConsume();
+        nextSpaceless();
+        return l;
+    }
+
+    private @NotNull Literal parseLiteralNoConsume() {
+        final @NotNull Tokenizer tokenizer = getTokenizer();
+        final String literal = tokenizer.lastRead();
         Literal l = getLiteralFromString(literal);
-        consume(LITERAL);
+
+        // Generics start
+        // Generics end
+
         return l;
     }
 
