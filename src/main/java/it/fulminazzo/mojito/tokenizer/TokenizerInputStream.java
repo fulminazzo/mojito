@@ -49,13 +49,13 @@ class TokenizerInputStream extends InputStream {
     }
 
     @Override
-    public int read(byte @NotNull [] bytes, int i, int i1) throws IOException {
-        return this.inputStream.read(bytes, i, i1);
+    public int read(byte @NotNull [] bytes, int offset, int length) throws IOException {
+        return this.inputStream.read(bytes, offset, length);
     }
 
     @Override
-    public long skip(long l) throws IOException {
-        return this.inputStream.skip(l);
+    public long skip(long bytes) throws IOException {
+        return this.inputStream.skip(bytes);
     }
 
     @Override
