@@ -18,6 +18,21 @@ class TokenizerTest extends Specification {
         return new Tokenizer(input)
     }
 
+    def 'test that tokenizer updates lines after pushback'() {
+        given:
+        def tokenizer = generateTokenizer('hello\nworld\nfriend')
+
+        and:
+        while (tokenizer.lastToken() != EOF) tokenizer.next()
+
+        when:
+        tokenizer.pushback('rld\nfriend')
+
+        then:
+        tokenizer.line() == 2
+        tokenizer.column() == 2
+    }
+
     def 'test that tokenizer updates itself after pushback'() {
         given:
         def tokenizer = generateTokenizer('1 < 2')
