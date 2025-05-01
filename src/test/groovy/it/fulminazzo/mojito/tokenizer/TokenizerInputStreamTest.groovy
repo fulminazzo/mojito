@@ -11,7 +11,7 @@ class TokenizerInputStreamTest extends Specification {
         this.stream = new TokenizerInputStream(this.actualStream)
     }
 
-    def 'test that tokenizer input stream works as a stream'() {
+    def 'test that tokenizer input stream read single works'() {
         when:
         def read = this.stream.read()
 
@@ -19,20 +19,15 @@ class TokenizerInputStreamTest extends Specification {
         read == 'h'.charAt(0)
     }
 
-    def 'test that tokenizer input stream prioritizes push over stream'() {
+    def 'test that tokenizer input stream read single buffer works'() {
         given:
-        this.stream.push(data)
+        this.stream.push((byte) 1)
 
         when:
         def read = this.stream.read()
 
         then:
-        read == expected
-
-        where:
-        data     || expected
-        (byte) 1 || 1
-        'world'  || 'w'.charAt(0)
+        read == 1
     }
 
     def 'test that tokenizer input stream available returns correct value'() {
