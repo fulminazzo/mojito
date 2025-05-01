@@ -999,12 +999,33 @@ class JavaParserTest extends Specification {
         e.message == ParserException.unexpectedToken(this.parser, TokenType.LITERAL).message
     }
 
-    def 'test parse literal'() {
+    def 'test parse boolean literal'() {
         when:
         def literal = this.parser.createLiteral(BooleanValueLiteral, 'true')
 
         then:
         literal == new BooleanValueLiteral('true')
+    }
+
+    def 'test parse literal with expression: #exp'() {
+        given:
+        startReading(exp)
+
+        when:
+        def literal = this.parser.parseLiteral()
+
+        then:
+        literal.literal == 'lit'
+
+        where:
+        exp << [
+                'lit', 'lit <',
+                'lit < hello',
+                'lit < hello, world',
+                'lit < hello, world 1',
+                'lit < hello, world, friend',
+                'lit < hello, world, friend true',
+        ]
     }
 
     def 'test parse literal LiteralException'() {
