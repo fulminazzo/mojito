@@ -30,6 +30,33 @@ class TokenizerInputStreamTest extends Specification {
         read == 1
     }
 
+    def 'test that tokenizer input stream read byte array works'() {
+        given:
+        def arr = new byte[3]
+
+        when:
+        def read = this.stream.read(arr)
+
+        then:
+        read == 3
+        arr == 'hel'.bytes
+    }
+
+    def 'test that tokenizer input stream read byte array buffer works'() {
+        given:
+        def arr = new byte[5]
+
+        and:
+        this.stream.push('!?')
+
+        when:
+        def read = this.stream.read(arr)
+
+        then:
+        read == 5
+        arr == '!?hel'.bytes
+    }
+
     def 'test that tokenizer input stream available returns correct value'() {
         when:
         def available = this.stream.available()
