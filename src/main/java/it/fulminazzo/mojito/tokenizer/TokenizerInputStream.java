@@ -74,7 +74,7 @@ class TokenizerInputStream extends InputStream {
 
     @Override
     public int available() throws IOException {
-        return this.inputStream.available();
+        return this.buffer.size() + this.inputStream.available();
     }
 
     @Override
