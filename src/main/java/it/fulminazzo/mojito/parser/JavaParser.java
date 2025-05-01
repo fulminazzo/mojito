@@ -878,6 +878,29 @@ public class JavaParser extends Parser {
         Literal l = getLiteralFromString(literal);
 
         // Generics start
+        List<String> buffer = new LinkedList<>();
+        do {
+            next();
+            buffer.add(tokenizer.lastRead());
+        } while (lastToken() == SPACE);
+
+        if (lastToken() == LESS_THAN) {
+            do {
+                next();
+                buffer.add(tokenizer.lastRead());
+                if (lastToken() == COMMA) {
+                    next();
+                    buffer.add(tokenizer.lastRead());
+                }
+            } while (lastToken() == LITERAL || lastToken() == SPACE);
+
+            if (lastToken() == GREATER_THAN) {
+                //TODO: Generics
+                throw new IllegalArgumentException("To be implemented");
+            }
+        }
+
+        tokenizer.pushback(buffer.toArray(new String[0]));
         // Generics end
 
         return l;
