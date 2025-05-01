@@ -161,6 +161,21 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
         return Pattern.compile(regex).matcher(read).matches();
     }
 
+    /**
+     * Pushes the given data back into the internal {@link InputStream}.
+     * It will then be read with the next {@link #next()} method call.
+     * <br>
+     * WARNING: this might cause inconsistencies with the expected input.
+     * Use this method only to push back previously read data.
+     *
+     * @param data the data
+     */
+    public void pushback(final String @NotNull ... data) {
+        //TODO: update line count
+        this.input.flush();
+        for (String s : data) this.input.push(s);
+    }
+
     private char updateLineCount(int c) {
         if (c == '\n') {
             this.line++;
