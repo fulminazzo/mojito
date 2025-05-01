@@ -172,7 +172,6 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
      */
     public void pushback(final String @NotNull ... data) {
         String string = String.join("", data);
-        this.input.flush();
         this.input.push(string);
 
         String[] tmp = string.split("\n");
