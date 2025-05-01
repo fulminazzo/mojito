@@ -885,7 +885,7 @@ public class JavaParser extends Parser {
         if (lastToken() == LESS_THAN) {
             buffer.add(readSpaces());
             while (lastToken() == LITERAL) {
-                buffer.add(tokenizer.lastRead());
+                buffer.add(parseLiteralNoConsume().getLiteral());
                 buffer.add(readSpaces());
                 if (lastToken() == COMMA) {
                     buffer.add(tokenizer.lastRead());
