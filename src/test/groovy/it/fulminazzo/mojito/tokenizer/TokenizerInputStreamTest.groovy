@@ -39,7 +39,7 @@ class TokenizerInputStreamTest extends Specification {
 
         then:
         read == 3
-        arr == 'hel'.bytes
+        new String(arr) == 'hel'
     }
 
     def 'test that tokenizer input stream read byte array buffer works'() {
@@ -54,7 +54,34 @@ class TokenizerInputStreamTest extends Specification {
 
         then:
         read == 5
-        arr == '!?hel'.bytes
+        new String(arr) == '!?hel'
+    }
+
+    def 'test that tokenizer input stream read byte array bound works'() {
+        given:
+        def arr = 'lloXX'.bytes
+
+        when:
+        def read = this.stream.read(arr, 3, 2)
+
+        then:
+        read == 2
+        new String(arr) == 'llohe'
+    }
+
+    def 'test that tokenizer input stream read byte array bound buffer works'() {
+        given:
+        def arr = 'WorldXX XXllo!'.bytes
+
+        and:
+        this.stream.push('?! ')
+
+        when:
+        def read = this.stream.read(arr, 5, 5)
+
+        then:
+        read == 3
+        new String(arr) == 'World?! hello!'
     }
 
     def 'test that tokenizer input stream available returns correct value'() {
