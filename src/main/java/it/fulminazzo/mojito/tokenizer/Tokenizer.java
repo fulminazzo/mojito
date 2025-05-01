@@ -18,7 +18,6 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
     private final @NotNull TokenizerInputStream input;
     private @NotNull TokenType lastToken = TokenType.EOF;
     private @NotNull String lastRead = "";
-    private @NotNull String previousRead = "";
     private int line = -1;
     private int column = -1;
 
@@ -64,11 +63,10 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
      */
     public @NotNull TokenType readUntil(final @NotNull TokenType tokenType) {
         try {
-            StringBuilder read = new StringBuilder(getPreviousRead());
+            StringBuilder read = new StringBuilder();
             while (this.input.available() > 0 && !read.toString().matches("(.|\n)*" + tokenType.regex() + "$"))
                 read.append(updateLineCount(this.input.read()));
             this.lastRead = read.toString();
-            this.previousRead = "";
             return nextSpaceless();
         } catch (IOException e) {
             throw new TokenizerException(e);
@@ -122,8 +120,7 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
         try {
             if (this.line == -1) this.line = 1;
             if (this.column == -1) this.column = 0;
-            String read = getPreviousRead();
-            if (isTokenType(read) || regexMatches(regex, read)) return readTokenType(read, regex);
+            String read = "";
             while (this.input.available() > 0) {
                 read += updateLineCount(this.input.read());
                 if (isTokenType(read) || regexMatches(regex, read)) return readTokenType(read, regex);
@@ -152,22 +149,16 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
                 }
                 this.line = previousLine;
                 this.column = previousColumn;
-                this.previousRead = read.substring(read.length() - 1);
+                this.input.push(read.substring(read.length() - 1));
                 return isTokenType(subString) ? updateTokenType(subString) : TokenType.NONE;
             }
         }
-        this.previousRead = "";
         return updateTokenType(read);
     }
 
     private boolean regexMatches(final @NotNull String regex,
                                  final @NotNull String read) {
         return Pattern.compile(regex).matcher(read).matches();
-    }
-
-    private @NotNull String getPreviousRead() {
-        for (char c : this.previousRead.toCharArray()) updateLineCount(c);
-        return this.previousRead;
     }
 
     private char updateLineCount(int c) {
