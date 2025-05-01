@@ -84,6 +84,33 @@ class TokenizerInputStreamTest extends Specification {
         new String(arr) == 'World?! hello!'
     }
 
+    def 'test that tokenizer input stream skip works'() {
+        when:
+        def skipped = this.stream.skip(4)
+
+        and:
+        def read = this.stream.read()
+
+        then:
+        skipped == 4
+        read == 'o'.charAt(0)
+    }
+
+    def 'test that tokenizer input stream skip buffer works'() {
+        given:
+        this.stream.push('?!')
+
+        when:
+        def skipped = this.stream.skip(6)
+
+        and:
+        def read = this.stream.read()
+
+        then:
+        skipped == 6
+        read == 'o'.charAt(0)
+    }
+
     def 'test that tokenizer input stream available returns correct value'() {
         when:
         def available = this.stream.available()
