@@ -45,7 +45,7 @@ class TokenizerInputStream extends InputStream {
 
     @Override
     public int read(byte @NotNull [] bytes) throws IOException {
-        return this.inputStream.read(bytes);
+        return this.inputStream.read(bytes, 0, bytes.length);
     }
 
     @Override
