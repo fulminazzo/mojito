@@ -55,7 +55,13 @@ class TokenizerInputStream extends InputStream {
 
     @Override
     public long skip(long bytes) throws IOException {
-        return this.inputStream.skip(bytes);
+        long skipped = 0;
+        while (bytes > 0 && !this.buffer.isEmpty()) {
+            this.buffer.remove();
+            bytes--;
+            skipped++;
+        }
+        return skipped + this.inputStream.skip(bytes);
     }
 
     @Override
