@@ -464,6 +464,16 @@ public interface Visitor<
     @NotNull P visitMethodInvocation(@NotNull List<Node> parameters);
 
     /**
+     * Converts ternary operator and its fields to this visitor type.
+     *
+     * @param expression the expression
+     * @param first      the first option
+     * @param second     the second option
+     * @return the result of the operation
+     */
+    @NotNull O visitTernaryOperator(@NotNull Node expression, @NotNull Node first, @NotNull Node second);
+
+    /**
      * Converts and and its fields to this visitor type.
      *
      * @param left  the left
