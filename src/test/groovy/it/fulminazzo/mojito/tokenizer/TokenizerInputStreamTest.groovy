@@ -150,7 +150,7 @@ class TokenizerInputStreamTest extends Specification {
 
     def 'test that tokenizer input stream close actually closes the stream'() {
         given:
-        this.actualStream.close()
+        this.stream.close()
 
         when:
         this.actualStream.read()
