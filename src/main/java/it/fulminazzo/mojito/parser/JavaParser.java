@@ -254,7 +254,6 @@ public class JavaParser extends Parser {
      * @return the node
      */
     protected @NotNull CaseStatement parseCaseBlock() {
-        //TODO: merged cases
         consume(CASE);
         Node expression = parseExpression();
         consume(COLON);
