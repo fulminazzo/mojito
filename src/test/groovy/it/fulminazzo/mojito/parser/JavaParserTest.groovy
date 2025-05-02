@@ -1,5 +1,6 @@
 package it.fulminazzo.mojito.parser
 
+import groovy.transform.Final
 import it.fulminazzo.mojito.parser.node.*
 import it.fulminazzo.mojito.parser.node.arrays.DynamicArray
 import it.fulminazzo.mojito.parser.node.arrays.StaticArray
@@ -722,6 +723,17 @@ class JavaParserTest extends Specification {
         '++var' | new Increment(Literal.of('var'), true)  | true
         'var--' | new Decrement(Literal.of('var'), false) | false
         '--var' | new Decrement(Literal.of('var'), true)  | true
+    }
+
+    def 'test parseAssignment with final'() {
+        when:
+        startReading('final int i = 1')
+        def output = this.parser.parseAssignment()
+
+        then:
+        output == new FinalAssignment(
+                new Assignment(Literal.of('int'), Literal.of('i'), new NumberValueLiteral('1'))
+        )
     }
 
     def 'test parseAssignment with final throws error when uninitialized'() {
