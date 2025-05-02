@@ -478,7 +478,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the and
+     * @return the result of the operation
      */
     @NotNull
     default O visitAnd(@NotNull Node left, @NotNull Node right) {
@@ -490,7 +490,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the or
+     * @return the result of the operation
      */
     @NotNull
     default O visitOr(@NotNull Node left, @NotNull Node right) {
@@ -502,7 +502,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the equal
+     * @return the result of the operation
      */
     @NotNull
     default O visitEqual(@NotNull Node left, @NotNull Node right) {
@@ -514,7 +514,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the not equal
+     * @return the result of the operation
      */
     @NotNull
     default O visitNotEqual(@NotNull Node left, @NotNull Node right) {
@@ -526,7 +526,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the less than
+     * @return the result of the operation
      */
     @NotNull
     default O visitLessThan(@NotNull Node left, @NotNull Node right) {
@@ -538,7 +538,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the less than equal
+     * @return the result of the operation
      */
     @NotNull
     default O visitLessThanEqual(@NotNull Node left, @NotNull Node right) {
@@ -550,7 +550,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the greater than
+     * @return the result of the operation
      */
     @NotNull
     default O visitGreaterThan(@NotNull Node left, @NotNull Node right) {
@@ -562,7 +562,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the greater than equal
+     * @return the result of the operation
      */
     @NotNull
     default O visitGreaterThanEqual(@NotNull Node left, @NotNull Node right) {
@@ -574,7 +574,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the bit and
+     * @return the result of the operation
      */
     @NotNull
     default O visitBitAnd(@NotNull Node left, @NotNull Node right) {
@@ -586,7 +586,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the bit or
+     * @return the result of the operation
      */
     @NotNull
     default O visitBitOr(@NotNull Node left, @NotNull Node right) {
@@ -598,7 +598,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the bit xor
+     * @return the result of the operation
      */
     @NotNull
     default O visitBitXor(@NotNull Node left, @NotNull Node right) {
@@ -610,7 +610,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the l shift
+     * @return the result of the operation
      */
     @NotNull
     default O visitLShift(@NotNull Node left, @NotNull Node right) {
@@ -622,7 +622,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the r shift
+     * @return the result of the operation
      */
     @NotNull
     default O visitRShift(@NotNull Node left, @NotNull Node right) {
@@ -634,7 +634,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the ur shift
+     * @return the result of the operation
      */
     @NotNull
     default O visitURShift(@NotNull Node left, @NotNull Node right) {
@@ -646,7 +646,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the add
+     * @return the result of the operation
      */
     @NotNull
     default O visitAdd(@NotNull Node left, @NotNull Node right) {
@@ -658,7 +658,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the subtract
+     * @return the result of the operation
      */
     @NotNull
     default O visitSubtract(@NotNull Node left, @NotNull Node right) {
@@ -670,7 +670,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the multiply
+     * @return the result of the operation
      */
     @NotNull
     default O visitMultiply(@NotNull Node left, @NotNull Node right) {
@@ -682,7 +682,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the divide
+     * @return the result of the operation
      */
     @NotNull
     default O visitDivide(@NotNull Node left, @NotNull Node right) {
@@ -694,7 +694,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the modulo
+     * @return the result of the operation
      */
     @NotNull
     default O visitModulo(@NotNull Node left, @NotNull Node right) {
@@ -706,7 +706,7 @@ public interface Visitor<
      *
      * @param left  the left
      * @param right the right
-     * @return the cast
+     * @return the cast node
      */
     default @NotNull O visitCast(final @NotNull Node left, final @NotNull Node right) {
         O cast = left.accept(this);
