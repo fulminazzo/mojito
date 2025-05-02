@@ -893,8 +893,8 @@ public class JavaParser extends Parser {
             buffer.add(readSpaces());
 
             List<Literal> literals = new LinkedList<>();
-            while (lastToken() == LITERAL) {
-                Literal readLiteral = parseLiteralNoConsume();
+            while (lastToken() == LITERAL || lastToken() == QUESTION_MARK) {
+                Literal readLiteral = lastToken() == QUESTION_MARK ? new EmptyLiteral() : parseLiteralNoConsume();
                 literals.add(readLiteral);
                 buffer.add(readLiteral.getLiteral());
                 buffer.add(readSpaces());

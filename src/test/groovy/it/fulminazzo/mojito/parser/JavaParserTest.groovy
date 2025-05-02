@@ -1019,6 +1019,7 @@ class JavaParserTest extends Specification {
 
         where:
         code                                              | expected
+        'List<?>'                                         | new GenericsLiteral('List', [new EmptyLiteral()])
         'List<String>'                                    | new GenericsLiteral('List', [Literal.of('String')])
         'Map<String, Integer>'                            | new GenericsLiteral('Map', [
                 Literal.of('String'), Literal.of('Integer')
