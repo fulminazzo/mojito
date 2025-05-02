@@ -270,8 +270,7 @@ public interface Visitor<
         VariableContainer<C, O, P, ?> variableName = assignment.getName().accept(this).check(VariableContainer.class);
         try {
             getEnvironment().markConstant(variableName.check(LiteralVariableContainer.class).namedEntity());
-        } catch (ScopeException e) {
-            throw exceptionWrapper(e);
+        } catch (ScopeException ignored) {
         }
         return o;
     }
