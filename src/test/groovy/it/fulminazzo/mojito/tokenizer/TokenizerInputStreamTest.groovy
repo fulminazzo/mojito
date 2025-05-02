@@ -87,6 +87,7 @@ class TokenizerInputStreamTest extends Specification {
         length || expected
         5      || 'World?! hello!'
         3      || 'World?! XXllo!'
+        1      || 'World?X XXllo!'
     }
 
     def 'test that tokenizer input stream read byte array bound throws exception for values: #offset, #length'() {

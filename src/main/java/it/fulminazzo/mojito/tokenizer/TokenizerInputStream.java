@@ -72,7 +72,7 @@ class TokenizerInputStream extends InputStream {
                     offset, length, bytes.length));
 
         int index = 0;
-        while (length > 0 && !this.buffer.isEmpty())
+        while (length > index && !this.buffer.isEmpty())
             bytes[offset + index++] = (byte) (int) this.buffer.poll();
         return index + this.inputStream.read(bytes, offset + index, length - index);
     }
