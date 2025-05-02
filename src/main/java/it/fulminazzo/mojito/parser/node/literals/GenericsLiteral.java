@@ -4,6 +4,7 @@ import it.fulminazzo.mojito.parser.node.NodeException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * An extension of {@link Literal} that supports generic typing.
@@ -19,6 +20,15 @@ public class GenericsLiteral extends LiteralImpl implements Literal {
     public GenericsLiteral(@NotNull String rawValue, @NotNull List<Literal> types) throws NodeException {
         super(rawValue);
         this.types = types;
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return String.format("%s(%s, [%s])",
+                getClass().getSimpleName(),
+                getLiteral(),
+                this.types.stream().map(Object::toString).collect(Collectors.joining(", "))
+        );
     }
 
 }
