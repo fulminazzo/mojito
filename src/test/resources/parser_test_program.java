@@ -77,6 +77,8 @@ String stW = "Hello world";
 String stWCast = (String) stW;
 String stWCastNull = (String) null;
 
+List<String> list = new ArrayList<>();
+
 // Binary operations
 i = i + 1 - 1 * 1 / 1 % 2 & 1 | 1 ^ 1 << 2 >> 1 >>> 1;
 i = ((((i + 1) - (1 * 1)) / ((1 % 2) & (1 | 1))) ^ ((1 << 2) >> (1 >>> 1)));
