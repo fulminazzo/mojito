@@ -891,8 +891,12 @@ public class JavaParser extends Parser {
         buffer.add(tokenizer.lastRead());
         if (lastToken() == LESS_THAN) {
             buffer.add(readSpaces());
+
+            List<Literal> literals = new LinkedList<>();
             while (lastToken() == LITERAL) {
-                buffer.add(parseLiteralNoConsume().getLiteral());
+                Literal readLiteral = parseLiteralNoConsume();
+                literals.add(readLiteral);
+                buffer.add(readLiteral.getLiteral());
                 buffer.add(readSpaces());
                 if (lastToken() == COMMA) {
                     buffer.add(tokenizer.lastRead());
@@ -902,7 +906,7 @@ public class JavaParser extends Parser {
 
             buffer.add(tokenizer.lastRead());
             if (lastToken() == GREATER_THAN) {
-                //TODO: Generics
+                //TODO: Generics, use literals
                 throw new IllegalArgumentException("To be implemented");
             }
         }
