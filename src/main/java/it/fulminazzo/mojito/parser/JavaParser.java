@@ -395,7 +395,7 @@ public class JavaParser extends Parser {
     }
 
     /**
-     * EXPR := NEW_OBJECT | INCREMENT | DECREMENT | AND
+     * EXPR := NEW_OBJECT | INCREMENT | DECREMENT | TERNARY_OP
      *
      * @return the node
      */
@@ -417,7 +417,7 @@ public class JavaParser extends Parser {
                 break;
             }
             default: {
-                expression = parseBinaryComparison();
+                expression = parseTernaryOperator();
             }
         }
         return expression;
