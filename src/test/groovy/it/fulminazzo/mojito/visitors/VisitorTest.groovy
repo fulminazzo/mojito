@@ -56,7 +56,7 @@ class VisitorTest extends Specification {
             if (!ReflectionUtils.isPrimitive(it.type)) value = '@NotNull ' + value
             return value
         }.join(', ')
-        toWrite.add("    @NotNull T ${methodName}(${stringParameters});\n")
+        toWrite.add("    @NotNull O ${methodName}(${stringParameters});\n")
         toWrite.add('\n}')
 
         file.delete()
