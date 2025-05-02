@@ -95,6 +95,17 @@ public class Environment<T> implements Scoped<T> {
     }
 
     @Override
+    public void markConstant(@NotNull NamedEntity name) throws ScopeException {
+        for (Scope<T> scope : this.scopes)
+            try {
+                scope.markConstant(name);
+                return;
+            } catch (ScopeException ignored) {
+            }
+        throw ScopeException.noSuchVariable(name);
+    }
+
+    @Override
     public void declare(@NotNull Info info, @NotNull NamedEntity name, @NotNull T value) throws ScopeException {
         if (isDeclared(name)) throw ScopeException.alreadyDeclaredVariable(name);
         else lastScope().declare(info, name, value);

@@ -39,6 +39,11 @@ class Scope<T> implements Scoped<T> {
     }
 
     @Override
+    public void markConstant(@NotNull NamedEntity name) throws ScopeException {
+        getKey(name).orElseThrow(() -> ScopeException.noSuchVariable(name)).markConstant();
+    }
+
+    @Override
     public void declare(@NotNull Info info, @NotNull NamedEntity name, @NotNull T value) throws ScopeException {
         if (isDeclared(name)) throw ScopeException.alreadyDeclaredVariable(name);
         else this.internalMap.put(new ObjectData(info, name), value);
