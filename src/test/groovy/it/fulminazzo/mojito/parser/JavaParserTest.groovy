@@ -1007,6 +1007,32 @@ class JavaParserTest extends Specification {
         literal == new BooleanValueLiteral('true')
     }
 
+    def 'test parse generics literal with expression: #code'() {
+        given:
+        startReading(code)
+
+        when:
+        def literal = this.parser.parseLiteral()
+
+        then:
+        literal == expected
+
+        where:
+        code                                              | expected
+        'List<String>'                                    | new GenericsLiteral('List', [Literal.of('String')])
+        'Map<String, Integer>'                            | new GenericsLiteral('Map', [
+                Literal.of('String'), Literal.of('Integer')
+        ])
+        'TernaryOperator<String, List, Integer>'          | new GenericsLiteral('TernaryOperator', [
+                Literal.of('String'), Literal.of('List'), Literal.of('Integer')
+        ])
+        'TernaryOperator<String, List<Boolean>, Integer>' | new GenericsLiteral('TernaryOperator', [
+                Literal.of('String'),
+                new GenericsLiteral('List', [Literal.of('Boolean')]),
+                Literal.of('Integer')
+        ])
+    }
+
     def 'test parse literal with expression: #exp'() {
         given:
         startReading(exp)
