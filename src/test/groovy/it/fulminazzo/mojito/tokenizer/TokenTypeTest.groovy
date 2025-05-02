@@ -37,6 +37,7 @@ class TokenTypeTest extends Specification {
 
         where:
         expected      | token
+        QUESTION_MARK | '?'
         ADD           | '+'
         SUBTRACT      | '-'
         MULTIPLY      | '*'

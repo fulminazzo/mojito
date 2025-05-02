@@ -113,7 +113,7 @@ will return the parsed variable `name` (`fulminazzo`) in the _returnedValue_
 
 ## Roadmap
 
-- [ ] ternary operator (`a ? b : c`);
+- [x] ternary operator (`a ? b : c`);
 - [ ] diamond operator (generics);
 - [ ] advanced wildcard handling (`super` and `extends`);
 - [ ] `final` keyword;
@@ -152,7 +152,7 @@ IF_STMT := if PAR_EXPR BLOCK ( else IF_STMT )* ( else BLOCK )?
 
 ASSIGNMENT := ARRAY_LITERAL LITERAL ( = EXPR? ) | LITERAL = EXPR | EXPR
 
-EXPR := NEW_OBJECT | INCREMENT | DECREMENT | AND
+EXPR := NEW_OBJECT | INCREMENT | DECREMENT | TERNARY_OP
 NEW_OBJECT := new LITERAL METHOD_INVOCATION |
               new ARRAY_LITERAL{ ( EXPR )? ( , EXPR )* \} |
               new LITERAL ( \[ NUMBER_VALUE \] )+
@@ -160,6 +160,8 @@ ARRAY_LITERAL := LITERAL ( \[\] )* | LITERAL ( \[ [0-9]+ \] )+
 
 INCREMENT := ++ATOM
 DECREMENT := --ATOM | MINUS
+
+TERNARY_OP := AND ? EXPR : EXPR
 
 AND := OR (&& OR)*
 OR := EQUAL (|| EQUAL)*

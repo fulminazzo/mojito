@@ -6,6 +6,7 @@ import it.fulminazzo.mojito.parser.node.arrays.StaticArray
 import it.fulminazzo.mojito.parser.node.container.CodeBlock
 import it.fulminazzo.mojito.parser.node.literals.*
 import it.fulminazzo.mojito.parser.node.operators.binary.*
+import it.fulminazzo.mojito.parser.node.operators.ternary.TernaryOperator
 import it.fulminazzo.mojito.parser.node.operators.unary.Decrement
 import it.fulminazzo.mojito.parser.node.operators.unary.Increment
 import it.fulminazzo.mojito.parser.node.operators.unary.Minus
@@ -764,6 +765,22 @@ class JavaParserTest extends Specification {
 
         then:
         output == expected
+    }
+
+    def 'test parseTernaryOperator'() {
+        given:
+        def code = 'true ? 1 : 2'
+
+        when:
+        startReading(code)
+        def output = this.parser.parseTernaryOperator()
+
+        then:
+        output == new TernaryOperator(
+                new BooleanValueLiteral('true'),
+                new NumberValueLiteral('1'),
+                new NumberValueLiteral('2')
+        )
     }
 
     def 'test complex parseBinaryOperation'() {
