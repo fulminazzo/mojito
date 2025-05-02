@@ -724,6 +724,21 @@ class JavaParserTest extends Specification {
         '--var' | new Decrement(Literal.of('var'), true)  | true
     }
 
+    def 'test invalid parseAssignment with final for code: #code'() {
+        when:
+        startReading(code)
+        this.parser.parseAssignment()
+
+        then:
+        def exception = thrown(ParserException)
+        exception.message == ParserException.finalNotAllowed(this.parser, expression).message
+
+        where:
+        code                    | expression
+        'final i = 1'           | new ReAssign(Literal.of('i'), new NumberValueLiteral('1'))
+        'final 3 + 2'           | new Add(new NumberValueLiteral('3'), new NumberValueLiteral('2'))
+    }
+
     def 'test parseReAssign with operation: #operation'() {
         given:
         def code = "var ${operation}= 2"
