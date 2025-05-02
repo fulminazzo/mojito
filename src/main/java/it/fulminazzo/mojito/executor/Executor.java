@@ -271,6 +271,12 @@ public class Executor implements Visitor<ClassValue<?>, Value<?>, ParameterValue
     }
 
     @Override
+    public @NotNull Value<?> visitTernaryOperator(@NotNull Node expression, @NotNull Node first, @NotNull Node second) {
+        if (expression.accept(this).is(BooleanValue.TRUE)) return first.accept(this);
+        else return second.accept(this);
+    }
+
+    @Override
     public @NotNull Value<?> visitNullLiteral() {
         return Values.NULL_VALUE;
     }
