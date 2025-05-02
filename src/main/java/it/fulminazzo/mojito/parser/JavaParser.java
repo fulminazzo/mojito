@@ -389,14 +389,16 @@ public class JavaParser extends Parser {
                     consume(ASSIGN);
                     value = parseExpression();
                 }
-                expression = new Assignment(expression, name, value);
-                if (finalVariable) return new FinalAssignment(expression);
+                Assignment assignment = new Assignment(expression, name, value);
+                if (finalVariable)
+                    if (assignment.isInitialized()) return new FinalAssignment(assignment);
+                    else throw ParserException.finalVariableNotInitialized(this, assignment);
             } else {
                 consume(ASSIGN);
                 expression = new ReAssign(expression, parseExpression());
             }
         }
-        if (finalVariable) throw ParserException.invalidFinal(expression);
+        if (finalVariable) throw ParserException.finalNotAllowed(this, expression);
         return expression;
     }
 
