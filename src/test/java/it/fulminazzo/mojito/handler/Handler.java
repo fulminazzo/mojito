@@ -134,6 +134,11 @@ public class Handler implements Visitor<ClassElement, Element, ParameterElements
     }
 
     @Override
+    public @NotNull Element visitTernaryOperator(@NotNull Node expression, @NotNull Node first, @NotNull Node second) {
+        return Element.of(new Object());
+    }
+
+    @Override
     public @NotNull Element visitNullLiteral() {
         return Element.of(null);
     }
