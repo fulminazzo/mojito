@@ -45,6 +45,17 @@ public final class ScopeException extends FormatException {
     }
 
     /**
+     * Generates a {@link ScopeException} with message:
+     * <i>The variable "%name%" was declared as constant, so it cannot be updated</i>
+     *
+     * @param name the name of the variable
+     * @return the scope exception
+     */
+    public static @NotNull ScopeException cannotUpdateConstantVariable(final @NotNull NamedEntity name) {
+        return new ScopeException("The variable \"%s\" was declared as constant, so it cannot be updated", name.getName());
+    }
+
+    /**
      * Generates two {@link ScopeException} based on the passed {@link ScopeType}s:
      * <ul>
      *     <li>if it is empty, <i>Cannot compare current scope type with no types provided</i>;</li>
