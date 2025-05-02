@@ -52,6 +52,7 @@ class Scope<T> implements Scoped<T> {
     @Override
     public void update(@NotNull NamedEntity name, @NotNull T value) throws ScopeException {
         ObjectData key = getKey(name).orElseThrow(() -> ScopeException.noSuchVariable(name));
+        if (key.isConstant()) throw ScopeException.cannotUpdateConstantVariable(name);
         if (key.getInfo().compatibleWith(value)) this.internalMap.put(key, value);
         else throw ScopeException.cannotAssignValue(value, key.getInfo());
     }
