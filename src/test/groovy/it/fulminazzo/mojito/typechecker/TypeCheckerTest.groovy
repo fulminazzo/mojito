@@ -1200,6 +1200,19 @@ class TypeCheckerTest extends Specification {
         expected << [PrimitiveType.CHAR, PrimitiveType.INT, PrimitiveType.LONG, PrimitiveType.FLOAT, PrimitiveType.DOUBLE]
     }
 
+    def 'test ternary operator'() {
+        given:
+        def type = this.typeChecker.visitTernaryOperator(BOOL_LIT, object, STRING_LIT)
+
+        expect:
+        type == expected
+
+        where:
+        object     | expected
+        NUMBER_LIT | ObjectType.OBJECT
+        STRING_LIT | ObjectType.STRING
+    }
+
     def 'test equal'() {
         given:
         def type = this.typeChecker.visitEqual(NUMBER_LIT, NUMBER_LIT)
