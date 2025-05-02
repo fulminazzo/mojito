@@ -258,6 +258,25 @@ public interface Visitor<
     @NotNull O visitIfStatement(@NotNull CodeBlock then, @NotNull Node elseBranch, @NotNull Node expression);
 
     /**
+     * Converts final assignment and its fields to this visitor type.
+     * In reality, all it does is mark the already declared variable
+     * as constant, to prevent further modifications.
+     *
+     * @param assignment the assignment
+     * @return the assignment
+     */
+    default @NotNull O visitFinalAssignment(@NotNull Assignment assignment) {
+        O o = assignment.accept(this);
+        VariableContainer<C, O, P, ?> variableName = assignment.getName().accept(this).check(VariableContainer.class);
+        try {
+            getEnvironment().markConstant(variableName.check(LiteralVariableContainer.class).namedEntity());
+        } catch (ScopeException e) {
+            throw exceptionWrapper(e);
+        }
+        return o;
+    }
+
+    /**
      * Converts assignment and its fields to this visitor type.
      * Checks if the object resulting from the name is a {@link VariableContainer}.
      * If it is not, throws an exception.
