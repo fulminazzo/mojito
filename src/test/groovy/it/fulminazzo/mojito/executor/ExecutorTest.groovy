@@ -730,8 +730,8 @@ class ExecutorTest extends Specification {
 
         where:
         expression     | first      | second     | expected
-        BOOL_LIT_TRUE  | NUMBER_LIT | STRING_LIT | NUMBER_LIT
-        BOOL_LIT_FALSE | NUMBER_LIT | STRING_LIT | STRING_LIT
+        BOOL_LIT_TRUE  | NUMBER_LIT | STRING_LIT | PrimitiveValue.of(1)
+        BOOL_LIT_FALSE | NUMBER_LIT | STRING_LIT | ObjectValue.of('Hello, world!')
     }
 
     def 'test equal'() {
