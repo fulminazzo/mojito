@@ -10,6 +10,7 @@ import it.fulminazzo.mojito.parser.node.container.CodeBlock;
 import it.fulminazzo.mojito.parser.node.container.JavaProgram;
 import it.fulminazzo.mojito.parser.node.literals.*;
 import it.fulminazzo.mojito.parser.node.operators.binary.*;
+import it.fulminazzo.mojito.parser.node.operators.ternary.TernaryOperator;
 import it.fulminazzo.mojito.parser.node.operators.unary.Decrement;
 import it.fulminazzo.mojito.parser.node.operators.unary.Increment;
 import it.fulminazzo.mojito.parser.node.operators.unary.Minus;
@@ -553,6 +554,23 @@ public class JavaParser extends Parser {
         if (lastToken() != SUBTRACT) return new Minus(parseExpression());
         consume(SUBTRACT);
         return new Decrement(parseAtom(), true);
+    }
+
+    /**
+     * TERNARY_OP := AND ? EXPR : EXPR
+     *
+     * @return the node
+     */
+    protected @NotNull Node parseTernaryOperator() {
+        Node expr = parseBinaryComparison();
+        if (lastToken() == QUESTION_MARK) {
+            consume(QUESTION_MARK);
+            Node left = parseExpression();
+            consume(COLON);
+            Node right = parseExpression();
+            expr = new TernaryOperator(expr, left, right);
+        }
+        return expr;
     }
 
     /**
