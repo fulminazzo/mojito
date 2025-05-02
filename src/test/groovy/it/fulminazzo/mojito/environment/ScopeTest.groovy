@@ -10,12 +10,42 @@ class ScopeTest extends Specification {
         this.scope = new Scope<>(ScopeType.CODE_BLOCK)
     }
 
+    def 'test update on final variable'() {
+        given:
+        def varName = NamedEntity.of('var')
+
+        and:
+        this.scope.declare(new WrapperInfo<>(String), varName, '1')
+
+        and:
+        this.scope.markConstant(varName)
+
+        when:
+        this.scope.update(varName, '2')
+
+        then:
+        def e = thrown(ScopeException)
+        e.message == ScopeException.cannotUpdateConstantVariable(varName).message
+    }
+
     def 'test lookupInfo not declared'() {
         given:
         def varName = 'var'
 
         when:
         this.scope.lookupInfo(NamedEntity.of(varName))
+
+        then:
+        def e = thrown(ScopeException)
+        e.message == ScopeException.noSuchVariable(NamedEntity.of(varName)).message
+    }
+
+    def 'test markConstant not declared'() {
+        given:
+        def varName = 'var'
+
+        when:
+        this.scope.markConstant(NamedEntity.of(varName))
 
         then:
         def e = thrown(ScopeException)

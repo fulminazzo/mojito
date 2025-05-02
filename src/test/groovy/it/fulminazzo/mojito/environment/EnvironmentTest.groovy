@@ -142,6 +142,34 @@ class EnvironmentTest extends Specification {
         e.message == ScopeException.noSuchVariable(NamedEntity.of(varName)).message
     }
 
+    def 'test markConstant'() {
+        given:
+        def expected = new WrapperInfo<>(Integer)
+        def varName = 'var'
+
+        when:
+        this.environment.declare(expected, NamedEntity.of(varName), 1)
+        this.environment.markConstant(NamedEntity.of(varName))
+
+        and:
+        def data = this.environment.lastScope().getKey(NamedEntity.of(varName))
+
+        then:
+        data.get().isConstant()
+    }
+
+    def 'test markConstant not declared'() {
+        given:
+        def varName = 'var'
+
+        when:
+        this.environment.markConstant(NamedEntity.of(varName))
+
+        then:
+        def e = thrown(ScopeException)
+        e.message == ScopeException.noSuchVariable(NamedEntity.of(varName)).message
+    }
+
     def 'test declare twice'() {
         given:
         def varName = 'var'

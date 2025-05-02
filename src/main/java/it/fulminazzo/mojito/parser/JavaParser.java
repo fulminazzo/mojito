@@ -371,11 +371,16 @@ public class JavaParser extends Parser {
     }
 
     /**
-     * ASSIGNMENT := ARRAY_LITERAL LITERAL ( = EXPR? ) | LITERAL = EXPR | EXPR
+     * ASSIGNMENT := ( final )? ARRAY_LITERAL LITERAL ( = EXPR? ) | LITERAL = EXPR | EXPR
      *
      * @return the node
      */
     protected @NotNull Node parseAssignment() {
+        boolean finalVariable = false;
+        if (lastToken() == FINAL) {
+            consume(FINAL);
+            finalVariable = true;
+        }
         Node expression = parseExpression();
         if (expression.is(Literal.class)) {
             if (lastToken() == LITERAL || expression.is(ArrayLiteral.class)) {
@@ -385,12 +390,17 @@ public class JavaParser extends Parser {
                     consume(ASSIGN);
                     value = parseExpression();
                 }
-                expression = new Assignment(expression, name, value);
+                Assignment assignment = new Assignment(expression, name, value);
+                if (finalVariable) {
+                    if (assignment.isInitialized()) return new FinalAssignment(assignment);
+                    else throw ParserException.finalVariableNotInitialized(this, assignment);
+                } else expression = assignment;
             } else {
                 consume(ASSIGN);
                 expression = new ReAssign(expression, parseExpression());
             }
         }
+        if (finalVariable) throw ParserException.finalNotAllowed(this, expression);
         return expression;
     }
 

@@ -1,5 +1,6 @@
 package it.fulminazzo.mojito.parser
 
+import groovy.transform.Final
 import it.fulminazzo.mojito.parser.node.*
 import it.fulminazzo.mojito.parser.node.arrays.DynamicArray
 import it.fulminazzo.mojito.parser.node.arrays.StaticArray
@@ -723,6 +724,43 @@ class JavaParserTest extends Specification {
         '++var' | new Increment(Literal.of('var'), true)  | true
         'var--' | new Decrement(Literal.of('var'), false) | false
         '--var' | new Decrement(Literal.of('var'), true)  | true
+    }
+
+    def 'test parseAssignment with final'() {
+        when:
+        startReading('final int i = 1')
+        def output = this.parser.parseAssignment()
+
+        then:
+        output == new FinalAssignment(
+                new Assignment(Literal.of('int'), Literal.of('i'), new NumberValueLiteral('1'))
+        )
+    }
+
+    def 'test parseAssignment with final throws error when uninitialized'() {
+        when:
+        startReading('final int i')
+        this.parser.parseAssignment()
+
+        then:
+        def e = thrown(ParserException)
+        e.message == ParserException.finalVariableNotInitialized(this.parser,
+                new Assignment(Literal.of('int'), Literal.of('i'), new EmptyLiteral())).message
+    }
+
+    def 'test invalid parseAssignment with final for code: #code'() {
+        when:
+        startReading(code)
+        this.parser.parseAssignment()
+
+        then:
+        def e = thrown(ParserException)
+        e.message == ParserException.finalNotAllowed(this.parser, expression).message
+
+        where:
+        code          | expression
+        'final i = 1' | new ReAssign(Literal.of('i'), new NumberValueLiteral('1'))
+        'final 3 + 2' | new Add(new NumberValueLiteral('3'), new NumberValueLiteral('2'))
     }
 
     def 'test parseReAssign with operation: #operation'() {

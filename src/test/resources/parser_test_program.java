@@ -24,6 +24,8 @@ double dCast = (double) d;
 boolean bo = true;
 boolean boCast = (boolean) bo;
 
+final int finalI = 3;
+
 // Re-assignments
 i = -4;
 l = i;

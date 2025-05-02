@@ -30,6 +30,8 @@ public enum TokenType {
     IF("if"),
     ELSE("else"),
 
+    FINAL("final"),
+
     // Expr
     ASSIGN("="),
     OPEN_PAR("\\("),

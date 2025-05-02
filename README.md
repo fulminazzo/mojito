@@ -116,7 +116,7 @@ will return the parsed variable `name` (`fulminazzo`) in the _returnedValue_
 - [x] ternary operator (`a ? b : c`);
 - [ ] diamond operator (generics);
 - [ ] advanced wildcard handling (`super` and `extends`);
-- [ ] `final` keyword;
+- [x] `final` keyword;
 - [ ] `instanceof` keyword (also Java 17 pattern matching);
 - [ ] lambda expressions.
 
@@ -150,7 +150,7 @@ DO_STMT := do BLOCK while PAR_EXPR
 WHILE_STMT := while PAR_EXPR BLOCK
 IF_STMT := if PAR_EXPR BLOCK ( else IF_STMT )* ( else BLOCK )?
 
-ASSIGNMENT := ARRAY_LITERAL LITERAL ( = EXPR? ) | LITERAL = EXPR | EXPR
+ASSIGNMENT := ( final )? ARRAY_LITERAL LITERAL ( = EXPR? ) | LITERAL = EXPR | EXPR
 
 EXPR := NEW_OBJECT | INCREMENT | DECREMENT | TERNARY_OP
 NEW_OBJECT := new LITERAL METHOD_INVOCATION |

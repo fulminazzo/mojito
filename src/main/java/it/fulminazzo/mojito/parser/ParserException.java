@@ -1,6 +1,7 @@
 package it.fulminazzo.mojito.parser;
 
 import it.fulminazzo.mojito.exceptions.FormatRuntimeException;
+import it.fulminazzo.mojito.parser.node.Assignment;
 import it.fulminazzo.mojito.parser.node.Node;
 import it.fulminazzo.mojito.parser.node.statements.CaseStatement;
 import it.fulminazzo.mojito.tokenizer.TokenType;
@@ -146,6 +147,34 @@ public final class ParserException extends FormatRuntimeException {
      */
     public static @NotNull ParserException invalidTryStatement(final @NotNull Parser parser) {
         return new ParserException(parser, "Invalid try statement: no catch or finally block specified");
+    }
+
+    /**
+     * Generates a {@link ParserException} with message:
+     * <i>Final variables should be initialized, but "%assignment_name%" was not</i>
+     *
+     * @param parser     the parser
+     * @param assignment the assignment
+     * @return the parser exception
+     */
+    public static @NotNull ParserException finalVariableNotInitialized(final @NotNull Parser parser,
+                                                                       final @NotNull Assignment assignment) {
+        return new ParserException(parser, String.format("Final variables should be initialized, but \"%s\" was not",
+                assignment.getName()));
+    }
+
+    /**
+     * Generates a {@link ParserException} with message:
+     * <i>The final keyword is only allowed for assignments, not expressions like: %expression%</i>
+     *
+     * @param parser     the parser
+     * @param expression the expression
+     * @return the parser exception
+     */
+    public static @NotNull ParserException finalNotAllowed(final @NotNull Parser parser,
+                                                           final @NotNull Node expression) {
+        return new ParserException(parser, "The final keyword is only allowed for assignments, not expressions like: "
+                + expression);
     }
 
 }

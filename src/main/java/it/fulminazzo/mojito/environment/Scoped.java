@@ -41,6 +41,15 @@ interface Scoped<T> {
     @NotNull Info lookupInfo(@NotNull NamedEntity name) throws ScopeException;
 
     /**
+     * Finds the variable with the given name and marks it as constant.
+     * When marked as constant, a variable cannot be changed.
+     *
+     * @param name the name of the variable
+     * @throws ScopeException thrown if the variable is not declared
+     */
+    void markConstant(@NotNull NamedEntity name) throws ScopeException;
+
+    /**
      * Finds the variable with the given name and returns its value.
      *
      * @param name the name of the variable

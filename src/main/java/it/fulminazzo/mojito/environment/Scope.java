@@ -2,6 +2,7 @@ package it.fulminazzo.mojito.environment;
 
 import it.fulminazzo.mojito.environment.scopetypes.ScopeType;
 import it.fulminazzo.mojito.wrappers.BiObjectWrapper;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -38,6 +39,11 @@ class Scope<T> implements Scoped<T> {
     }
 
     @Override
+    public void markConstant(@NotNull NamedEntity name) throws ScopeException {
+        getKey(name).orElseThrow(() -> ScopeException.noSuchVariable(name)).markConstant();
+    }
+
+    @Override
     public void declare(@NotNull Info info, @NotNull NamedEntity name, @NotNull T value) throws ScopeException {
         if (isDeclared(name)) throw ScopeException.alreadyDeclaredVariable(name);
         else this.internalMap.put(new ObjectData(info, name), value);
@@ -46,6 +52,7 @@ class Scope<T> implements Scoped<T> {
     @Override
     public void update(@NotNull NamedEntity name, @NotNull T value) throws ScopeException {
         ObjectData key = getKey(name).orElseThrow(() -> ScopeException.noSuchVariable(name));
+        if (key.isConstant()) throw ScopeException.cannotUpdateConstantVariable(name);
         if (key.getInfo().compatibleWith(value)) this.internalMap.put(key, value);
         else throw ScopeException.cannotAssignValue(value, key.getInfo());
     }
@@ -69,6 +76,8 @@ class Scope<T> implements Scoped<T> {
      * Represents the information of an object.
      */
     static class ObjectData extends BiObjectWrapper<Info, String> {
+        @Getter
+        private boolean constant;
 
         /**
          * Instantiates a new Object data.
@@ -80,12 +89,30 @@ class Scope<T> implements Scoped<T> {
             super(info, name.getName());
         }
 
+        /**
+         * Gets info.
+         *
+         * @return the info
+         */
         public @NotNull Info getInfo() {
             return this.first;
         }
 
+        /**
+         * Gets name.
+         *
+         * @return the name
+         */
         public @NotNull String getName() {
             return this.second;
+        }
+
+        /**
+         * Marks the current object as constant.
+         * When constant, it cannot be changed.
+         */
+        public void markConstant() {
+            this.constant = true;
         }
 
     }
