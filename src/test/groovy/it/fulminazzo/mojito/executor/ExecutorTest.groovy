@@ -721,6 +721,19 @@ class ExecutorTest extends Specification {
         'Decrement' | new Decrement(Literal.of('i'), false) | PrimitiveValue.of(1) | PrimitiveValue.of(0)
     }
 
+    def 'test ternary operator'() {
+        given:
+        def result = this.executor.visitTernaryOperator(expression, first, second)
+
+        expect:
+        result == expected
+
+        where:
+        expression     | first      | second     | expected
+        BOOL_LIT_TRUE  | NUMBER_LIT | STRING_LIT | NUMBER_LIT
+        BOOL_LIT_FALSE | NUMBER_LIT | STRING_LIT | STRING_LIT
+    }
+
     def 'test equal'() {
         given:
         def result = this.executor.visitEqual(first, second)
