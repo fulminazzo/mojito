@@ -1,6 +1,5 @@
 package it.fulminazzo.mojito.tokenizer;
 
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -11,10 +10,18 @@ import java.util.LinkedList;
  * A wrapper for a generic {@link InputStream}.
  * It provides several methods to push back data into the buffer.
  */
-@RequiredArgsConstructor
 class TokenizerInputStream extends InputStream {
     private final @NotNull InputStream inputStream;
     private final @NotNull LinkedList<Integer> buffer = new LinkedList<>();
+
+    /**
+     * Instantiates a new Tokenizer input stream.
+     *
+     * @param inputStream the input stream
+     */
+    public TokenizerInputStream(final @NotNull InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
 
     @Override
     public int read() throws IOException {
