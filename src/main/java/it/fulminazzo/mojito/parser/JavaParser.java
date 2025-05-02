@@ -872,7 +872,14 @@ public class JavaParser extends Parser {
         return l;
     }
 
-    private @NotNull Literal parseLiteralNoConsume() {
+    /**
+     * Support method for {@link #parseLiteral()}.
+     * Executes the logic behind literal parsing by not
+     * reading the next token.
+     *
+     * @return the read literal
+     */
+    protected @NotNull Literal parseLiteralNoConsume() {
         final @NotNull Tokenizer tokenizer = getTokenizer();
         final String literal = tokenizer.lastRead();
         Literal l = getLiteralFromString(literal);
