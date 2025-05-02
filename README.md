@@ -115,6 +115,7 @@ will return the parsed variable `name` (`fulminazzo`) in the _returnedValue_
 
 - [ ] ternary operator (`a ? b : c`);
 - [ ] diamond operator (generics);
+- [ ] instanceof;
 - [ ] lambda expressions.
 
 ## Grammar
