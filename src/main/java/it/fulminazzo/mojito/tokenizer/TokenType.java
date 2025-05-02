@@ -41,6 +41,7 @@ public enum TokenType {
     COMMA(","),
     SEMICOLON(";"),
     COLON(":"),
+    QUESTION_MARK("//?"),
 
     // Binary Comparisons
     AND("&&"),
