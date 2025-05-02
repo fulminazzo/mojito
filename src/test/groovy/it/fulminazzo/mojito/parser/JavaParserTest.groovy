@@ -742,8 +742,8 @@ class JavaParserTest extends Specification {
         this.parser.parseAssignment()
 
         then:
-        def exception = thrown(ParserException)
-        exception.message == ParserException.finalVariableNotInitialized(this.parser,
+        def e = thrown(ParserException)
+        e.message == ParserException.finalVariableNotInitialized(this.parser,
                 new Assignment(Literal.of('int'), Literal.of('i'), new EmptyLiteral())).message
     }
 
@@ -753,8 +753,8 @@ class JavaParserTest extends Specification {
         this.parser.parseAssignment()
 
         then:
-        def exception = thrown(ParserException)
-        exception.message == ParserException.finalNotAllowed(this.parser, expression).message
+        def e = thrown(ParserException)
+        e.message == ParserException.finalNotAllowed(this.parser, expression).message
 
         where:
         code          | expression
