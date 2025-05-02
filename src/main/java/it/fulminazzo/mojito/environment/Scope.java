@@ -80,10 +80,20 @@ class Scope<T> implements Scoped<T> {
             super(info, name.getName());
         }
 
+        /**
+         * Gets info.
+         *
+         * @return the info
+         */
         public @NotNull Info getInfo() {
             return this.first;
         }
 
+        /**
+         * Gets name.
+         *
+         * @return the name
+         */
         public @NotNull String getName() {
             return this.second;
         }
