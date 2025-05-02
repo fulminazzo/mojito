@@ -180,6 +180,21 @@ class VisitorTest extends Specification {
         this.environment.lookup('k').element == 3
     }
 
+    def 'test visitFinalAssignment'() {
+        given:
+        def type = Literal.of(Integer.simpleName)
+        def name = 'i'
+        def value = new NumberValueLiteral('1')
+
+        when:
+        def element = this.visitor.visitFinalAssignment(new Assignment(type, Literal.of(name), value))
+
+        then:
+        element == Element.of(1)
+        this.environment.lookupInfo(name) == ClassElement.of(Integer)
+        this.environment.lookup(name) == Element.of(1)
+    }
+
     def 'test visitAssignment'() {
         given:
         def type = Literal.of(Integer.simpleName)
