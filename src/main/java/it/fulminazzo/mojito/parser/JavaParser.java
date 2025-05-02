@@ -390,9 +390,10 @@ public class JavaParser extends Parser {
                     value = parseExpression();
                 }
                 Assignment assignment = new Assignment(expression, name, value);
-                if (finalVariable)
+                if (finalVariable) {
                     if (assignment.isInitialized()) return new FinalAssignment(assignment);
                     else throw ParserException.finalVariableNotInitialized(this, assignment);
+                } else expression = assignment;
             } else {
                 consume(ASSIGN);
                 expression = new ReAssign(expression, parseExpression());
