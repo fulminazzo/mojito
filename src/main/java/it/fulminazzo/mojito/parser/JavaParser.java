@@ -370,7 +370,7 @@ public class JavaParser extends Parser {
     }
 
     /**
-     * ASSIGNMENT := ARRAY_LITERAL LITERAL ( = EXPR? ) | LITERAL = EXPR | EXPR
+     * ASSIGNMENT := ( final )? ARRAY_LITERAL LITERAL ( = EXPR? ) | LITERAL = EXPR | EXPR
      *
      * @return the node
      */
