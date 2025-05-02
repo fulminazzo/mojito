@@ -22,6 +22,18 @@ class ScopeTest extends Specification {
         e.message == ScopeException.noSuchVariable(NamedEntity.of(varName)).message
     }
 
+    def 'test markConstant not declared'() {
+        given:
+        def varName = 'var'
+
+        when:
+        this.scope.markConstant(NamedEntity.of(varName))
+
+        then:
+        def e = thrown(ScopeException)
+        e.message == ScopeException.noSuchVariable(NamedEntity.of(varName)).message
+    }
+
     def 'declare should throw ScopeException on already declared variable'() {
         when:
         this.scope.declare(new WrapperInfo<>(String), NamedEntity.of('var'), '1')
