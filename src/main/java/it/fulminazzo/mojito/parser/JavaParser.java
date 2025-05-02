@@ -375,6 +375,11 @@ public class JavaParser extends Parser {
      * @return the node
      */
     protected @NotNull Node parseAssignment() {
+        boolean finalVariable = false;
+        if (lastToken() == FINAL) {
+            consume(FINAL);
+            finalVariable = true;
+        }
         Node expression = parseExpression();
         if (expression.is(Literal.class)) {
             if (lastToken() == LITERAL || expression.is(ArrayLiteral.class)) {
@@ -385,11 +390,13 @@ public class JavaParser extends Parser {
                     value = parseExpression();
                 }
                 expression = new Assignment(expression, name, value);
+                if (finalVariable) return new FinalAssignment(expression);
             } else {
                 consume(ASSIGN);
                 expression = new ReAssign(expression, parseExpression());
             }
         }
+        if (finalVariable) throw ParserException.invalidFinal(expression);
         return expression;
     }
 
