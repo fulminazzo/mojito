@@ -265,7 +265,7 @@ public interface Visitor<
      * @param assignment the assignment
      * @return the assignment
      */
-    default @NotNull O visitFinalAssignment(@NotNull Assignment assignment) {
+    default @NotNull O visitFinalAssignment(final @NotNull Assignment assignment) {
         O o = assignment.accept(this);
         VariableContainer<C, O, P, ?> variableName = assignment.getName().accept(this).check(VariableContainer.class);
         try {
