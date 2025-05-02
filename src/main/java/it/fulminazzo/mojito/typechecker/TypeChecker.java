@@ -329,6 +329,14 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
     }
 
     @Override
+    public @NotNull Type visitTernaryOperator(@NotNull Node expression, @NotNull Node first, @NotNull Node second) {
+        expression.accept(this).check(PrimitiveType.BOOLEAN, ObjectType.BOOLEAN);
+        Type firstType = first.accept(this);
+        Type secondType = second.accept(this);
+        return firstType.is(secondType) ? firstType : ObjectType.OBJECT;
+    }
+
+    @Override
     public @NotNull Type visitNullLiteral() {
         return Types.NULL_TYPE;
     }
