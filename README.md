@@ -115,6 +115,9 @@ will return the parsed variable `name` (`fulminazzo`) in the _returnedValue_
 
 - [ ] ternary operator (`a ? b : c`);
 - [ ] diamond operator (generics);
+- [ ] advanced wildcard handling (`super` and `extends`);
+- [ ] `final` keyword;
+- [ ] `instanceof` keyword (also Java 17 pattern matching);
 - [ ] lambda expressions.
 
 ## Grammar
