@@ -114,6 +114,10 @@ bo = bo || false;
 bo = i < d || i <= d || f >= d || f > d;
 bo = (((i < d) || (i <= d)) || ((f >= d) || (f > d)));
 
+// Ternary operations
+d = true ? 1.0 : 2.0;
+d = false ? 1.0 : 2.0;
+
 // Re-Assignment operations
 i++;
 i--;
