@@ -12,10 +12,6 @@ import java.util.regex.Pattern;
  * A converter from raw {@link InputStream} to {@link TokenType}.
  */
 public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
-    private static final TokenType[] IGNORED_TYPES = new TokenType[]{
-            TokenType.EOF, TokenType.NONE
-    };
-
     private final @NotNull TokenizerInputStream input;
     private @NotNull TokenType lastToken = TokenType.EOF;
     private @NotNull String lastRead = "";
@@ -214,9 +210,7 @@ public class Tokenizer implements Iterable<TokenType>, Iterator<TokenType> {
 
     private boolean isTokenType(final @NotNull String read) {
         try {
-            TokenType tokenType = TokenType.fromString(read);
-            for (TokenType type : IGNORED_TYPES)
-                if (type == tokenType) return false;
+            TokenType.fromString(read);
             return true;
         } catch (IllegalArgumentException e) {
             return false;
