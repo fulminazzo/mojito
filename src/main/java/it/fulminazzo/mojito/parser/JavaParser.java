@@ -906,8 +906,11 @@ public class JavaParser extends Parser {
 
             buffer.add(tokenizer.lastRead());
             if (lastToken() == GREATER_THAN) {
-                //TODO: Generics, use literals
-                throw new IllegalArgumentException("To be implemented");
+                try {
+                    return new GenericsLiteral(l.getLiteral(), literals);
+                } catch (NodeException ignored) {
+                    // Unreachable code
+                }
             }
         }
 
