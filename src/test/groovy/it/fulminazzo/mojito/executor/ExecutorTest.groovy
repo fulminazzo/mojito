@@ -19,7 +19,9 @@ import it.fulminazzo.mojito.parser.node.container.CodeBlock
 import it.fulminazzo.mojito.parser.node.container.JavaProgram
 import it.fulminazzo.mojito.parser.node.literals.ArrayLiteral
 import it.fulminazzo.mojito.parser.node.literals.EmptyLiteral
+import it.fulminazzo.mojito.parser.node.literals.GenericsLiteral
 import it.fulminazzo.mojito.parser.node.literals.Literal
+import it.fulminazzo.mojito.parser.node.literals.NullLiteral
 import it.fulminazzo.mojito.parser.node.literals.ThisLiteral
 import it.fulminazzo.mojito.parser.node.operators.binary.*
 import it.fulminazzo.mojito.parser.node.operators.unary.Decrement
@@ -465,6 +467,19 @@ class ExecutorTest extends Specification {
         then:
         def e = thrown(ExecutorException)
         e.message == expected
+    }
+
+    def 'test visit assignment of generic type'() {
+        given:
+        def literalType = new GenericsLiteral('List', [Literal.of('String')])
+        def literalName = Literal.of('list')
+
+        when:
+        this.executor.visitAssignment(literalType, literalName, new NullLiteral())
+        def value = this.environment.lookup('list')
+
+        then:
+        value == Values.NULL_VALUE
     }
 
     def 'test visit assignment: #valueClass #name = #val should return value #expected'() {
