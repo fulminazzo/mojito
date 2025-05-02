@@ -374,6 +374,12 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
     }
 
     @Override
+    public @NotNull Type visitGenericsLiteral(@NotNull List<Literal> types, @NotNull String value) {
+        //TODO: complete several checks
+        return visitLiteralImpl(value);
+    }
+
+    @Override
     public @NotNull LiteralVariableContainer<ClassType, Type, ParameterTypes> newLiteralObject(@NotNull String value) {
         return new TypeLiteralVariableContainer(this.environment, value);
     }
