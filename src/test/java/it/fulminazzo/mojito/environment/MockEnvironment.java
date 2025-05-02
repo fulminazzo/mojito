@@ -9,9 +9,11 @@ import java.util.Optional;
 
 public class MockEnvironment<T> extends Environment<T> {
     private final List<ScopeType> enteredScopes;
+    private boolean constants;
 
     public MockEnvironment() {
         this.enteredScopes = new LinkedList<>();
+        this.constants = true;
     }
 
     @Override
@@ -33,6 +35,12 @@ public class MockEnvironment<T> extends Environment<T> {
         return super.lookupInfo(NamedEntity.of(name));
     }
 
+    @Override
+    public void markConstant(@NotNull NamedEntity name) throws ScopeException {
+        if (this.constants) super.markConstant(name);
+        else throw ScopeException.noSuchVariable(name);
+    }
+
     public void declare(@NotNull Info info, @NotNull String name, @NotNull T value) throws ScopeException {
         super.declare(info, NamedEntity.of(name), value);
     }
@@ -47,6 +55,10 @@ public class MockEnvironment<T> extends Environment<T> {
 
     public boolean isDeclared(@NotNull String name) {
         return super.isDeclared(NamedEntity.of(name));
+    }
+
+    public void disableConstants() {
+        this.constants = false;
     }
 
 }

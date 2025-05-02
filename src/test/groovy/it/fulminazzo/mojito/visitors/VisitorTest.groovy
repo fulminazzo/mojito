@@ -195,6 +195,22 @@ class VisitorTest extends Specification {
         this.environment.lookup(name) == Element.of(1)
     }
 
+    def 'test visitFinalAssignment exception for JaCoCo'() {
+        given:
+        def type = Literal.of(Integer.simpleName)
+        def name = 'i'
+        def value = new NumberValueLiteral('1')
+
+        and:
+        this.environment.disableConstants()
+
+        when:
+        this.visitor.visitFinalAssignment(new Assignment(type, Literal.of(name), value))
+
+        then:
+        notThrown(ScopeException)
+    }
+
     def 'test visitAssignment'() {
         given:
         def type = Literal.of(Integer.simpleName)
