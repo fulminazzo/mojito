@@ -2,6 +2,7 @@ package it.fulminazzo.mojito.environment;
 
 import it.fulminazzo.mojito.environment.scopetypes.ScopeType;
 import it.fulminazzo.mojito.wrappers.BiObjectWrapper;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -69,6 +70,8 @@ class Scope<T> implements Scoped<T> {
      * Represents the information of an object.
      */
     static class ObjectData extends BiObjectWrapper<Info, String> {
+        @Getter
+        private boolean constant;
 
         /**
          * Instantiates a new Object data.
@@ -96,6 +99,14 @@ class Scope<T> implements Scoped<T> {
          */
         public @NotNull String getName() {
             return this.second;
+        }
+
+        /**
+         * Marks the current object as constant.
+         * When constant, it cannot be changed.
+         */
+        public void markConstant() {
+            this.constant = true;
         }
 
     }
