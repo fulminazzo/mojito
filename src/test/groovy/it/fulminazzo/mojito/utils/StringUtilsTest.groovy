@@ -9,7 +9,7 @@ class StringUtilsTest extends Specification {
         def string = 'Hello(Friend, World, Mom), how, (are you, you doing)'
 
         when:
-        def split = StringUtils.quoteSplitter(string, ',', '(', ')')
+        def split = StringUtils.quoteSplitter(string, ', *', '\\(', '\\)')
 
         then:
         split.length == 3

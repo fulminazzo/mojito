@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A collection of utilities to work with strings.
@@ -29,6 +31,7 @@ public final class StringUtils {
                                                   final @NotNull String splitter,
                                                   final @NotNull String startDelimiter,
                                                   final @NotNull String endDelimiter) {
+        Pattern pattern = Pattern.compile("(.*)" + splitter + "$");
         List<String> result = new ArrayList<>();
 
         String current = "";
@@ -36,12 +39,14 @@ public final class StringUtils {
 
         for (char c : toSplit.toCharArray()) {
             current += c;
-            if (current.endsWith(startDelimiter)) delimiters++;
-            else if (current.endsWith(endDelimiter) && delimiters > 0) delimiters--;
-            else if (current.endsWith(splitter) && delimiters == 0) {
-                current = current.substring(0, current.length() - splitter.length());
-                result.add(current);
-                current = "";
+            if (current.matches(".*" + startDelimiter + "$")) delimiters++;
+            else if (current.matches(".*" + endDelimiter + "$") && delimiters > 0) delimiters--;
+            else if (delimiters == 0) {
+                Matcher matcher = pattern.matcher(current);
+                if (matcher.matches()) {
+                    result.add(matcher.group(1));
+                    current = "";
+                }
             }
         }
         result.add(current);
