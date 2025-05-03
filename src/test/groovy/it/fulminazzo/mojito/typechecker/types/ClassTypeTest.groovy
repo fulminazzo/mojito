@@ -28,18 +28,26 @@ class ClassTypeTest extends Specification {
 
         then:
         classType == new GenericsObjectClassType(
-                ClassType.of(className),
+                ObjectType.of(className),
                 [
                         new GenericsObjectClassType(
-                                ClassType.of('Integer'),
-                                [new GenericsObjectClassType(
-                                        ClassType.of('List'),
-                                        [ClassType.of('String')]
-                                )]
+                                ObjectType.of('Map'),
+                                [
+                                        ObjectClassType.INTEGER,
+                                        new GenericsObjectClassType(
+                                                ObjectType.of('List'),
+                                                [
+                                                        ObjectClassType.STRING
+                                                ]
+                                        )
+                                ]
                         ),
                         new GenericsObjectClassType(
-                                ClassType.of('Tree'),
-                                [ClassType.of('Number')]
+                                ObjectType.of('TreeMap'),
+                                [
+                                        ObjectClassType.of('Number'),
+                                        ObjectClassType.DOUBLE
+                                ]
                         )
                 ]
         )
