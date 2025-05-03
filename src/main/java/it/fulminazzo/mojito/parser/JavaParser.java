@@ -566,7 +566,7 @@ public class JavaParser extends Parser {
     }
 
     /**
-     * TERNARY_OP := AND ? EXPR : EXPR
+     * TERNARY_OP := AND ( \? EXPR : EXPR )?
      *
      * @return the node
      */
