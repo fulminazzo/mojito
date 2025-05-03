@@ -117,8 +117,9 @@ will return the parsed variable `name` (`fulminazzo`) in the _returnedValue_
 - [ ] diamond operator (generics);
 - [ ] advanced wildcard handling (`super` and `extends`);
 - [x] `final` keyword;
-- [ ] `instanceof` keyword (also Java 17 pattern matching);
-- [ ] lambda expressions.
+- [ ] `instanceof` keyword;
+- [ ] lambda expressions;
+- [ ] Java 17 features (section to be expanded).
 
 ## Grammar
 
