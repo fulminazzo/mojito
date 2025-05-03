@@ -109,14 +109,14 @@ class GenericsObjectClassTypeTest extends Specification {
         then:
         def e = thrown(TypeCheckerException)
         e.message == TypeCheckerException.invalidType(
-                ClassType.of(bound), parameter
+                bound, parameter
         ).message
 
         where:
         parameter                | bound
-        ClassType.of(String)     | Number
-        ClassType.of(Number)     | Comparator
-        ClassType.of(Comparator) | Number
+        ClassType.of(String)     | ClassType.of(Number)
+        ClassType.of(Number)     | new GenericsObjectClassType(ObjectType.of(Comparator), [ObjectClassType.STRING])
+        ClassType.of(Comparator) | ClassType.of(Number)
     }
 
     static class TestClass<F extends Number & Comparator<String>> {
