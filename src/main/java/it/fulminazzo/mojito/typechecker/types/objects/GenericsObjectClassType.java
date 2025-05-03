@@ -1,5 +1,6 @@
 package it.fulminazzo.mojito.typechecker.types.objects;
 
+import it.fulminazzo.fulmicollection.utils.ReflectionUtils;
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.ParameterTypes;
 import it.fulminazzo.mojito.typechecker.types.Type;
@@ -14,20 +15,42 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.TypeVariable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a {@link ObjectClassType} with a class different from the default types.
  * It supports generic typing.
  */
 class GenericsObjectClassType extends CustomObjectClassType implements ClassType {
+    private final Map<String, ClassType> genericTypes;
 
     /**
      * Instantiates a new Generics object class type.
      *
      * @param internalType the internal type
+     * @param genericTypes the generic types
      */
-    public GenericsObjectClassType(@NotNull ObjectType internalType) {
+    public GenericsObjectClassType(final @NotNull ObjectType internalType,
+                                   final @NotNull List<ClassType> genericTypes) {
         super(internalType);
+        this.genericTypes = new HashMap<>();
+        Class<?> clazz = toJavaClass();
+        TypeVariable<? extends Class<?>>[] typeParameters = clazz.getTypeParameters();
+
+        if (typeParameters.length != genericTypes.size())
+            throw TypeException.invalidGenericTypeSize(this, typeParameters.length, genericTypes.size());
+
+        for (int i = 0; i < typeParameters.length; i++) {
+            TypeVariable<? extends Class<?>> expectedParameter = typeParameters[i];
+            ClassType actualType = genericTypes.get(i);
+            java.lang.reflect.Type[] bounds = expectedParameter.getBounds();
+            for (java.lang.reflect.Type bound : bounds)
+                actualType.checkExtends(ClassType.of(ReflectionUtils.getClass(bound.getTypeName())));
+            this.genericTypes.put(expectedParameter.getName(), actualType);
+        }
     }
 
     @Override
