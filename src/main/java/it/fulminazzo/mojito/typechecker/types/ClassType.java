@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Represents the class of a {@link Type}.
@@ -56,7 +58,9 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
 
     /**
      * Gets a new {@link ClassType} from the given class name.
-     * Tries first to obtain from {@link PrimitiveClassType}.
+     * First checks if the given name comprehends a generic notation (%name%&lt;%parameters%&gt;).
+     * If it does, a {@link GenericObjectClassType} is returned.
+     * Then, it tries to obtain from {@link PrimitiveClassType}.
      * If it fails, uses the fields of {@link ObjectClassType}.
      * Otherwise, a new type is created.
      *
@@ -65,6 +69,11 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
      * @throws TypeException the exception thrown in case the class is not found
      */
     static @NotNull ClassType of(final @NotNull String className) throws TypeException {
+        String genericClassPattern = "([^<]+)<(.*)>";
+        Matcher matcher = Pattern.compile(genericClassPattern).matcher(className);
+        if (matcher.matches()) {
+            throw new IllegalArgumentException("Not implemented yet");
+        }
         try {
             String lowerCase = className.toLowerCase();
             if (lowerCase.equals(className)) return PrimitiveClassType.valueOf(className.toUpperCase());
