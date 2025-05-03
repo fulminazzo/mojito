@@ -1,6 +1,5 @@
 package it.fulminazzo.mojito.typechecker.types.objects;
 
-import it.fulminazzo.fulmicollection.utils.ReflectionUtils;
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.ParameterTypes;
@@ -49,7 +48,11 @@ class GenericsObjectClassType extends CustomObjectClassType implements ClassType
             ClassType actualType = genericTypes.get(i);
             java.lang.reflect.Type[] bounds = expectedParameter.getBounds();
             for (java.lang.reflect.Type bound : bounds)
-                actualType.checkExtends(ClassType.of(ReflectionUtils.getClass(bound.getTypeName())));
+                try {
+                    actualType.checkExtends(ClassType.of(bound.getTypeName()));
+                } catch (TypeException e) {
+                    throw TypeCheckerException.of(e);
+                }
             this.genericTypes.put(expectedParameter.getName(), actualType);
         }
     }
