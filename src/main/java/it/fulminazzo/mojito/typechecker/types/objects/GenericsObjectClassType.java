@@ -19,6 +19,7 @@ import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Represents a {@link ObjectClassType} with a class different from the default types.
@@ -65,12 +66,6 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
 
     @Override
     public boolean compatibleWith(@NotNull Type type) {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public @NotNull String toString() {
         //TODO:
         throw new IllegalStateException("Not implemented yet");
     }
@@ -163,6 +158,16 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     public @NotNull Type invokeMethod(@NotNull String methodName, @NotNull ParameterTypes parameters) throws VisitorObjectException {
         //TODO:
         throw new IllegalStateException("Not implemented yet");
+    }
+
+    @Override
+    public @NotNull String toString() {
+        String[] output = super.toString().split("\\.");
+        return output[0] + "<" +
+                this.genericTypes.values().stream()
+                        .map(ClassType::toString)
+                        .collect(Collectors.joining(", ")) +
+                ">." + output[1];
     }
 
 }
