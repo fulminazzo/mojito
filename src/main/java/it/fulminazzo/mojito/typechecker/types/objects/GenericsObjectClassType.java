@@ -72,6 +72,7 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
 
     @Override
     public void checkExtends(@NotNull ClassType classType) {
+        if (true) return;
         //TODO:
         throw new IllegalStateException("Not implemented yet");
     }
@@ -158,6 +159,15 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     public @NotNull Type invokeMethod(@NotNull String methodName, @NotNull ParameterTypes parameters) throws VisitorObjectException {
         //TODO:
         throw new IllegalStateException("Not implemented yet");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof GenericsObjectClassType) {
+            GenericsObjectClassType other = (GenericsObjectClassType) o;
+            return this.object.equals(other.object) && this.genericTypes.equals(other.genericTypes);
+        }
+        return super.equals(o);
     }
 
     @Override
