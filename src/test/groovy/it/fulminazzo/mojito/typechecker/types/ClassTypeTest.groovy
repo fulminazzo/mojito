@@ -2,6 +2,8 @@ package it.fulminazzo.mojito.typechecker.types
 
 import it.fulminazzo.fulmicollection.objects.Refl
 import it.fulminazzo.mojito.TestClass
+import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassType
+import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassTypeTest
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject
@@ -15,6 +17,33 @@ class ClassTypeTest extends Specification {
 
     void setup() {
         this.classType = ClassType.of(TestClass)
+    }
+
+    def 'test that generic class is correctly recognized'() {
+        given:
+        def className = 'Map'
+        def parameterTypes = 'Map<Integer, List<String>>, Tree<Number>'
+
+        when:
+        def classType = ClassType.of("${className}<${parameterTypes}>")
+
+        then:
+        classType == new GenericsObjectClassType(
+                ClassType.of(className),
+                [
+                        new GenericsObjectClassType(
+                                ClassType.of('Integer'),
+                                [new GenericsObjectClassType(
+                                        ClassType.of('List'),
+                                        [ClassType.of('String')]
+                                )]
+                        ),
+                        new GenericsObjectClassType(
+                                ClassType.of('Tree'),
+                                [ClassType.of('Number')]
+                        )
+                ]
+        )
     }
 
     def 'test method #toClass should always return a wrapper for java.lang.Class'() {
