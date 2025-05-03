@@ -37,13 +37,21 @@ public final class StringUtils {
         String current = "";
         int delimiters = 0;
 
-        for (char c : toSplit.toCharArray()) {
-            current += c;
+        char[] chars = toSplit.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            current += chars[i];
             if (current.matches(".*" + startDelimiter + "$")) delimiters++;
             else if (current.matches(".*" + endDelimiter + "$") && delimiters > 0) delimiters--;
             else if (delimiters == 0) {
                 Matcher matcher = pattern.matcher(current);
                 if (matcher.matches()) {
+                    while (matcher.matches()) {
+                        current += chars[++i];
+                        matcher = pattern.matcher(current);
+                    }
+                    i--;
+                    matcher = pattern.matcher(current.substring(0, current.length() - 1));
+                    matcher.matches();
                     result.add(matcher.group(1));
                     current = "";
                 }

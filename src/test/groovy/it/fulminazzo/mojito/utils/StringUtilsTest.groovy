@@ -14,8 +14,8 @@ class StringUtilsTest extends Specification {
         then:
         split.length == 3
         split[0] == 'Hello(Friend, World, Mom)'
-        split[1] == ' how'
-        split[2] == ' (are you, you doing)'
+        split[1] == 'how'
+        split[2] == '(are you, you doing)'
     }
 
 }
