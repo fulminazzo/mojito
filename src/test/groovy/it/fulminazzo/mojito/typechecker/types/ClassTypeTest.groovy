@@ -3,7 +3,6 @@ package it.fulminazzo.mojito.typechecker.types
 import it.fulminazzo.fulmicollection.objects.Refl
 import it.fulminazzo.mojito.TestClass
 import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassType
-import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassTypeTest
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject
@@ -22,7 +21,7 @@ class ClassTypeTest extends Specification {
     def 'test that generic class is correctly recognized'() {
         given:
         def className = 'Map'
-        def parameterTypes = 'Map<Integer, List<String>>, Tree<Number>'
+        def parameterTypes = 'Map<Integer, List<String>>, TreeMap<Number, Double>'
 
         when:
         def classType = ClassType.of("${className}<${parameterTypes}>")
