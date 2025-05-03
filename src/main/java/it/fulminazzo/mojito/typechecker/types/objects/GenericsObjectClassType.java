@@ -42,7 +42,7 @@ class GenericsObjectClassType extends CustomObjectClassType implements ClassType
         TypeVariable<? extends Class<?>>[] typeParameters = clazz.getTypeParameters();
 
         if (typeParameters.length != genericTypes.size())
-            throw TypeCheckerException.invalidGenericTypeSize(this, typeParameters.length, genericTypes.size());
+            throw TypeCheckerException.invalidGenericTypeSize(ClassType.of(clazz), typeParameters.length, genericTypes.size());
 
         for (int i = 0; i < typeParameters.length; i++) {
             TypeVariable<? extends Class<?>> expectedParameter = typeParameters[i];
