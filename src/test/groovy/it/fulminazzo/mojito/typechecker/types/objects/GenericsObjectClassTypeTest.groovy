@@ -41,4 +41,28 @@ class GenericsObjectClassTypeTest extends Specification {
         parameter << [0, 2, 3]
     }
 
+    def 'test that exception is thrown when parameter with invalid bounds is passed'() {
+        given:
+        def type = ObjectType.of(TestClass)
+
+        when:
+        new GenericsObjectClassType(type, [parameter])
+
+        then:
+        def e = thrown(TypeCheckerException)
+        e.message == TypeCheckerException.invalidType(
+                ClassType.of(bound), parameter
+        ).message
+
+        where:
+        parameter                | bound
+        ClassType.of(String)     | Number
+        ClassType.of(Number)     | Comparator
+        ClassType.of(Comparator) | Number
+    }
+
+    static class TestClass<F extends Number & Comparator<String>> {
+
+    }
+
 }
