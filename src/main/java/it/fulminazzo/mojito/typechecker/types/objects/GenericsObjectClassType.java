@@ -24,7 +24,7 @@ import java.util.Map;
  * Represents a {@link ObjectClassType} with a class different from the default types.
  * It supports generic typing.
  */
-class GenericsObjectClassType extends CustomObjectClassType implements ClassType {
+public class GenericsObjectClassType extends CustomObjectClassType implements ClassType {
     private final Map<String, ClassType> genericTypes;
 
     /**
