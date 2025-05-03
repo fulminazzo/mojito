@@ -150,22 +150,6 @@ public class TypeException extends VisitorObjectException {
     }
 
     /**
-     * Generates a {@link TypeException} with message:
-     * <i>Invalid generic parameters passed for type %type%: it requires %expectedSize% types, but %actualSize% were given.</i>
-     *
-     * @param type    the type
-     * @param expectedSize the expected size
-     * @param actualSize   the actual size
-     * @return type exception
-     */
-    public static @NotNull TypeException invalidGenericTypeSize(final @NotNull ClassType type,
-                                                                final int expectedSize,
-                                                                final int actualSize) {
-        return new TypeException("Invalid generic parameters passed for type %s: it requires %s types, but %s were given.",
-                type, expectedSize, actualSize);
-    }
-
-    /**
      * Gets the visibility modifier from the given accessible object in a string format.
      *
      * @param accessibleObject the accessible object

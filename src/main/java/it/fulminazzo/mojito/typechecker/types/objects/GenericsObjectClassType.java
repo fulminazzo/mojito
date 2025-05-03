@@ -1,6 +1,7 @@
 package it.fulminazzo.mojito.typechecker.types.objects;
 
 import it.fulminazzo.fulmicollection.utils.ReflectionUtils;
+import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.ParameterTypes;
 import it.fulminazzo.mojito.typechecker.types.Type;
@@ -41,7 +42,7 @@ class GenericsObjectClassType extends CustomObjectClassType implements ClassType
         TypeVariable<? extends Class<?>>[] typeParameters = clazz.getTypeParameters();
 
         if (typeParameters.length != genericTypes.size())
-            throw TypeException.invalidGenericTypeSize(this, typeParameters.length, genericTypes.size());
+            throw TypeCheckerException.invalidGenericTypeSize(this, typeParameters.length, genericTypes.size());
 
         for (int i = 0; i < typeParameters.length; i++) {
             TypeVariable<? extends Class<?>> expectedParameter = typeParameters[i];
