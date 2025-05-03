@@ -1,12 +1,17 @@
 package it.fulminazzo.mojito.typechecker.types;
 
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
+import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
+import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
+import it.fulminazzo.mojito.utils.StringUtils;
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,7 +64,7 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
     /**
      * Gets a new {@link ClassType} from the given class name.
      * First checks if the given name comprehends a generic notation (%name%&lt;%parameters%&gt;).
-     * If it does, a {@link GenericObjectClassType} is returned.
+     * If it does, a {@link GenericsObjectClassType} is returned.
      * Then, it tries to obtain from {@link PrimitiveClassType}.
      * If it fails, uses the fields of {@link ObjectClassType}.
      * Otherwise, a new type is created.
@@ -71,15 +76,31 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
     static @NotNull ClassType of(final @NotNull String className) throws TypeException {
         String genericClassPattern = "([^<]+)<(.*)>";
         Matcher matcher = Pattern.compile(genericClassPattern).matcher(className);
-        if (matcher.matches()) {
-            throw new IllegalArgumentException("Not implemented yet");
-        }
+        if (matcher.matches()) return of(matcher.group(1), matcher.group(2));
         try {
             String lowerCase = className.toLowerCase();
             if (lowerCase.equals(className)) return PrimitiveClassType.valueOf(className.toUpperCase());
         } catch (IllegalArgumentException ignored) {
         }
         return ObjectClassType.of(className);
+    }
+
+    /**
+     * Gets a new {@link GenericsObjectClassType} from the given class name.
+     * It uses the given <b>genericTypes</b> as list of parameters, which are
+     * then each passed to {@link #of(String)}.
+     *
+     * @param className    the class name
+     * @param genericTypes the generic types
+     * @return class type
+     * @throws TypeException the exception thrown in case a class is not found
+     */
+    static @NotNull ClassType of(final @NotNull String className,
+                                 final @NotNull String genericTypes) throws TypeException {
+        String[] types = StringUtils.quoteSplitter(genericTypes, ", *", "<", ">");
+        List<ClassType> classTypes = new LinkedList<>();
+        for (String type : types) classTypes.add(of(type));
+        return new GenericsObjectClassType(ObjectType.of(className), classTypes);
     }
 
     /**
