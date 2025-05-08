@@ -83,7 +83,7 @@ class TypesTest extends Specification {
     def 'test SingletonType hashCode'() {
         given:
         def code = this.type.hashCode()
-        int expected = Types.SingletonType.hashCode() ^ 'TEST_TYPE'.hashCode()
+        int expected = Objects.hash(Types.SingletonType, 'TEST_TYPE')
 
         expect:
         code == expected

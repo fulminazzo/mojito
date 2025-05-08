@@ -63,7 +63,7 @@ class ValuesTest extends Specification {
     def 'test SingletonValue hashCode'() {
         given:
         def code = this.value.hashCode()
-        int expected = Values.SingletonValue.hashCode() ^ 'TEST_VALUE'.hashCode()
+        int expected = Objects.hash(Values.SingletonValue, 'TEST_VALUE')
 
         expect:
         code == expected

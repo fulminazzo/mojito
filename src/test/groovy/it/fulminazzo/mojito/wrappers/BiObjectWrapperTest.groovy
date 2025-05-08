@@ -15,7 +15,7 @@ class BiObjectWrapperTest extends Specification {
 
     def 'test hashCode'() {
         given:
-        int code = MockWrapper.hashCode() ^ this.name.hashCode() ^ this.age.hashCode()
+        int code = Objects.hash(MockWrapper, this.name, this.age)
 
         expect:
         this.wrapper.hashCode() == code
