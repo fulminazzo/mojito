@@ -51,7 +51,7 @@ public class ObjectType extends ObjectWrapper<Class<?>> implements Type {
      *
      * @return the inner class
      */
-    Class<?> getInnerClass() {
+    public Class<?> getInnerClass() {
         return this.object;
     }
 
