@@ -83,6 +83,11 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     }
 
     @Override
+    public @NotNull Type toType() {
+        return new GenericsObjectType(this.object.getClass(), this.genericTypes.values());
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(getClass().hashCode(), this.object, this.genericTypes);
     }
