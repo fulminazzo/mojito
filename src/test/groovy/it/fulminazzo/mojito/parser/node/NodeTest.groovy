@@ -9,7 +9,7 @@ class NodeTest extends Specification {
         def node = new MockNode('MockNode', 1)
 
         expect:
-        node.hashCode() == 'MockNode'.hashCode() + 1.hashCode()
+        node.hashCode() == Objects.hash('MockNode', 1)
     }
 
     def 'test equals'() {
