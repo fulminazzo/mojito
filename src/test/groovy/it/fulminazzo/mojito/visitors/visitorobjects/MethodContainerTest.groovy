@@ -3,6 +3,8 @@ package it.fulminazzo.mojito.visitors.visitorobjects
 import it.fulminazzo.mojito.handler.elements.ClassElement
 import spock.lang.Specification
 
+import java.lang.reflect.Array
+
 class MethodContainerTest extends Specification {
     private static final ClassElement a = ClassElement.of(Double)
     private static final ClassElement b = ClassElement.of(Float)
@@ -34,6 +36,24 @@ class MethodContainerTest extends Specification {
 
         expect:
         container.returnType == a.toJavaClass()
+    }
+
+    def 'test that parameters of method parameters(#parameters) are #expected'() {
+        given:
+        def container = MethodContainer.of(
+                GenericClass.getMethod('parameters', parameters.toArray(new Class[0])),
+                this.type
+        )
+
+        expect:
+        container.parameterTypes.toList() == expected
+
+        where:
+        parameters                  | expected
+        [Object]                    | [b.toJavaClass()]
+        [Object, String]            | [b.toJavaClass(), String]
+        [Integer, Object, String]   | [Integer, b.toJavaClass(), String]
+        [Integer, Object, Object[]] | [Integer, b.toJavaClass(), Array.newInstance(c.toJavaClass(), 0).getClass()]
     }
 
     @SuppressWarnings('unused')
