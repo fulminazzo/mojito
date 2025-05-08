@@ -1,11 +1,51 @@
 package it.fulminazzo.mojito.typechecker.types.objects
 
 import it.fulminazzo.mojito.typechecker.types.ClassType
+import it.fulminazzo.mojito.typechecker.types.Types
 import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectType
 import spock.lang.Specification
 
 class GenericsObjectClassTypeTest extends Specification {
+
+    def 'test that class type is compatible with #type'() {
+        given:
+        def classType = new GenericsObjectClassType(ObjectType.of(List),
+                [ClassType.of(String)]
+        )
+
+        expect:
+        classType.compatibleWith(type)
+
+        where:
+        type << [
+                Types.NULL_TYPE,
+                ObjectType.of(List, [ClassType.of(String)]),
+                ObjectType.of(List)
+        ]
+    }
+
+    def 'test that class type is not compatible with #type'() {
+        given:
+        def classType = new GenericsObjectClassType(ObjectType.of(List),
+                [ClassType.of(String)]
+        )
+
+        expect:
+        !classType.compatibleWith(type)
+
+        where:
+        type << [
+                ObjectType.of(List, [ClassType.of(Integer)]),
+                ObjectType.of(Set, [ClassType.of(String)]),
+                {
+                    GenericsObjectType type = ObjectType.of(List, [ClassType.of(Integer)])
+                    type.genericTypes.remove('E')
+                    type.genericTypes.put('D', ClassType.of(Integer))
+                    return type
+                }
+        ]
+    }
 
     def 'test equals method'() {
         given:
