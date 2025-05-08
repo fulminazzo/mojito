@@ -44,6 +44,19 @@ public interface MethodContainer {
      */
     boolean isVarArgs();
 
+    /**
+     * Gets an instance of a {@link MethodContainer} from the given method.
+     *
+     * @param method the method
+     * @return the method container
+     */
+    static @NotNull MethodContainer of(final @NotNull Method method) {
+        return new MethodContainerImpl(method);
+    }
+
+    /**
+     * An implementation of {@link MethodContainer}.
+     */
     final class MethodContainerImpl implements MethodContainer {
         private final @NotNull Method actualMethod;
 
