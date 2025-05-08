@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * Holds critical information about a method.
@@ -125,6 +127,7 @@ public interface MethodContainer {
      */
     @Getter
     class GenericsMethodContainerImpl<C extends ClassVisitorObject<C, ?, ?>> extends MethodContainerImpl {
+        private final @NotNull Class<?> returnType;
 
         /**
          * Instantiates a new Generics method container.
@@ -135,12 +138,11 @@ public interface MethodContainer {
         public GenericsMethodContainerImpl(@NotNull Method method,
                                            @NotNull GenericsContainer<C> genericsContainer) {
             super(method);
-        }
+            Map<String, C> types = genericsContainer.getGenericTypes();
 
-        @Override
-        public @NotNull Class<?> getReturnType() {
-            //TODO:
-            throw new IllegalStateException();
+            Type returnType = method.getGenericReturnType();
+            if (returnType instanceof Class) this.returnType = (Class<?>) returnType;
+            else this.returnType = types.get(returnType.getTypeName()).toJavaClass();
         }
 
         @Override
