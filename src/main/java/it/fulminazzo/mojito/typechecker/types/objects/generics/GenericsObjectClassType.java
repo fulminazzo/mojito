@@ -1,6 +1,5 @@
 package it.fulminazzo.mojito.typechecker.types.objects.generics;
 
-import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.ParameterTypes;
 import it.fulminazzo.mojito.typechecker.types.Type;
@@ -18,9 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -38,27 +35,9 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
      * @param genericTypes the generic types
      */
     public GenericsObjectClassType(final @NotNull ObjectType internalType,
-                                   final @NotNull List<ClassType> genericTypes) {
+                                   final @NotNull Collection<ClassType> genericTypes) {
         super(internalType);
-        this.genericTypes = new HashMap<>();
-        Class<?> clazz = toJavaClass();
-        TypeVariable<? extends Class<?>>[] typeParameters = clazz.getTypeParameters();
-
-        if (typeParameters.length != genericTypes.size())
-            throw TypeCheckerException.invalidGenericTypeSize(ClassType.of(clazz), typeParameters.length, genericTypes.size());
-
-        for (int i = 0; i < typeParameters.length; i++) {
-            TypeVariable<? extends Class<?>> expectedParameter = typeParameters[i];
-            ClassType actualType = genericTypes.get(i);
-            java.lang.reflect.Type[] bounds = expectedParameter.getBounds();
-            for (java.lang.reflect.Type bound : bounds)
-                try {
-                    actualType.checkExtends(ClassType.of(bound.getTypeName()));
-                } catch (TypeException e) {
-                    throw TypeCheckerException.of(e);
-                }
-            this.genericTypes.put(expectedParameter.getName(), actualType);
-        }
+        this.genericTypes = GenericsUtils.genericTypesToMap(toJavaClass(), genericTypes);
     }
 
     @Override
