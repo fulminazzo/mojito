@@ -1,11 +1,30 @@
 package it.fulminazzo.mojito.typechecker.types.objects.generics
 
 import it.fulminazzo.mojito.typechecker.types.ClassType
+import it.fulminazzo.mojito.typechecker.types.ParameterTypes
+import it.fulminazzo.mojito.typechecker.types.PrimitiveType
+import it.fulminazzo.mojito.typechecker.types.Types
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject
 import spock.lang.Specification
 
 class GenericsObjectTypeTest extends Specification {
+
+    def 'test that calling method #method(#parameters) returns #expected'() {
+        given:
+        def type = new GenericsObjectType(List, [ClassType.of(String)])
+
+        when:
+        def returned = type.invokeMethod(method, new ParameterTypes(parameters))
+
+        then:
+        returned == expected
+
+        where:
+        method | parameters          | expected
+        'add'  | [ObjectType.STRING] | ObjectType.BOOLEAN
+        'get'  | [PrimitiveType.INT] | ObjectType.STRING
+    }
 
     def 'test that getField returns correct generic type'() {
         given:
