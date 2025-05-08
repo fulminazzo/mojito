@@ -1,5 +1,6 @@
 package it.fulminazzo.mojito.visitors.visitorobjects;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
@@ -45,6 +46,13 @@ public interface MethodContainer {
     boolean isVarArgs();
 
     /**
+     * Gets the actual method contained in this method.
+     *
+     * @return the method
+     */
+    Method getActualMethod();
+
+    /**
      * Gets an instance of a {@link MethodContainer} from the given method.
      *
      * @param method the method
@@ -57,6 +65,7 @@ public interface MethodContainer {
     /**
      * An implementation of {@link MethodContainer}.
      */
+    @Getter
     final class MethodContainerImpl implements MethodContainer {
         private final @NotNull Method actualMethod;
 
