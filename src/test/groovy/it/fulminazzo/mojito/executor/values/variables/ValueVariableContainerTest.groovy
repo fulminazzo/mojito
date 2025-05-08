@@ -81,7 +81,7 @@ class ValueVariableContainerTest extends Specification {
         def container = generateContainer(variable)
 
         and:
-        def method = new MethodContainer(TestClass.getMethod('publicMethod'))
+        def method = MethodContainer.of(TestClass.getMethod('publicMethod'))
         def values = new ParameterValues([])
 
         when:
