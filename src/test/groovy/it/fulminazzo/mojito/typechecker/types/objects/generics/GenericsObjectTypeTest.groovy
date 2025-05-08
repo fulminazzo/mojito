@@ -3,6 +3,7 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics
 import it.fulminazzo.mojito.typechecker.types.ClassType
 import it.fulminazzo.mojito.typechecker.types.ParameterTypes
 import it.fulminazzo.mojito.typechecker.types.PrimitiveType
+import it.fulminazzo.mojito.typechecker.types.TypeException
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject
 import spock.lang.Specification
@@ -23,6 +24,25 @@ class GenericsObjectTypeTest extends Specification {
         method | parameters          | expected
         'add'  | [ObjectType.STRING] | PrimitiveType.BOOLEAN
         'get'  | [PrimitiveType.INT] | ObjectType.STRING
+    }
+
+    def 'test that calling parameterized method with wrong parameters throws'() {
+        given:
+        def type = new GenericsObjectType(List, [ClassType.of(String)])
+
+        and:
+        def parameterTypes = new ParameterTypes([ObjectType.INTEGER])
+
+        when:
+        type.invokeMethod('add', parameterTypes)
+
+        then:
+        def e = thrown(TypeException)
+        e.message == TypeException.typesMismatch(
+                type.toClass(),
+                List.getMethod('add', Object),
+                parameterTypes
+        ).message
     }
 
     def 'test that getField returns correct generic type'() {
