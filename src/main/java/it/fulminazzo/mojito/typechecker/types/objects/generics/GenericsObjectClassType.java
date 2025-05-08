@@ -7,13 +7,10 @@ import it.fulminazzo.mojito.typechecker.types.TypeException;
 import it.fulminazzo.mojito.typechecker.types.objects.CustomObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
-import it.fulminazzo.mojito.typechecker.types.variables.TypeFieldContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObjectException;
-import it.fulminazzo.mojito.visitors.visitorobjects.variables.FieldContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
@@ -71,12 +68,6 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     public @NotNull Type newObject(@NotNull Constructor<?> constructor, @NotNull ParameterTypes parameterTypes) throws TypeException {
         //TODO:
         return super.newObject(constructor, parameterTypes);
-    }
-
-    @Override
-    public @NotNull FieldContainer<ClassType, Type, ParameterTypes> getField(@NotNull String fieldName) throws VisitorObjectException {
-        //TODO:
-        return super.getField(fieldName);
     }
 
     @Override
