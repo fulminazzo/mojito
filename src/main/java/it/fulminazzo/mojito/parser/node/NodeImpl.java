@@ -35,11 +35,10 @@ public abstract class NodeImpl implements Node {
     @Override
     public int hashCode() {
         Refl<?> refl = new Refl<>(this);
-        return refl.getNonStaticFields().stream()
+        return Objects.hash(refl.getNonStaticFields().stream()
                 .map(refl::getFieldObject)
                 .filter(Objects::nonNull)
-                .mapToInt(Object::hashCode)
-                .sum();
+                .toArray());
     }
 
     @Override
