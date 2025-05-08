@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Method;
 
 /**
- * Holds critical informations about a method.
+ * Holds critical information about a method.
  */
 public interface MethodContainer {
 
