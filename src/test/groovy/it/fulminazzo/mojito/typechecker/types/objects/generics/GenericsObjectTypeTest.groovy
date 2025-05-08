@@ -8,7 +8,7 @@ import spock.lang.Specification
 
 class GenericsObjectTypeTest extends Specification {
 
-    def 'test that getField returns correct type'() {
+    def 'test that getField returns correct generic type'() {
         given:
         def fieldType = ClassType.of(GenericsTestClass.MockTestClass)
         def classType = new GenericsObjectType(GenericsTestClass,
@@ -20,6 +20,20 @@ class GenericsObjectTypeTest extends Specification {
 
         then:
         container.type == fieldType
+        container.variable == Types.NULL_TYPE
+    }
+
+    def 'test that getField returns correct normal type'() {
+        given:
+        def classType = new GenericsObjectType(GenericsTestClass,
+                [ClassType.of(GenericsTestClass.MockTestClass)]
+        )
+
+        when:
+        def container = classType.getField('second')
+
+        then:
+        container.type == ClassType.of(Integer)
         container.variable == Types.NULL_TYPE
     }
 
