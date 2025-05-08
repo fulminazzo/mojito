@@ -4,6 +4,7 @@ import it.fulminazzo.fulmicollection.objects.Refl;
 import it.fulminazzo.mojito.handler.HandlerException;
 import it.fulminazzo.mojito.handler.elements.variables.ElementFieldContainer;
 import it.fulminazzo.mojito.tokenizer.TokenType;
+import it.fulminazzo.mojito.visitors.visitorobjects.MethodContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObjectException;
 import it.fulminazzo.mojito.visitors.visitorobjects.variables.FieldContainer;
@@ -12,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 
 @SuppressWarnings("unchecked")
@@ -56,7 +56,7 @@ public interface Element extends VisitorObject<ClassElement, Element, ParameterE
     }
 
     @Override
-    default @NotNull Element invokeMethod(@NotNull Method method, @NotNull ParameterElements parameters) throws VisitorObjectException {
+    default @NotNull Element invokeMethod(@NotNull MethodContainer method, @NotNull ParameterElements parameters) throws VisitorObjectException {
         Refl<?> refl = new Refl<>(getElement());
         Object returned = refl.invokeMethod(method.getReturnType(), method.getName(), method.getParameterTypes(),
                 parameters.stream().map(Element::getElement).toArray(Object[]::new));

@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -142,7 +141,7 @@ public interface VisitorObject<
                 if (Boolean.TRUE.equals(refl.invokeMethod("validateParameters",
                         new Class[]{Class[].class, Class[].class, boolean.class},
                         parametersTypes, method.getParameterTypes(), method.isVarArgs())))
-                    return invokeMethod(method.getActualMethod(), parameters);
+                    return invokeMethod(method, parameters);
             }
 
             throw typesMismatch(classVisitorObject, methods.get(0).getActualMethod(), parameters);
@@ -178,7 +177,7 @@ public interface VisitorObject<
      * @return the returned object from the method
      * @throws VisitorObjectException the exception thrown in case of errors
      */
-    @NotNull O invokeMethod(final @NotNull Method method, final @NotNull P parameters) throws VisitorObjectException;
+    @NotNull O invokeMethod(final @NotNull MethodContainer method, final @NotNull P parameters) throws VisitorObjectException;
 
     /**
      * Converts the current object to its primitive associated object.
