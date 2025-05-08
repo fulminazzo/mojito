@@ -3,6 +3,8 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics;
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.TypeException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.TypeVariable;
@@ -11,6 +13,7 @@ import java.util.*;
 /**
  * A collection of utilities for the classes of this package.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class GenericsUtils {
 
     /**
