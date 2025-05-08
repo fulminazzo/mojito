@@ -141,8 +141,8 @@ public interface VisitorObject<
             for (Method method : methods) {
                 // For each one, validate its parameters
                 if (Boolean.TRUE.equals(refl.invokeMethod("validateParameters",
-                        new Class[]{Class[].class, Executable.class},
-                        parametersTypes, method)))
+                        new Class[]{Class[].class, Class[].class, boolean.class},
+                        parametersTypes, method.getParameterTypes(), method.isVarArgs())))
                     return invokeMethod(method, parameters);
             }
 
