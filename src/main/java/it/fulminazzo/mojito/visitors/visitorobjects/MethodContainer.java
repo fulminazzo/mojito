@@ -63,10 +63,23 @@ public interface MethodContainer {
     }
 
     /**
+     * Gets an instance of a {@link MethodContainer} from the given method.
+     * It supports generics types, thanks to the given container.
+     *
+     * @param method            the method
+     * @param genericsContainer the generics container
+     * @return the method container
+     */
+    static @NotNull MethodContainer of(final @NotNull Method method,
+                                       final @NotNull GenericsContainer<?> genericsContainer) {
+        return new GenericsMethodContainerImpl<>(method, genericsContainer);
+    }
+
+    /**
      * An implementation of {@link MethodContainer}.
      */
     @Getter
-    final class MethodContainerImpl implements MethodContainer {
+    class MethodContainerImpl implements MethodContainer {
         private final @NotNull Method actualMethod;
 
         /**
@@ -101,6 +114,39 @@ public interface MethodContainer {
         @Override
         public boolean isVarArgs() {
             return this.actualMethod.isVarArgs();
+        }
+
+    }
+
+    /**
+     * An implementation of {@link MethodContainer} that supports generic types.
+     *
+     * @param <C> the type of the parameterized types
+     */
+    @Getter
+    class GenericsMethodContainerImpl<C extends ClassVisitorObject<C, ?, ?>> extends MethodContainerImpl {
+
+        /**
+         * Instantiates a new Generics method container.
+         *
+         * @param method            the method
+         * @param genericsContainer the generics container to get the parameters from
+         */
+        public GenericsMethodContainerImpl(@NotNull Method method,
+                                           @NotNull GenericsContainer<C> genericsContainer) {
+            super(method);
+        }
+
+        @Override
+        public @NotNull Class<?> getReturnType() {
+            //TODO:
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public @NotNull Class<?>[] getParameterTypes() {
+            //TODO:
+            throw new IllegalStateException();
         }
 
     }
