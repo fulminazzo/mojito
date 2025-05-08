@@ -1,10 +1,13 @@
-package it.fulminazzo.mojito.typechecker.types.objects;
+package it.fulminazzo.mojito.typechecker.types.objects.generics;
 
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.ParameterTypes;
 import it.fulminazzo.mojito.typechecker.types.Type;
 import it.fulminazzo.mojito.typechecker.types.TypeException;
+import it.fulminazzo.mojito.typechecker.types.objects.CustomObjectClassType;
+import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
+import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.typechecker.types.variables.TypeFieldContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject;

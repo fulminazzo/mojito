@@ -1,7 +1,7 @@
 package it.fulminazzo.mojito.typechecker.types;
 
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
-import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassType;
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.utils.StringUtils;

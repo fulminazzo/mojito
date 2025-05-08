@@ -2,7 +2,6 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics
 
 import it.fulminazzo.mojito.typechecker.TypeCheckerException
 import it.fulminazzo.mojito.typechecker.types.ClassType
-import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import spock.lang.Specification

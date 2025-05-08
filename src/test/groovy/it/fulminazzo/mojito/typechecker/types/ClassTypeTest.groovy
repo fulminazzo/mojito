@@ -2,7 +2,7 @@ package it.fulminazzo.mojito.typechecker.types
 
 import it.fulminazzo.fulmicollection.objects.Refl
 import it.fulminazzo.mojito.TestClass
-import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassType
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject

@@ -2,7 +2,6 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics;
 
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.Type;
-import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.wrappers.ObjectWrapper;
 import org.jetbrains.annotations.NotNull;

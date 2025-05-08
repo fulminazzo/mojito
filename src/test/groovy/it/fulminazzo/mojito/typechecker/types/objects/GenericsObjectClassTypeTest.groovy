@@ -1,5 +1,6 @@
 package it.fulminazzo.mojito.typechecker.types.objects
 
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType
 import spock.lang.Specification
 
 class GenericsObjectClassTypeTest extends Specification {
