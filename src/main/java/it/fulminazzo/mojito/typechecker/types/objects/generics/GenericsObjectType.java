@@ -4,7 +4,6 @@ import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.Type;
 import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
-import it.fulminazzo.mojito.wrappers.ObjectWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
  * This allows to keep track of the defined class per each type
  * using an internal map and to avoid incompatibilities.
  */
-public class GenericsObjectType extends ObjectWrapper<Class<?>> implements Type {
+public class GenericsObjectType extends ObjectType implements Type {
     private final Map<String, ClassType> genericTypes;
 
     /**
@@ -52,7 +51,7 @@ public class GenericsObjectType extends ObjectWrapper<Class<?>> implements Type 
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return Type.print(ObjectType.getClassName(this.object) + String.format("<%s>",
                 this.genericTypes.values().stream()
                         .map(Object::toString)
