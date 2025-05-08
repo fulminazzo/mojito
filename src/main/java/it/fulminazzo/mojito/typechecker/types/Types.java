@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * A collection of static immutable {@link Type}s.
  */
@@ -55,7 +57,7 @@ public final class Types {
 
         @Override
         public int hashCode() {
-            return SingletonType.class.hashCode() ^ this.typeName.hashCode();
+            return Objects.hash(SingletonType.class, this.typeName);
         }
 
         @Override

@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * A collection of static immutable {@link Value}s.
  */
@@ -45,7 +47,7 @@ public final class Values {
 
         @Override
         public int hashCode() {
-            return SingletonValue.class.hashCode() ^ this.valueName.hashCode();
+            return Objects.hash(SingletonValue.class, this.valueName);
         }
 
         @Override

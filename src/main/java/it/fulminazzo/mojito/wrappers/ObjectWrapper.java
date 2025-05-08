@@ -22,7 +22,7 @@ public class ObjectWrapper<O> {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode() ^ this.object.hashCode();
+        return Objects.hash(getClass(), this.object);
     }
 
     @Override

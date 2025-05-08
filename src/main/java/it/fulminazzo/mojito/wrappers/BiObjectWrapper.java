@@ -29,7 +29,7 @@ public class BiObjectWrapper<F, S> {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode() ^ this.first.hashCode() ^ this.second.hashCode();
+        return Objects.hash(getClass(), this.first, this.second);
     }
 
     @Override

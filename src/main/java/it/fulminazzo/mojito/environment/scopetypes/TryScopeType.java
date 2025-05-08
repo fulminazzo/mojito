@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,7 +49,7 @@ public final class TryScopeType implements ScopeType {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode() ^ this.caughtExceptions.hashCode();
+        return Objects.hash(getClass(), this.caughtExceptions);
     }
 
     @Override
