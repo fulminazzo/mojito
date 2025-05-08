@@ -28,6 +28,17 @@ class MethodContainerTest extends Specification {
 
     }
 
+    def 'test that return type of parameterized method is correct'() {
+        given:
+        def container = MethodContainer.of(
+                GenericClass.getMethod('returnType'),
+                this.type
+        )
+
+        expect:
+        container.returnType == a.toJavaClass()
+    }
+
     @SuppressWarnings('unused')
     static class GenericClass<A, B, C> {
 
