@@ -1,10 +1,8 @@
 package it.fulminazzo.mojito.typechecker.types.objects.generics;
 
 import it.fulminazzo.mojito.typechecker.types.ClassType;
-import it.fulminazzo.mojito.typechecker.types.ParameterTypes;
 import it.fulminazzo.mojito.typechecker.types.Type;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
-import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
 import it.fulminazzo.mojito.wrappers.ObjectWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,21 +24,6 @@ public class GenericsObjectType extends ObjectWrapper<Class<?>> implements Type 
     public @NotNull ClassType toClass() {
         //TODO:
         return null;
-    }
-
-    @Override
-    public boolean is(@NotNull Class<?> object) {
-        return Type.super.is(object);
-    }
-
-    @Override
-    public boolean is(Type @NotNull ... objects) {
-        return Type.super.is(objects);
-    }
-
-    @Override
-    public boolean isAssignableFrom(@NotNull ClassVisitorObject<ClassType, Type, ParameterTypes> classVisitorObject) {
-        return Type.super.isAssignableFrom(classVisitorObject);
     }
 
     @Override
