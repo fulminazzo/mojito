@@ -3,6 +3,7 @@ package it.fulminazzo.mojito.visitors.visitorobjects;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -143,15 +144,25 @@ public interface MethodContainer {
 
             Type returnType = method.getGenericReturnType();
             if (returnType instanceof Class) this.returnType = (Class<?>) returnType;
-            else this.returnType = types.get(returnType.getTypeName()).toJavaClass();
+            else this.returnType = getClassFromType(types, returnType.getTypeName());
 
             this.parameterTypes = method.getParameterTypes();
             Type[] genericParameterTypes = method.getGenericParameterTypes();
             for (int i = 0; i < genericParameterTypes.length; i++) {
                 Type parameterType = genericParameterTypes[i];
                 if (!(parameterType instanceof Class<?>))
-                    this.parameterTypes[i] = types.get(parameterType.getTypeName()).toJavaClass();
+                    this.parameterTypes[i] = getClassFromType(types, parameterType.getTypeName());
             }
+        }
+
+        private static <C extends ClassVisitorObject<C, ?, ?>> @NotNull Class<?> getClassFromType(
+                final @NotNull Map<String, C> types,
+                final @NotNull String typeName
+        ) {
+            if (typeName.contains("[]")) {
+                Class<?> typeClass = getClassFromType(types, typeName.substring(0, typeName.indexOf("[]")));
+                return Array.newInstance(typeClass, 0).getClass();
+            } else return types.get(typeName).toJavaClass();
         }
 
     }
