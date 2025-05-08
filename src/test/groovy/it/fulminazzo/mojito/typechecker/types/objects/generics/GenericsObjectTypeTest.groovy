@@ -1,10 +1,20 @@
 package it.fulminazzo.mojito.typechecker.types.objects.generics
 
 import it.fulminazzo.mojito.typechecker.types.ClassType
+import it.fulminazzo.mojito.typechecker.types.Type
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import spock.lang.Specification
 
 class GenericsObjectTypeTest extends Specification {
+
+    def 'test that generic type is other type'() {
+        given:
+        def first = new GenericsObjectType(List, [ClassType.of(String)])
+        def second = new GenericsObjectType(List, [ClassType.of(String)])
+
+        expect:
+        GenericsObjectType.getMethod('is', Type[]).invoke(first, new Object[]{new Type[]{second}})
+    }
 
     def 'test equals correctly works'() {
         given:
