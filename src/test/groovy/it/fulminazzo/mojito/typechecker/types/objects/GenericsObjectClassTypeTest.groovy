@@ -58,7 +58,7 @@ class GenericsObjectClassTypeTest extends Specification {
         then:
         code == Objects.hash(
                 GenericsObjectClassType.hashCode(),
-                List,
+                ObjectType.of(List),
                 ['E': ClassType.of(String)]
         )
     }
