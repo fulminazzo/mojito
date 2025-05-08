@@ -62,39 +62,39 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     }
 
     @Override
-    public @NotNull Type newObject(@NotNull Constructor<?> constructor, @NotNull ParameterTypes parameterTypes) throws TypeException {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public @NotNull TypeFieldContainer getField(@NotNull Field field) throws TypeException {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public @NotNull Type invokeMethod(@NotNull Method method, @NotNull ParameterTypes parameterTypes) throws TypeException {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
     public @NotNull Type newObject(@NotNull ParameterTypes parameters) throws VisitorObjectException {
         //TODO:
-        throw new IllegalStateException("Not implemented yet");
+        return super.newObject(parameters);
+    }
+
+    @Override
+    public @NotNull Type newObject(@NotNull Constructor<?> constructor, @NotNull ParameterTypes parameterTypes) throws TypeException {
+        //TODO:
+        return super.newObject(constructor, parameterTypes);
     }
 
     @Override
     public @NotNull FieldContainer<ClassType, Type, ParameterTypes> getField(@NotNull String fieldName) throws VisitorObjectException {
         //TODO:
-        throw new IllegalStateException("Not implemented yet");
+        return super.getField(fieldName);
+    }
+
+    @Override
+    public @NotNull TypeFieldContainer getField(@NotNull Field field) throws TypeException {
+        //TODO:
+        return super.getField(field);
     }
 
     @Override
     public @NotNull Type invokeMethod(@NotNull String methodName, @NotNull ParameterTypes parameters) throws VisitorObjectException {
         //TODO:
-        throw new IllegalStateException("Not implemented yet");
+        return super.invokeMethod(methodName, parameters);
+    }
+
+    @Override
+    public @NotNull Type invokeMethod(@NotNull Method method, @NotNull ParameterTypes parameterTypes) throws TypeException {
+        //TODO:
+        return super.invokeMethod(method, parameterTypes);
     }
 
     @Override
