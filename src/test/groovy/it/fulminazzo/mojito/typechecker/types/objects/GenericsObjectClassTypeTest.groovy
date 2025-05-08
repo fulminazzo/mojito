@@ -1,6 +1,8 @@
 package it.fulminazzo.mojito.typechecker.types.objects
 
+import it.fulminazzo.mojito.typechecker.types.ClassType
 import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectType
 import spock.lang.Specification
 
 class GenericsObjectClassTypeTest extends Specification {
@@ -44,6 +46,21 @@ class GenericsObjectClassTypeTest extends Specification {
                 ),
                 ObjectClassType.of('List')
         ]
+    }
+
+    def 'test hashCode correctly works'() {
+        given:
+        def type = new GenericsObjectClassType(ObjectType.of(List), [ClassType.of(String)])
+
+        when:
+        def code = type.hashCode()
+
+        then:
+        code == Objects.hash(
+                GenericsObjectClassType.hashCode(),
+                List,
+                ['E': ClassType.of(String)]
+        )
     }
 
     def 'test toString method'() {

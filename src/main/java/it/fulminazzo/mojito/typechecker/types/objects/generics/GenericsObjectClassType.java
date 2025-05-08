@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -141,6 +142,11 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     public @NotNull Type invokeMethod(@NotNull String methodName, @NotNull ParameterTypes parameters) throws VisitorObjectException {
         //TODO:
         throw new IllegalStateException("Not implemented yet");
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClass().hashCode(), this.object, this.genericTypes);
     }
 
     @Override
