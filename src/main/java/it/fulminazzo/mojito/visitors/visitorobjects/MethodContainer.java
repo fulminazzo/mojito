@@ -128,6 +128,7 @@ public interface MethodContainer {
     @Getter
     class GenericsMethodContainerImpl<C extends ClassVisitorObject<C, ?, ?>> extends MethodContainerImpl {
         private final @NotNull Class<?> returnType;
+        private final @NotNull Class<?>[] parameterTypes;
 
         /**
          * Instantiates a new Generics method container.
@@ -143,12 +144,14 @@ public interface MethodContainer {
             Type returnType = method.getGenericReturnType();
             if (returnType instanceof Class) this.returnType = (Class<?>) returnType;
             else this.returnType = types.get(returnType.getTypeName()).toJavaClass();
-        }
 
-        @Override
-        public @NotNull Class<?>[] getParameterTypes() {
-            //TODO:
-            throw new IllegalStateException();
+            this.parameterTypes = method.getParameterTypes();
+            Type[] genericParameterTypes = method.getGenericParameterTypes();
+            for (int i = 0; i < genericParameterTypes.length; i++) {
+                Type parameterType = genericParameterTypes[i];
+                if (!(parameterType instanceof Class<?>))
+                    this.parameterTypes[i] = types.get(parameterType.getTypeName()).toJavaClass();
+            }
         }
 
     }
