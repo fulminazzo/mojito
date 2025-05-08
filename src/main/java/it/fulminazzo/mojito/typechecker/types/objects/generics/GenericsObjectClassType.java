@@ -47,8 +47,18 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
 
     @Override
     public boolean compatibleWith(@NotNull Type type) {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
+        if (type.is(GenericsObjectType.class)) {
+            GenericsObjectType genericsObjectType = (GenericsObjectType) type;
+            if (!toJavaClass().isAssignableFrom(genericsObjectType.getInnerClass()))
+                return false;
+            Map<String, ClassType> genericTypes = genericsObjectType.getGenericTypes();
+            for (String key : this.genericTypes.keySet()) {
+                if (!genericTypes.containsKey(key)) return false;
+                if (!this.genericTypes.get(key).is(genericTypes.get(key)))
+                    return false;
+            }
+            return true;
+        } else return super.compatibleWith(type);
     }
 
     @Override
