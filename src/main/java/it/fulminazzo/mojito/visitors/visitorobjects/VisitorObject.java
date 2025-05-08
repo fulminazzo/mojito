@@ -164,7 +164,7 @@ public interface VisitorObject<
         C classVisitorObject = is(ClassVisitorObject.class) ? (C) this : toClass();
         return ReflectionUtils.getMethods(classVisitorObject.toJavaClass(), m ->
                         m.getName().equals(methodName) && VisitorObjectUtils.verifyExecutable(parameters, m)).stream()
-                .map(MethodContainer::new)
+                .map(MethodContainer::of)
                 .collect(Collectors.toList());
     }
 
