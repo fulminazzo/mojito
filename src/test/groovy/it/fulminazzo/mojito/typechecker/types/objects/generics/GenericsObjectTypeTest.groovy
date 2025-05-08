@@ -1,8 +1,8 @@
 package it.fulminazzo.mojito.typechecker.types.objects.generics
 
 import it.fulminazzo.mojito.typechecker.types.ClassType
-import it.fulminazzo.mojito.typechecker.types.Type
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
+import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject
 import spock.lang.Specification
 
 class GenericsObjectTypeTest extends Specification {
@@ -13,7 +13,7 @@ class GenericsObjectTypeTest extends Specification {
         def second = new GenericsObjectType(List, [ClassType.of(String)])
 
         expect:
-        GenericsObjectType.getMethod('is', Type[]).invoke(first, new Object[]{new Type[]{second}})
+        GenericsObjectType.getMethod('is', VisitorObject[]).invoke(first, new Object[]{new VisitorObject[]{second}})
     }
 
     def 'test equals correctly works'() {
