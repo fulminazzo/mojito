@@ -11,8 +11,6 @@ import java.lang.reflect.Method;
 @Getter
 public final class MethodContainer {
     private final @NotNull Method actualMethod;
-    private final @NotNull Class<?>[] parameterTypes;
-    private final boolean varArgs;
 
     /**
      * Instantiates a new Method container.
@@ -21,8 +19,51 @@ public final class MethodContainer {
      */
     public MethodContainer(final @NotNull Method method) {
         this.actualMethod = method;
-        this.parameterTypes = method.getParameterTypes();
-        this.varArgs = method.isVarArgs();
+    }
+
+    /**
+     * Gets the method modifiers.
+     *
+     * @return the modifiers
+     */
+    public int getModifiers() {
+        return this.actualMethod.getModifiers();
+    }
+
+    /**
+     * Gets the method return type.
+     *
+     * @return the return type
+     */
+    public @NotNull Class<?> getReturnType() {
+        return this.actualMethod.getReturnType();
+    }
+
+    /**
+     * Gets the method name.
+     *
+     * @return the name
+     */
+    public @NotNull String getName() {
+        return this.actualMethod.getName();
+    }
+
+    /**
+     * Get the method parameter types.
+     *
+     * @return an array containing the classes of the parameters
+     */
+    public @NotNull Class<?>[] getParameterTypes() {
+        return this.actualMethod.getParameterTypes();
+    }
+
+    /**
+     * Checks if the method accepts variable arguments.
+     *
+     * @return true if it does
+     */
+    public boolean isVarArgs() {
+        return this.actualMethod.isVarArgs();
     }
 
 }
