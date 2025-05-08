@@ -45,7 +45,7 @@ class GenericsUtilsTest extends Specification {
 
     def 'test that exception is thrown when parameter with invalid bounds is passed'() {
         given:
-        def type = TestClass
+        def type = GenericsTestClass
 
         when:
         GenericsUtils.genericTypesToMap(type, [parameter])
@@ -63,8 +63,5 @@ class GenericsUtilsTest extends Specification {
         ClassType.of(Comparator) | ClassType.of(Number)
     }
 
-    static class TestClass<F extends Number & Comparator<String>> {
-
-    }
 
 }
