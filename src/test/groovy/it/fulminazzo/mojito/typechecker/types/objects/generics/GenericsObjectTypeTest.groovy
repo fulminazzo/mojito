@@ -1,11 +1,27 @@
 package it.fulminazzo.mojito.typechecker.types.objects.generics
 
 import it.fulminazzo.mojito.typechecker.types.ClassType
+import it.fulminazzo.mojito.typechecker.types.Types
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject
 import spock.lang.Specification
 
 class GenericsObjectTypeTest extends Specification {
+
+    def 'test that getField returns correct type'() {
+        given:
+        def fieldType = ClassType.of(GenericsTestClass.MockTestClass)
+        def classType = new GenericsObjectType(GenericsTestClass,
+                [fieldType]
+        )
+
+        when:
+        def container = classType.getField('first')
+
+        then:
+        container.type == fieldType
+        container.variable == Types.NULL_TYPE
+    }
 
     def 'test that generic type is other type'() {
         given:
