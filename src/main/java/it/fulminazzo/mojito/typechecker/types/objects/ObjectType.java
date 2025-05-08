@@ -4,11 +4,13 @@ import it.fulminazzo.fulmicollection.objects.Refl;
 import it.fulminazzo.fulmicollection.utils.ReflectionUtils;
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.*;
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectType;
 import it.fulminazzo.mojito.wrappers.ObjectWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -17,7 +19,7 @@ import java.util.Map;
  * The distinction between these and {@link PrimitiveClassType}
  * is mandatory for correct functioning of casts, operations, null assignments and more.
  */
-public final class ObjectType extends ObjectWrapper<Class<?>> implements Type {
+public class ObjectType extends ObjectWrapper<Class<?>> implements Type {
     public static final ObjectType BYTE = new ObjectType(Byte.class);
     public static final ObjectType SHORT = new ObjectType(Short.class);
     public static final ObjectType CHARACTER = new ObjectType(Character.class);
@@ -35,10 +37,20 @@ public final class ObjectType extends ObjectWrapper<Class<?>> implements Type {
             IOException.class.getPackage().getName()
     };
 
-    private ObjectType(final @NotNull Class<?> innerClass) {
+    /**
+     * Instantiates a new Object type.
+     *
+     * @param innerClass the inner class
+     */
+    protected ObjectType(final @NotNull Class<?> innerClass) {
         super(innerClass);
     }
 
+    /**
+     * Gets the inner class.
+     *
+     * @return the inner class
+     */
     Class<?> getInnerClass() {
         return this.object;
     }
@@ -112,11 +124,22 @@ public final class ObjectType extends ObjectWrapper<Class<?>> implements Type {
     /**
      * Obtains an instance of {@link ObjectType} from the given class name.
      *
-     * @param clazz the clazz
+     * @param clazz the class
      * @return the object type
      */
     public static @NotNull ObjectType of(final @NotNull Class<?> clazz) {
         return new ObjectType(clazz);
+    }
+
+    /**
+     * Obtains an instance of {@link GenericsObjectType} to work with generics.
+     *
+     * @param clazz        the class
+     * @param genericTypes the generic types
+     */
+    public static @NotNull ObjectType of(final @NotNull Class<?> clazz,
+                                         final @NotNull Collection<ClassType> genericTypes) {
+        return new GenericsObjectType(clazz, genericTypes);
     }
 
     /**
