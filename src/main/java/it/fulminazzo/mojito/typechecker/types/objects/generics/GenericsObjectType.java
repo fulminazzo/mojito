@@ -3,6 +3,7 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics;
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.Type;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  * This allows to keep track of the defined class per each type
  * using an internal map and to avoid incompatibilities.
  */
+@Getter
 public class GenericsObjectType extends ObjectType implements Type {
     private final Map<String, ClassType> genericTypes;
 
