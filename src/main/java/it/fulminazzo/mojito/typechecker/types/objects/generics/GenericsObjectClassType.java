@@ -7,7 +7,6 @@ import it.fulminazzo.mojito.typechecker.types.TypeException;
 import it.fulminazzo.mojito.typechecker.types.objects.CustomObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
-import it.fulminazzo.mojito.visitors.visitorobjects.MethodContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObjectException;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,18 +67,6 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     public @NotNull Type newObject(@NotNull Constructor<?> constructor, @NotNull ParameterTypes parameterTypes) throws TypeException {
         //TODO:
         return super.newObject(constructor, parameterTypes);
-    }
-
-    @Override
-    public @NotNull Type invokeMethod(@NotNull String methodName, @NotNull ParameterTypes parameters) throws VisitorObjectException {
-        //TODO:
-        return super.invokeMethod(methodName, parameters);
-    }
-
-    @Override
-    public @NotNull Type invokeMethod(@NotNull MethodContainer method, @NotNull ParameterTypes parameterTypes) throws TypeException {
-        //TODO:
-        return super.invokeMethod(method, parameterTypes);
     }
 
     @Override
