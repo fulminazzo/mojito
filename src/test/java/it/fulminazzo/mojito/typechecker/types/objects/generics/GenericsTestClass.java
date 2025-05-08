@@ -8,6 +8,7 @@ import lombok.Setter;
 class GenericsTestClass<F extends GenericsTestClass.Numeric & GenericsTestClass.Decimal> {
 
     public F first;
+    public Integer second;
 
     interface Numeric {
 
