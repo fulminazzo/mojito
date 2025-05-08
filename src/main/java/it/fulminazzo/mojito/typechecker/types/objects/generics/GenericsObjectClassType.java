@@ -8,8 +8,6 @@ import it.fulminazzo.mojito.typechecker.types.objects.CustomObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.typechecker.types.variables.TypeFieldContainer;
-import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
-import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObjectException;
 import it.fulminazzo.mojito.visitors.visitorobjects.variables.FieldContainer;
 import org.jetbrains.annotations.NotNull;
@@ -55,37 +53,12 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
 
     @Override
     public void checkExtends(@NotNull ClassType classType) {
-        if (true) return;
         //TODO:
         throw new IllegalStateException("Not implemented yet");
     }
 
     @Override
     public @NotNull Type newObject(@NotNull Constructor<?> constructor, @NotNull ParameterTypes parameterTypes) throws TypeException {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public <T extends VisitorObject<ClassType, Type, ParameterTypes>> @NotNull T check(@NotNull Class<T> classType) {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public @NotNull Type check(Type @NotNull ... expectedTypes) {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public @NotNull Type checkNot(Type @NotNull ... expectedTypes) {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public @NotNull Type checkAssignableFrom(@NotNull ClassType classType) {
         //TODO:
         throw new IllegalStateException("Not implemented yet");
     }
@@ -103,31 +76,7 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     }
 
     @Override
-    public boolean compatibleWith(@NotNull Object object) {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
     public @NotNull Type newObject(@NotNull ParameterTypes parameters) throws VisitorObjectException {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public boolean is(@NotNull Class<?> object) {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public boolean is(Type @NotNull ... objects) {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
-    public boolean isAssignableFrom(@NotNull ClassVisitorObject<ClassType, Type, ParameterTypes> classVisitorObject) {
         //TODO:
         throw new IllegalStateException("Not implemented yet");
     }
