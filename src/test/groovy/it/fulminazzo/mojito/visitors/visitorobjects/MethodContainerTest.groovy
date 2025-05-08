@@ -68,6 +68,18 @@ class MethodContainerTest extends Specification {
         container.returnType == a.toJavaClass()
     }
 
+    def 'test that method container lookup does not override methods generic types'() {
+        given:
+        def container = MethodContainer.of(
+                GenericClass.getMethod('dubious', Object, Byte),
+                this.type
+        )
+
+        expect:
+        container.parameterTypes.toList() == [b.toJavaClass(), Byte]
+        container.returnType == Character
+    }
+
     @SuppressWarnings('unused')
     static class GenericClass<A, B, C> {
 
@@ -92,6 +104,10 @@ class MethodContainerTest extends Specification {
         }
 
         A full(B b, C c) {
+            return null
+        }
+
+        <A extends Character, C extends Byte> A dubious(B b, C c) {
             return null
         }
 
