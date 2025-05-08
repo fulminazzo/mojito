@@ -130,7 +130,13 @@ public interface VisitorObject<
         C classVisitorObject = is(ClassVisitorObject.class) ? (C) this : toClass();
         try {
             // Lookup methods from name and parameters count
-            List<MethodContainer> methods = lookupMatchingMethods(methodName, parameters);
+            List<MethodContainer> methods = ReflectionUtils.getMethods(classVisitorObject.toJavaClass(), m ->
+                            m.getName().equals(methodName) && VisitorObjectUtils.verifyExecutable(parameters, m)).stream()
+                    .map(m -> this instanceof GenericsContainer<?> ?
+                            MethodContainer.of(m, (GenericsContainer<?>) this) :
+                            MethodContainer.of(m)
+                    )
+                    .collect(Collectors.toList());
             if (methods.isEmpty()) throw new IllegalArgumentException();
 
             Refl<?> refl = new Refl<>(ReflectionUtils.class);
@@ -148,24 +154,6 @@ public interface VisitorObject<
         } catch (IllegalArgumentException e) {
             throw methodNotFound(classVisitorObject, methodName, parameters);
         }
-    }
-
-    /**
-     * Gets a list of all the methods that might match the given name and parameters count.
-     * This is a very rough comparison and should not be definitive, as it does no operation
-     * over class compatibility.
-     *
-     * @param methodName the method name
-     * @param parameters the parameters
-     * @return the list
-     */
-    default @NotNull List<MethodContainer> lookupMatchingMethods(final @NotNull String methodName,
-                                                                 final @NotNull P parameters) {
-        C classVisitorObject = is(ClassVisitorObject.class) ? (C) this : toClass();
-        return ReflectionUtils.getMethods(classVisitorObject.toJavaClass(), m ->
-                        m.getName().equals(methodName) && VisitorObjectUtils.verifyExecutable(parameters, m)).stream()
-                .map(MethodContainer::of)
-                .collect(Collectors.toList());
     }
 
     /**
