@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -140,17 +142,23 @@ public interface MethodContainer {
         public GenericsMethodContainerImpl(@NotNull Method method,
                                            @NotNull GenericsContainer<C> genericsContainer) {
             super(method);
-            Map<String, C> types = genericsContainer.getGenericTypes();
+            final Map<String, C> types = new LinkedHashMap<>(genericsContainer.getGenericTypes());
+            Arrays.stream(method.getTypeParameters())
+                    .map(Type::getTypeName)
+                    .forEach(types::remove);
 
             Type returnType = method.getGenericReturnType();
-            if (returnType instanceof Class) this.returnType = (Class<?>) returnType;
-            else this.returnType = getClassFromType(types, returnType.getTypeName());
+            String returnName = returnType.getTypeName().replace("[]", "");
+            if (!(returnType instanceof Class) && types.containsKey(returnName))
+                this.returnType = getClassFromType(types, returnType.getTypeName());
+            else this.returnType = method.getReturnType();
 
             this.parameterTypes = method.getParameterTypes();
             Type[] genericParameterTypes = method.getGenericParameterTypes();
             for (int i = 0; i < genericParameterTypes.length; i++) {
                 Type parameterType = genericParameterTypes[i];
-                if (!(parameterType instanceof Class<?>))
+                String parameterName = parameterType.getTypeName().replace("[]", "");
+                if (!(parameterType instanceof Class<?>) && types.containsKey(parameterName))
                     this.parameterTypes[i] = getClassFromType(types, parameterType.getTypeName());
             }
         }
