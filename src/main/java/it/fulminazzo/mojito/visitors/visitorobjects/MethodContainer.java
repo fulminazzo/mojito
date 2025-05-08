@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
  */
 @Getter
 public final class MethodContainer {
+    private final @NotNull Method actualMethod;
     private final @NotNull Class<?>[] parameterTypes;
     private final boolean varArgs;
 
@@ -19,6 +20,7 @@ public final class MethodContainer {
      * @param method the method to create from
      */
     public MethodContainer(final @NotNull Method method) {
+        this.actualMethod = method;
         this.parameterTypes = method.getParameterTypes();
         this.varArgs = method.isVarArgs();
     }
