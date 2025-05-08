@@ -147,28 +147,31 @@ public interface MethodContainer {
                     .map(Type::getTypeName)
                     .forEach(types::remove);
 
-            Type returnType = method.getGenericReturnType();
-            String returnName = returnType.getTypeName().replace("[]", "");
-            if (!(returnType instanceof Class) && types.containsKey(returnName))
-                this.returnType = getClassFromType(types, returnType.getTypeName());
-            else this.returnType = method.getReturnType();
+            this.returnType = getClassFromType(method.getGenericReturnType(), types, method.getReturnType());
 
             this.parameterTypes = method.getParameterTypes();
             Type[] genericParameterTypes = method.getGenericParameterTypes();
-            for (int i = 0; i < genericParameterTypes.length; i++) {
-                Type parameterType = genericParameterTypes[i];
-                String parameterName = parameterType.getTypeName().replace("[]", "");
-                if (!(parameterType instanceof Class<?>) && types.containsKey(parameterName))
-                    this.parameterTypes[i] = getClassFromType(types, parameterType.getTypeName());
-            }
+            for (int i = 0; i < genericParameterTypes.length; i++)
+                this.parameterTypes[i] = getClassFromType(genericParameterTypes[i], types, this.parameterTypes[i]);
         }
 
         private static <C extends ClassVisitorObject<C, ?, ?>> @NotNull Class<?> getClassFromType(
+                final @NotNull Type type,
+                final @NotNull Map<String, C> types,
+                final @NotNull Class<?> fallback
+        ) {
+            String typeName = type.getTypeName().replace("[]", "");
+            if (!(type instanceof Class<?>) && types.containsKey(typeName))
+                return typeNameToClass(types, type.getTypeName());
+            else return fallback;
+        }
+
+        private static <C extends ClassVisitorObject<C, ?, ?>> @NotNull Class<?> typeNameToClass(
                 final @NotNull Map<String, C> types,
                 final @NotNull String typeName
         ) {
             if (typeName.contains("[]")) {
-                Class<?> typeClass = getClassFromType(types, typeName.substring(0, typeName.indexOf("[]")));
+                Class<?> typeClass = typeNameToClass(types, typeName.substring(0, typeName.indexOf("[]")));
                 return Array.newInstance(typeClass, 0).getClass();
             } else return types.get(typeName).toJavaClass();
         }
