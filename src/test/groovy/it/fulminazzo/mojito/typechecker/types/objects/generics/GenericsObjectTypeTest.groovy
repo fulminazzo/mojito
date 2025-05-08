@@ -1,7 +1,6 @@
 package it.fulminazzo.mojito.typechecker.types.objects.generics
 
 import it.fulminazzo.mojito.typechecker.types.ClassType
-import it.fulminazzo.mojito.typechecker.types.Types
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject
 import spock.lang.Specification
@@ -20,11 +19,12 @@ class GenericsObjectTypeTest extends Specification {
 
         then:
         container.type == fieldType
-        container.variable == Types.NULL_TYPE
+        container.variable == fieldType.toType()
     }
 
     def 'test that getField returns correct normal type'() {
         given:
+        def fieldType = ClassType.of(Integer)
         def classType = new GenericsObjectType(GenericsTestClass,
                 [ClassType.of(GenericsTestClass.MockTestClass)]
         )
@@ -34,7 +34,7 @@ class GenericsObjectTypeTest extends Specification {
 
         then:
         container.type == ClassType.of(Integer)
-        container.variable == Types.NULL_TYPE
+        container.variable == fieldType.toType()
     }
 
     def 'test that generic type is other type'() {
