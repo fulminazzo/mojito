@@ -50,7 +50,7 @@ public interface MethodContainer {
      *
      * @return the method
      */
-    Method getActualMethod();
+    @NotNull Method getActualMethod();
 
     /**
      * Gets an instance of a {@link MethodContainer} from the given method.
