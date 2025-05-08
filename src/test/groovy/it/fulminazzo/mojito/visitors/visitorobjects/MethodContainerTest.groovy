@@ -4,23 +4,20 @@ import it.fulminazzo.mojito.handler.elements.ClassElement
 import spock.lang.Specification
 
 class MethodContainerTest extends Specification {
-    private ClassElement a
-    private ClassElement b
-    private ClassElement c
+    private static final ClassElement a = ClassElement.of(Double)
+    private static final ClassElement b = ClassElement.of(Float)
+    private static final ClassElement c = ClassElement.of(Boolean)
     private GenericsContainer<ClassElement> type
 
     void setup() {
-        this.a = ClassElement.of(Double)
-        this.b = ClassElement.of(Float)
-        this.c = ClassElement.of(Boolean)
         this.type = new GenericsContainer<ClassElement>() {
 
             @Override
             Map<String, ClassElement> getGenericTypes() {
                 return [
-                        'A': this.a,
-                        'B': this.b,
-                        'C': this.c
+                        'A': a,
+                        'B': b,
+                        'C': c
                 ]
             }
 
