@@ -80,12 +80,6 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     }
 
     @Override
-    public @NotNull TypeFieldContainer getField(@NotNull Field field) throws TypeException {
-        //TODO:
-        return super.getField(field);
-    }
-
-    @Override
     public @NotNull Type invokeMethod(@NotNull String methodName, @NotNull ParameterTypes parameters) throws VisitorObjectException {
         //TODO:
         return super.invokeMethod(methodName, parameters);
