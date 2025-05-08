@@ -62,12 +62,6 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     }
 
     @Override
-    public void checkExtends(@NotNull ClassType classType) {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
-    }
-
-    @Override
     public @NotNull Type newObject(@NotNull Constructor<?> constructor, @NotNull ParameterTypes parameterTypes) throws TypeException {
         //TODO:
         throw new IllegalStateException("Not implemented yet");
