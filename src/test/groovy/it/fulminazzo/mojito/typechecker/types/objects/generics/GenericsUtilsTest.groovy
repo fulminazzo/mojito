@@ -3,7 +3,6 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics
 import it.fulminazzo.mojito.typechecker.TypeCheckerException
 import it.fulminazzo.mojito.typechecker.types.ClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
-import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import spock.lang.Specification
 
 class GenericsUtilsTest extends Specification {
@@ -57,10 +56,10 @@ class GenericsUtilsTest extends Specification {
         ).message
 
         where:
-        parameter                | bound
-        ClassType.of(String)     | ClassType.of(Number)
-        ClassType.of(Number)     | new GenericsObjectClassType(ObjectType.of(Comparator), [ObjectClassType.STRING])
-        ClassType.of(Comparator) | ClassType.of(Number)
+        parameter                               | bound
+        ClassType.of(String)                    | ClassType.of(GenericsTestClass.Numeric)
+        ClassType.of(GenericsTestClass.Numeric) | ClassType.of(GenericsTestClass.Decimal)
+        ClassType.of(GenericsTestClass.Decimal) | ClassType.of(GenericsTestClass.Numeric)
     }
 
 

@@ -3,12 +3,22 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Comparator;
-
 @Getter
 @Setter
-class GenericsTestClass<F extends Number & Comparator<String>> {
+class GenericsTestClass<F extends GenericsTestClass.Numeric & GenericsTestClass.Decimal> {
 
-    private F first;
+    public F first;
+
+    interface Numeric {
+
+    }
+
+    interface Decimal {
+
+    }
+
+    static class MockTestClass implements Numeric, Decimal {
+
+    }
 
 }
