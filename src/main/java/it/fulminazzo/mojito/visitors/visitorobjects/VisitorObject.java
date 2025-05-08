@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The object that will be returned by a {@link Visitor} instance.
@@ -129,27 +130,43 @@ public interface VisitorObject<
         if (isPrimitive()) return toWrapper().invokeMethod(methodName, parameters);
         C classVisitorObject = is(ClassVisitorObject.class) ? (C) this : toClass();
         try {
-            Class<?> javaClass = classVisitorObject.toJavaClass();
             // Lookup methods from name and parameters count
-            @NotNull List<Method> methods = ReflectionUtils.getMethods(javaClass, m ->
-                    m.getName().equals(methodName) && VisitorObjectUtils.verifyExecutable(parameters, m));
+            List<MethodContainer> methods = lookupMatchingMethods(methodName, parameters);
             if (methods.isEmpty()) throw new IllegalArgumentException();
 
             Refl<?> refl = new Refl<>(ReflectionUtils.class);
             Class<?> @NotNull [] parametersTypes = parameters.toJavaClassArray();
 
-            for (Method method : methods) {
+            for (MethodContainer method : methods) {
                 // For each one, validate its parameters
                 if (Boolean.TRUE.equals(refl.invokeMethod("validateParameters",
                         new Class[]{Class[].class, Class[].class, boolean.class},
                         parametersTypes, method.getParameterTypes(), method.isVarArgs())))
-                    return invokeMethod(method, parameters);
+                    return invokeMethod(method.getActualMethod(), parameters);
             }
 
-            throw typesMismatch(classVisitorObject, methods.get(0), parameters);
+            throw typesMismatch(classVisitorObject, methods.get(0).getActualMethod(), parameters);
         } catch (IllegalArgumentException e) {
             throw methodNotFound(classVisitorObject, methodName, parameters);
         }
+    }
+
+    /**
+     * Gets a list of all the methods that might match the given name and parameters count.
+     * This is a very rough comparison and should not be definitive, as it does no operation
+     * over class compatibility.
+     *
+     * @param methodName the method name
+     * @param parameters the parameters
+     * @return the list
+     */
+    default @NotNull List<MethodContainer> lookupMatchingMethods(final @NotNull String methodName,
+                                                                 final @NotNull P parameters) {
+        C classVisitorObject = is(ClassVisitorObject.class) ? (C) this : toClass();
+        return ReflectionUtils.getMethods(classVisitorObject.toJavaClass(), m ->
+                        m.getName().equals(methodName) && VisitorObjectUtils.verifyExecutable(parameters, m)).stream()
+                .map(MethodContainer::new)
+                .collect(Collectors.toList());
     }
 
     /**
