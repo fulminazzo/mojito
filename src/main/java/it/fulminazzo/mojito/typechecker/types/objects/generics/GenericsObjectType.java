@@ -2,6 +2,7 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics;
 
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.Type;
+import it.fulminazzo.mojito.typechecker.types.objects.GenericsObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.wrappers.ObjectWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +23,7 @@ public class GenericsObjectType extends ObjectWrapper<Class<?>> implements Type 
 
     @Override
     public @NotNull ClassType toClass() {
-        //TODO:
-        return null;
+        return new GenericsObjectClassType(this, this.genericTypes.values());
     }
 
     @Override
