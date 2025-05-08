@@ -3,7 +3,6 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics
 import it.fulminazzo.mojito.typechecker.types.ClassType
 import it.fulminazzo.mojito.typechecker.types.ParameterTypes
 import it.fulminazzo.mojito.typechecker.types.PrimitiveType
-import it.fulminazzo.mojito.typechecker.types.Types
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject
 import spock.lang.Specification
@@ -22,7 +21,7 @@ class GenericsObjectTypeTest extends Specification {
 
         where:
         method | parameters          | expected
-        'add'  | [ObjectType.STRING] | ObjectType.BOOLEAN
+        'add'  | [ObjectType.STRING] | PrimitiveType.BOOLEAN
         'get'  | [PrimitiveType.INT] | ObjectType.STRING
     }
 
