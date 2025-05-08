@@ -12,9 +12,20 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * A special {@link Type} that supports generic types.
+ * This allows to keep track of the defined class per each type
+ * using an internal map and to avoid incompatibilities.
+ */
 public class GenericsObjectType extends ObjectWrapper<Class<?>> implements Type {
     private final Map<String, ClassType> genericTypes;
 
+    /**
+     * Instantiates a new Generics object type.
+     *
+     * @param clazz        the class
+     * @param genericTypes the generic types
+     */
     public GenericsObjectType(final @NotNull Class<?> clazz,
                               final @NotNull Collection<ClassType> genericTypes) {
         super(clazz);
