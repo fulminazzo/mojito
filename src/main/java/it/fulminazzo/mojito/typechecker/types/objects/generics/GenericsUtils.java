@@ -6,9 +6,7 @@ import it.fulminazzo.mojito.typechecker.types.TypeException;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.TypeVariable;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A collection of utilities for the classes of this package.
@@ -24,16 +22,17 @@ final class GenericsUtils {
      * @return the final map
      */
     public static Map<String, ClassType> genericTypesToMap(final @NotNull Class<?> clazz,
-                                                           final @NotNull List<ClassType> genericTypes) {
+                                                           final @NotNull Collection<ClassType> genericTypes) {
         Map<String, ClassType> finalMap = new LinkedHashMap<>();
         TypeVariable<? extends Class<?>>[] typeParameters = clazz.getTypeParameters();
 
         if (typeParameters.length != genericTypes.size())
             throw TypeCheckerException.invalidGenericTypeSize(ClassType.of(clazz), typeParameters.length, genericTypes.size());
 
+        List<ClassType> types = new ArrayList<>(genericTypes);
         for (int i = 0; i < typeParameters.length; i++) {
             TypeVariable<? extends Class<?>> expectedParameter = typeParameters[i];
-            ClassType actualType = genericTypes.get(i);
+            ClassType actualType = types.get(i);
             java.lang.reflect.Type[] bounds = expectedParameter.getBounds();
             for (java.lang.reflect.Type bound : bounds)
                 try {
