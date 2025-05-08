@@ -5,6 +5,7 @@ import it.fulminazzo.mojito.typechecker.types.Type;
 import it.fulminazzo.mojito.typechecker.types.TypeException;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.typechecker.types.variables.TypeFieldContainer;
+import it.fulminazzo.mojito.visitors.visitorobjects.GenericsContainer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
  * using an internal map and to avoid incompatibilities.
  */
 @Getter
-public class GenericsObjectType extends ObjectType implements Type {
+public class GenericsObjectType extends ObjectType implements Type, GenericsContainer<ClassType> {
     private final Map<String, ClassType> genericTypes;
 
     /**

@@ -7,7 +7,9 @@ import it.fulminazzo.mojito.typechecker.types.TypeException;
 import it.fulminazzo.mojito.typechecker.types.objects.CustomObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
+import it.fulminazzo.mojito.visitors.visitorobjects.GenericsContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObjectException;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
@@ -20,7 +22,8 @@ import java.util.stream.Collectors;
  * Represents a {@link ObjectClassType} with a class different from the default types.
  * It supports generic typing.
  */
-public class GenericsObjectClassType extends CustomObjectClassType implements ClassType {
+@Getter
+public class GenericsObjectClassType extends CustomObjectClassType implements ClassType, GenericsContainer<ClassType> {
     private final Map<String, ClassType> genericTypes;
 
     /**
