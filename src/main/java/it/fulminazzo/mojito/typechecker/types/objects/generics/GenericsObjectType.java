@@ -6,7 +6,7 @@ import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.wrappers.ObjectWrapper;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ public class GenericsObjectType extends ObjectWrapper<Class<?>> implements Type 
     private final Map<String, ClassType> genericTypes;
 
     public GenericsObjectType(final @NotNull Class<?> clazz,
-                              final @NotNull List<ClassType> genericTypes) {
+                              final @NotNull Collection<ClassType> genericTypes) {
         super(clazz);
         this.genericTypes = GenericsUtils.genericTypesToMap(clazz, genericTypes);
     }
