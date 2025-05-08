@@ -56,6 +56,18 @@ class MethodContainerTest extends Specification {
         [Integer, Object, Object[]] | [Integer, b.toJavaClass(), Array.newInstance(c.toJavaClass(), 0).getClass()]
     }
 
+    def 'test that return type and parameters of parameterized method are correct'() {
+        given:
+        def container = MethodContainer.of(
+                GenericClass.getMethod('full', Object, Object),
+                this.type
+        )
+
+        expect:
+        container.parameterTypes.toList() == [b.toJavaClass(), c.toJavaClass()]
+        container.returnType == a.toJavaClass()
+    }
+
     @SuppressWarnings('unused')
     static class GenericClass<A, B, C> {
 
