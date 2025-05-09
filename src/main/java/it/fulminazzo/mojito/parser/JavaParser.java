@@ -566,7 +566,7 @@ public class JavaParser extends Parser {
     }
 
     /**
-     * TERNARY_OP := AND ( \? EXPR : EXPR )?
+     * TERNARY_OP := INSTANCE_OF ( \? EXPR : EXPR )?
      *
      * @return the node
      */

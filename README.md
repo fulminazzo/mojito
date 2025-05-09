@@ -162,7 +162,9 @@ ARRAY_LITERAL := LITERAL ( \[\] )* | LITERAL ( \[ [0-9]+ \] )+
 INCREMENT := ++ATOM
 DECREMENT := --ATOM | MINUS
 
-TERNARY_OP := AND ( \? EXPR : EXPR )?
+TERNARY_OP := INSTANCE_OF ( \? EXPR : EXPR )?
+
+INSTANCE_OF := AND ( instanceof LITERAL )?
 
 AND := OR (&& OR)*
 OR := EQUAL (|| EQUAL)*
