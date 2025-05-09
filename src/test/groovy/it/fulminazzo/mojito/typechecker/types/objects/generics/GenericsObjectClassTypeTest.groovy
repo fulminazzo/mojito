@@ -33,6 +33,25 @@ class GenericsObjectClassTypeTest extends Specification {
                 new GenericsObjectType(GenericsTestClass, [ObjectClassType.of(GenericsTestClass.MockTestClass)])
     }
 
+    def 'test Iterable compatibility with #clazz'() {
+        given:
+        def parameters = [ClassType.of(String)]
+
+        and:
+        def classType = new GenericsObjectClassType(ObjectType.of(Iterable), parameters)
+
+        and:
+        def type = new GenericsObjectType(clazz, parameters)
+
+        expect:
+        classType.compatibleWith(type)
+
+        where:
+        clazz << [
+                List, LinkedList, ArrayList, Set, HashSet, Queue, Stack, Collection, Iterable
+        ]
+    }
+
     def 'test that class type is compatible with #type'() {
         given:
         def classType = new GenericsObjectClassType(ObjectType.of(List),
