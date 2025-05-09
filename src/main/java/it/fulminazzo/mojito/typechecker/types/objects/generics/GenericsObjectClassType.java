@@ -74,7 +74,8 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
 
     @Override
     public @NotNull Type toType() {
-        return new GenericsObjectType(this.object.getClass(), this.genericTypes.values());
+        ObjectType objectType = (ObjectType) this.object;
+        return new GenericsObjectType(objectType.getInnerClass(), this.genericTypes.values());
     }
 
     @Override
