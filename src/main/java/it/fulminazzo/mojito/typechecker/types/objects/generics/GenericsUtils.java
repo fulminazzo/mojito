@@ -3,12 +3,15 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics;
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.TypeException;
+import it.fulminazzo.mojito.utils.StringUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -17,6 +20,51 @@ import java.util.regex.Pattern;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GenericsUtils {
     public static final @NotNull Pattern GENERICS_CLASS_PATTERN = Pattern.compile("([^<]+)<(.*)>");
+
+    public static boolean checkCompatibility(
+            final @NotNull GenericsObjectClassType model,
+            final @NotNull GenericsObjectType target
+    ) {
+        Class<?> modelClass = model.toJavaClass();
+        Map<String, ClassType> modelGenericTypes = model.getGenericTypes();
+
+        Class<?> targetClass = target.getInnerClass();
+        Map<String, ClassType> targetGenericTypes = new LinkedHashMap<>(target.getGenericTypes());
+
+        @NotNull List<Class<?>> hierarchy = getClassHierarchy(targetClass, modelClass);
+        for (int i = 0; i < hierarchy.size() - 1; i++) {
+            Class<?> current = hierarchy.get(i);
+            Class<?> next = hierarchy.get(i + 1);
+
+            Type superClass = next.isInterface() ?
+                    Arrays.stream(current.getGenericInterfaces())
+                            .filter(t -> {
+                                Matcher matcher = GENERICS_CLASS_PATTERN.matcher(t.getTypeName());
+                                return matcher.matches() && matcher.group(1).equals(next.getName());
+                            })
+                            .findFirst().orElseThrow(IllegalStateException::new) :
+                    next.getGenericSuperclass();
+
+            Matcher matcher = GENERICS_CLASS_PATTERN.matcher(superClass.getTypeName());
+            matcher.matches();
+            String[] types = StringUtils.quoteSplitter(matcher.group(2), ", *", "<", ">");
+
+            TypeVariable<? extends Class<?>>[] actualTypes = next.getTypeParameters();
+
+            Map<String, ClassType> newTargetGenericTypes = new LinkedHashMap<>();
+            for (int j = 0; j < actualTypes.length; j++)
+                newTargetGenericTypes.put(actualTypes[j].getTypeName(), targetGenericTypes.get(types[j]));
+            targetGenericTypes = newTargetGenericTypes;
+        }
+
+        for (String key : modelGenericTypes.keySet()) {
+            if (!targetGenericTypes.containsKey(key)) return false;
+            if (!modelGenericTypes.get(key).is(targetGenericTypes.get(key)))
+                return false;
+        }
+
+        return true;
+    }
 
     /**
      * Gets the hierarchy "path" from one class to the other.
