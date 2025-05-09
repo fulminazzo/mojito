@@ -459,6 +459,24 @@ class TypeCheckerTest extends Specification {
         e.message == TypeCheckerException.invalidType(classType.componentsType, PrimitiveClassType.BOOLEAN).message
     }
 
+    def 'test visit enhanced for statement of iterable with invalid type'() {
+        given:
+        def classType = ClassType.of(Collection, [ObjectClassType.INTEGER])
+        def type = ObjectType.of(Collection, [ObjectClassType.INTEGER])
+        this.environment.declare(classType, 'coll', type)
+
+        and:
+        def varType = Literal.of('boolean')
+        def varName = Literal.of('i')
+
+        when:
+        this.typeChecker.visitEnhancedForStatement(varType, varName, CODE_BLOCK_BREAK, Literal.of('coll'))
+
+        then:
+        def e = thrown(TypeCheckerException)
+        e.message == TypeCheckerException.invalidType(ClassType.of(Iterable, [ObjectClassType.BOOLEAN]), type).message
+    }
+
     def 'test visit for statement of (#expression) #codeBlock should return #expected'() {
         given:
         def assignment = new Assignment(Literal.of('int'), Literal.of('i'), NUMBER_LIT)
