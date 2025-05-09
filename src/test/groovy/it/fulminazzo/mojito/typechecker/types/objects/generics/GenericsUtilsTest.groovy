@@ -7,6 +7,24 @@ import spock.lang.Specification
 
 class GenericsUtilsTest extends Specification {
 
+    def 'test that getClassHierarchy works'() {
+        given:
+        def start = LinkedList
+        def end = Iterable
+
+        and:
+        def expected = [
+                LinkedList, AbstractSequentialList, AbstractList,
+                AbstractCollection, Collection, Iterable
+        ]
+
+        when:
+        def actual = GenericsUtils.getClassHierarchy(start, end)
+
+        then:
+        actual == expected
+    }
+
     def 'test that initialization with correct parameters does not throw'() {
         given:
         def type = List
