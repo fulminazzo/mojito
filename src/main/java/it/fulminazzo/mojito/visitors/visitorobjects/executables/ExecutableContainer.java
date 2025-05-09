@@ -3,6 +3,7 @@ package it.fulminazzo.mojito.visitors.visitorobjects.executables;
 import it.fulminazzo.mojito.visitors.visitorobjects.GenericsContainer;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 
@@ -54,6 +55,16 @@ public interface ExecutableContainer<E extends Executable> {
     @NotNull E getActualExecutable();
 
     /**
+     * Gets an instance of a {@link ExecutableContainer} from the given constructor.
+     *
+     * @param constructor the constructor
+     * @return the executable container
+     */
+    static @NotNull ExecutableContainer<Constructor<?>> of(final @NotNull Constructor<?> constructor) {
+        return new ConstructorContainerImpl(constructor);
+    }
+
+    /**
      * Gets an instance of a {@link ExecutableContainer} from the given method.
      *
      * @param method the method
@@ -72,7 +83,7 @@ public interface ExecutableContainer<E extends Executable> {
      * @return the executable container
      */
     static @NotNull ExecutableContainer<Method> of(final @NotNull Method method,
-                                           final @NotNull GenericsContainer<?> genericsContainer) {
+                                                   final @NotNull GenericsContainer<?> genericsContainer) {
         return new GenericsMethodContainerImpl<>(method, genericsContainer);
     }
 
