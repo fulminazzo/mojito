@@ -4,6 +4,7 @@ import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType;
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsUtils;
 import it.fulminazzo.mojito.utils.StringUtils;
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,6 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Represents the class of a {@link Type}.
@@ -74,8 +74,7 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
      * @throws TypeException the exception thrown in case the class is not found
      */
     static @NotNull ClassType of(final @NotNull String className) throws TypeException {
-        String genericClassPattern = "([^<]+)<(.*)>";
-        Matcher matcher = Pattern.compile(genericClassPattern).matcher(className);
+        Matcher matcher = GenericsUtils.GENERICS_CLASS_PATTERN.matcher(className);
         if (matcher.matches()) return of(matcher.group(1), matcher.group(2));
         try {
             String lowerCase = className.toLowerCase();

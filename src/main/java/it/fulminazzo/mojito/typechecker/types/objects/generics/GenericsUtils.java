@@ -9,12 +9,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.TypeVariable;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * A collection of utilities for the classes of this package.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-final class GenericsUtils {
+public final class GenericsUtils {
+    public static final @NotNull Pattern GENERICS_CLASS_PATTERN = Pattern.compile("([^<]+)<(.*)>");
 
     /**
      * Gets the hierarchy "path" from one class to the other.
