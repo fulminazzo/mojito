@@ -23,10 +23,7 @@ import it.fulminazzo.mojito.visitors.visitorobjects.variables.VariableContainer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A {@link Visitor} that checks and verifies all the types of the parsed code.
@@ -228,8 +225,7 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
                 if (!componentType.isAssignableFrom(variableType))
                     throw TypeCheckerException.invalidType(componentType.toClass(), variableType);
             } else {
-                //TODO: Iterable generic should check for type
-                ClassType iterable = ObjectClassType.of(Iterable.class);
+                ClassType iterable = ClassType.of(Iterator.class, Arrays.asList(variableType));
                 expressionType.checkAssignableFrom(iterable);
             }
 
