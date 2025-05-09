@@ -153,7 +153,7 @@ class TokenizerInputStreamTest extends Specification {
         this.stream.close()
 
         when:
-        this.actualStream.read()
+        this.stream.read()
 
         then:
         thrown(IOException)
@@ -169,7 +169,7 @@ class TokenizerInputStreamTest extends Specification {
 
     def 'test that tokenizer input stream reset actually resets'() {
         given:
-        this.actualStream.mark(6)
+        this.stream.mark(6)
 
         when:
         this.stream.reset()
