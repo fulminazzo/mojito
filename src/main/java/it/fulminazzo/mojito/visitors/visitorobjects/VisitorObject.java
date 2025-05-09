@@ -151,7 +151,7 @@ public interface VisitorObject<
                     return invokeMethod(method, parameters);
             }
 
-            throw typesMismatch(classVisitorObject, methods.get(0).getActualMethod(), parameters);
+            throw typesMismatch(classVisitorObject, methods.get(0).getActualExecutable(), parameters);
         } catch (IllegalArgumentException e) {
             throw methodNotFound(classVisitorObject, methodName, parameters);
         }

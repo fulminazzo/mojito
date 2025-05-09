@@ -20,7 +20,7 @@ class MethodContainerImpl extends ExecutableContainerImpl implements ExecutableC
 
     @Override
     public @NotNull Class<?> getReturnType() {
-        return this.actualMethod.getReturnType();
+        return this.actualExecutable.getReturnType();
     }
 
 }

@@ -50,7 +50,7 @@ public interface ExecutableContainer {
      *
      * @return the method
      */
-    @NotNull Method getActualMethod();
+    @NotNull Method getActualExecutable();
 
     /**
      * Gets an instance of a {@link ExecutableContainer} from the given method.

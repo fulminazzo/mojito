@@ -3,6 +3,7 @@ package it.fulminazzo.mojito.visitors.visitorobjects.executables;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 
 /**
@@ -10,7 +11,7 @@ import java.lang.reflect.Method;
  */
 @Getter
 abstract class ExecutableContainerImpl implements ExecutableContainer {
-    protected final @NotNull Method actualMethod;
+    protected final @NotNull Method actualExecutable;
 
     /**
      * Instantiates a new Method container.
@@ -18,27 +19,27 @@ abstract class ExecutableContainerImpl implements ExecutableContainer {
      * @param method the method to create from
      */
     public ExecutableContainerImpl(final @NotNull Method method) {
-        this.actualMethod = method;
+        this.actualExecutable = method;
     }
 
     @Override
     public int getModifiers() {
-        return this.actualMethod.getModifiers();
+        return this.actualExecutable.getModifiers();
     }
 
     @Override
     public @NotNull String getName() {
-        return this.actualMethod.getName();
+        return this.actualExecutable.getName();
     }
 
     @Override
     public @NotNull Class<?>[] getParameterTypes() {
-        return this.actualMethod.getParameterTypes();
+        return this.actualExecutable.getParameterTypes();
     }
 
     @Override
     public boolean isVarArgs() {
-        return this.actualMethod.isVarArgs();
+        return this.actualExecutable.isVarArgs();
     }
 
 }

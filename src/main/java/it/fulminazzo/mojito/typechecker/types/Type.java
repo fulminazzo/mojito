@@ -116,7 +116,7 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
                                        final @NotNull ParameterTypes parameterTypes) throws TypeException {
         ClassType classType = isClassType() ? (ClassType) this : toClass();
         if (!Modifier.isPublic(method.getModifiers()))
-            throw TypeException.cannotAccessMethod(classType, method.getActualMethod());
+            throw TypeException.cannotAccessMethod(classType, method.getActualExecutable());
         else if (isClassType() && !Modifier.isStatic(method.getModifiers()))
             throw TypeException.cannotAccessStaticMethod(classType, method.getName(), parameterTypes);
         return ClassType.of(method.getReturnType()).toType();
