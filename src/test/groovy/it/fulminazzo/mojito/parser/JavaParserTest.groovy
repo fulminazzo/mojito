@@ -883,6 +883,34 @@ class JavaParserTest extends Specification {
         '-'       | Subtract
     }
 
+    def 'test simple parseBinaryComparison (#comparison)'() {
+        given:
+        def code = "1 ${comparison} String"
+        def expected = expectedClass.newInstance(
+                new NumberValueLiteral('1'),
+                Literal.of('String')
+        )
+
+        when:
+        startReading(code)
+        def output = this.parser.parseExpression()
+
+        then:
+        output == expected
+
+        where:
+        comparison   | expectedClass
+        'instanceof' | InstanceOf
+        '&&'         | And
+        '||'         | Or
+        '=='         | Equal
+        '!='         | NotEqual
+        '<'          | LessThan
+        '<='         | LessThanEqual
+        '>'          | GreaterThan
+        '>='         | GreaterThanEqual
+    }
+
     def 'test simple parseBinaryOperation (#operation)'() {
         given:
         def code = "1 ${operation} 2"
