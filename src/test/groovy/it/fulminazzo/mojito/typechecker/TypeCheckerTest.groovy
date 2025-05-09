@@ -397,15 +397,10 @@ class TypeCheckerTest extends Specification {
     def 'test visit enhanced for statement of (#expression) #codeBlock should return #expected'() {
         given:
         this.environment.declare(new ArrayClassType(PrimitiveClassType.INT), 'arr', new ArrayType(PrimitiveType.INT))
-        this.environment.declare(ObjectClassType.of(Iterable), 'iterable', ObjectType.of(Iterable))
-        this.environment.declare(ObjectClassType.of(List), 'list', ObjectType.of(List))
-        this.environment.declare(ObjectClassType.of(Collection), 'collection', ObjectType.of(Collection))
-        this.environment.declare(ObjectClassType.of(Set), 'set', ObjectType.of(Set))
-        this.environment.declare(
-                ObjectClassType.of(List, [ClassType.of(Integer)]),
-                'parameterizedList',
-                ObjectType.of(List, [ClassType.of(Integer)])
-        )
+        this.environment.declare(ObjectClassType.of(Iterable, [ClassType.of(Integer)]), 'iterable', ObjectType.of(Iterable, [ClassType.of(Integer)]))
+        this.environment.declare(ObjectClassType.of(List, [ClassType.of(Integer)]), 'list', ObjectType.of(List, [ClassType.of(Integer)]))
+        this.environment.declare(ObjectClassType.of(Collection, [ClassType.of(Integer)]), 'collection', ObjectType.of(Collection, [ClassType.of(Integer)]))
+        this.environment.declare(ObjectClassType.of(Set, [ClassType.of(Integer)]), 'set', ObjectType.of(Set, [ClassType.of(Integer)]))
 
         and:
         def varType = Literal.of('int')
@@ -444,7 +439,7 @@ class TypeCheckerTest extends Specification {
 
         then:
         def e = thrown(TypeCheckerException)
-        e.message == TypeCheckerException.invalidType(ObjectClassType.of(Iterable), PrimitiveType.INT).message
+        e.message == TypeCheckerException.invalidType(ObjectClassType.of(Iterable, [ObjectClassType.INTEGER]), PrimitiveType.INT).message
     }
 
     def 'test visit enhanced for statement of array with invalid type'() {
