@@ -118,13 +118,15 @@ class GenericsObjectClassTypeTest extends Specification {
         type << [
                 ObjectType.of(List, [ClassType.of(Integer)]),
                 ObjectType.of(Set, [ClassType.of(String)]),
-                {
-                    GenericsObjectType type = ObjectType.of(List, [ClassType.of(Integer)])
-                    type.genericTypes.remove('E')
-                    type.genericTypes.put('D', ClassType.of(Integer))
-                    return type
-                }
+                getMockGenericsObjectType()
         ]
+    }
+
+    private static getMockGenericsObjectType() {
+        GenericsObjectType type = ObjectType.of(List, [ClassType.of(Integer)])
+        type.genericTypes.remove('E')
+        type.genericTypes.put('D', ClassType.of(Integer))
+        return type
     }
 
     def 'test equals method'() {
