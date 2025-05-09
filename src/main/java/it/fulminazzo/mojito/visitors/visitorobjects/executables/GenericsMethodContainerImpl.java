@@ -5,7 +5,6 @@ import it.fulminazzo.mojito.visitors.visitorobjects.GenericsContainer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -36,33 +35,12 @@ class GenericsMethodContainerImpl<C extends ClassVisitorObject<C, ?, ?>> extends
                 .map(Type::getTypeName)
                 .forEach(types::remove);
 
-        this.returnType = getClassFromType(method.getGenericReturnType(), types, method.getReturnType());
+        this.returnType = GenericsExecutableUtils.getClassFromType(method.getGenericReturnType(), types, method.getReturnType());
 
         this.parameterTypes = method.getParameterTypes();
         Type[] genericParameterTypes = method.getGenericParameterTypes();
         for (int i = 0; i < genericParameterTypes.length; i++)
-            this.parameterTypes[i] = getClassFromType(genericParameterTypes[i], types, this.parameterTypes[i]);
-    }
-
-    private static <C extends ClassVisitorObject<C, ?, ?>> @NotNull Class<?> getClassFromType(
-            final @NotNull Type type,
-            final @NotNull Map<String, C> types,
-            final @NotNull Class<?> fallback
-    ) {
-        String typeName = type.getTypeName().replace("[]", "");
-        if (!(type instanceof Class<?>) && types.containsKey(typeName))
-            return typeNameToClass(types, type.getTypeName());
-        else return fallback;
-    }
-
-    private static <C extends ClassVisitorObject<C, ?, ?>> @NotNull Class<?> typeNameToClass(
-            final @NotNull Map<String, C> types,
-            final @NotNull String typeName
-    ) {
-        if (typeName.contains("[]")) {
-            Class<?> typeClass = typeNameToClass(types, typeName.substring(0, typeName.indexOf("[]")));
-            return Array.newInstance(typeClass, 0).getClass();
-        } else return types.get(typeName).toJavaClass();
+            this.parameterTypes[i] = GenericsExecutableUtils.getClassFromType(genericParameterTypes[i], types, this.parameterTypes[i]);
     }
 
 }
