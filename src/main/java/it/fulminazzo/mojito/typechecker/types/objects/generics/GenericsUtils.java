@@ -17,6 +17,38 @@ import java.util.*;
 final class GenericsUtils {
 
     /**
+     * Gets the hierarchy "path" from one class to the other.
+     * The hierarchy path is a list of classes or interfaces
+     * chained together by a one on one hierarchy relation.
+     *
+     * @param start the class to start from
+     * @param end   the final reached class
+     * @return the path
+     */
+    public static @NotNull List<Class<?>> getClassHierarchy(
+            final @NotNull Class<?> start,
+            final @NotNull Class<?> end
+    ) {
+        if (start.equals(end)) return Collections.singletonList(end);
+
+        List<Class<?>> tmp = new LinkedList<>();
+        Class<?> superClass = start.getSuperclass();
+        if (superClass != null) tmp.add(superClass);
+        tmp.addAll(Arrays.asList(start.getInterfaces()));
+
+        for (Class<?> clazz : tmp) {
+            List<Class<?>> hierarchy = getClassHierarchy(clazz, end);
+            if (!hierarchy.isEmpty()) {
+                LinkedList<Class<?>> result = new LinkedList<>(hierarchy);
+                result.addFirst(start);
+                return result;
+            }
+        }
+
+        return new LinkedList<>();
+    }
+
+    /**
      * Converts the given list of {@link ClassType}s to a {@link Map}.
      * The keys are the names of the generic types taken from the given {@link Class}.
      *
