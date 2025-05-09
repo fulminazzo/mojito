@@ -1,11 +1,12 @@
-package it.fulminazzo.mojito.visitors.visitorobjects
+package it.fulminazzo.mojito.visitors.visitorobjects.executables
 
 import it.fulminazzo.mojito.handler.elements.ClassElement
+import it.fulminazzo.mojito.visitors.visitorobjects.GenericsContainer
 import spock.lang.Specification
 
 import java.lang.reflect.Array
 
-class MethodContainerTest extends Specification {
+class ExecutableContainerTest extends Specification {
     private static final ClassElement a = ClassElement.of(Double)
     private static final ClassElement b = ClassElement.of(Float)
     private static final ClassElement c = ClassElement.of(Boolean)
@@ -29,7 +30,7 @@ class MethodContainerTest extends Specification {
 
     def 'test that return type of parameterized method is correct'() {
         given:
-        def container = MethodContainer.of(
+        def container = ExecutableContainer.of(
                 GenericClass.getMethod('returnType'),
                 this.type
         )
@@ -40,7 +41,7 @@ class MethodContainerTest extends Specification {
 
     def 'test that parameters of method parameters(#parameters) are #expected'() {
         given:
-        def container = MethodContainer.of(
+        def container = ExecutableContainer.of(
                 GenericClass.getMethod('parameters', parameters.toArray(new Class[0])),
                 this.type
         )
@@ -58,7 +59,7 @@ class MethodContainerTest extends Specification {
 
     def 'test that return type and parameters of parameterized method are correct'() {
         given:
-        def container = MethodContainer.of(
+        def container = ExecutableContainer.of(
                 GenericClass.getMethod('full', Object, Object),
                 this.type
         )
@@ -70,7 +71,7 @@ class MethodContainerTest extends Specification {
 
     def 'test that method container lookup does not override methods generic types'() {
         given:
-        def container = MethodContainer.of(
+        def container = ExecutableContainer.of(
                 GenericClass.getMethod('dubious', Object, Byte),
                 this.type
         )

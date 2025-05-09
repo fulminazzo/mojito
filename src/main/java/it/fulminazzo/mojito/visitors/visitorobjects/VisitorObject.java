@@ -3,6 +3,7 @@ package it.fulminazzo.mojito.visitors.visitorobjects;
 import it.fulminazzo.fulmicollection.objects.Refl;
 import it.fulminazzo.fulmicollection.utils.ReflectionUtils;
 import it.fulminazzo.mojito.visitors.Visitor;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.variables.FieldContainer;
 import org.jetbrains.annotations.NotNull;
 
@@ -130,11 +131,11 @@ public interface VisitorObject<
         C classVisitorObject = is(ClassVisitorObject.class) ? (C) this : toClass();
         try {
             // Lookup methods from name and parameters count
-            List<MethodContainer> methods = ReflectionUtils.getMethods(classVisitorObject.toJavaClass(), m ->
+            List<ExecutableContainer> methods = ReflectionUtils.getMethods(classVisitorObject.toJavaClass(), m ->
                             m.getName().equals(methodName) && VisitorObjectUtils.verifyExecutable(parameters, m)).stream()
                     .map(m -> this instanceof GenericsContainer<?> ?
-                            MethodContainer.of(m, (GenericsContainer<?>) this) :
-                            MethodContainer.of(m)
+                            ExecutableContainer.of(m, (GenericsContainer<?>) this) :
+                            ExecutableContainer.of(m)
                     )
                     .collect(Collectors.toList());
             if (methods.isEmpty()) throw new IllegalArgumentException();
@@ -142,7 +143,7 @@ public interface VisitorObject<
             Refl<?> refl = new Refl<>(ReflectionUtils.class);
             Class<?> @NotNull [] parametersTypes = parameters.toJavaClassArray();
 
-            for (MethodContainer method : methods) {
+            for (ExecutableContainer method : methods) {
                 // For each one, validate its parameters
                 if (Boolean.TRUE.equals(refl.invokeMethod("validateParameters",
                         new Class[]{Class[].class, Class[].class, boolean.class},
@@ -165,7 +166,7 @@ public interface VisitorObject<
      * @return the returned object from the method
      * @throws VisitorObjectException the exception thrown in case of errors
      */
-    @NotNull O invokeMethod(final @NotNull MethodContainer method, final @NotNull P parameters) throws VisitorObjectException;
+    @NotNull O invokeMethod(final @NotNull ExecutableContainer method, final @NotNull P parameters) throws VisitorObjectException;
 
     /**
      * Converts the current object to its primitive associated object.

@@ -1,5 +1,7 @@
-package it.fulminazzo.mojito.visitors.visitorobjects;
+package it.fulminazzo.mojito.visitors.visitorobjects.executables;
 
+import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
+import it.fulminazzo.mojito.visitors.visitorobjects.GenericsContainer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +15,7 @@ import java.util.Map;
 /**
  * Holds critical information about a method.
  */
-public interface MethodContainer {
+public interface ExecutableContainer {
 
     /**
      * Gets the method modifiers.
@@ -58,33 +60,33 @@ public interface MethodContainer {
     @NotNull Method getActualMethod();
 
     /**
-     * Gets an instance of a {@link MethodContainer} from the given method.
+     * Gets an instance of a {@link ExecutableContainer} from the given method.
      *
      * @param method the method
      * @return the method container
      */
-    static @NotNull MethodContainer of(final @NotNull Method method) {
+    static @NotNull ExecutableContainer of(final @NotNull Method method) {
         return new MethodContainerImpl(method);
     }
 
     /**
-     * Gets an instance of a {@link MethodContainer} from the given method.
+     * Gets an instance of a {@link ExecutableContainer} from the given method.
      * It supports generics types, thanks to the given container.
      *
      * @param method            the method
      * @param genericsContainer the generics container
      * @return the method container
      */
-    static @NotNull MethodContainer of(final @NotNull Method method,
-                                       final @NotNull GenericsContainer<?> genericsContainer) {
+    static @NotNull ExecutableContainer of(final @NotNull Method method,
+                                           final @NotNull GenericsContainer<?> genericsContainer) {
         return new GenericsMethodContainerImpl<>(method, genericsContainer);
     }
 
     /**
-     * An implementation of {@link MethodContainer}.
+     * An implementation of {@link ExecutableContainer}.
      */
     @Getter
-    class MethodContainerImpl implements MethodContainer {
+    class MethodContainerImpl implements ExecutableContainer {
         private final @NotNull Method actualMethod;
 
         /**
@@ -124,7 +126,7 @@ public interface MethodContainer {
     }
 
     /**
-     * An implementation of {@link MethodContainer} that supports generic types.
+     * An implementation of {@link ExecutableContainer} that supports generic types.
      *
      * @param <C> the type of the parameterized types
      */

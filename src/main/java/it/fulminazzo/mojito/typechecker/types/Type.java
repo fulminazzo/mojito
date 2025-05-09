@@ -4,7 +4,7 @@ import it.fulminazzo.mojito.tokenizer.TokenType;
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.typechecker.types.variables.TypeFieldContainer;
-import it.fulminazzo.mojito.visitors.visitorobjects.MethodContainer;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -112,7 +112,7 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
     }
 
     @Override
-    default @NotNull Type invokeMethod(final @NotNull MethodContainer method,
+    default @NotNull Type invokeMethod(final @NotNull ExecutableContainer method,
                                        final @NotNull ParameterTypes parameterTypes) throws TypeException {
         ClassType classType = isClassType() ? (ClassType) this : toClass();
         if (!Modifier.isPublic(method.getModifiers()))

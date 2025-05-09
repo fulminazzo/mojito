@@ -6,7 +6,7 @@ import it.fulminazzo.mojito.executor.values.arrays.ArrayValue;
 import it.fulminazzo.mojito.executor.values.objects.ObjectValue;
 import it.fulminazzo.mojito.executor.values.primitivevalue.PrimitiveValue;
 import it.fulminazzo.mojito.executor.values.variables.ValueFieldContainer;
-import it.fulminazzo.mojito.visitors.visitorobjects.MethodContainer;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -124,7 +124,7 @@ public interface Value<V> extends VisitorObject<ClassValue<?>, Value<?>, Paramet
     }
 
     @Override
-    default @NotNull Value<?> invokeMethod(final @NotNull MethodContainer method,
+    default @NotNull Value<?> invokeMethod(final @NotNull ExecutableContainer method,
                                            final @NotNull ParameterValues parameters) throws ValueException {
         Refl<V> executor = new Refl<>(getValue());
         List<Object> parametersList = new ArrayList<>();
