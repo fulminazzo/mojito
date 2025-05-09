@@ -31,8 +31,11 @@ public final class GenericsUtils {
         Class<?> targetClass = target.getInnerClass();
         Map<String, ClassType> targetGenericTypes = new LinkedHashMap<>(target.getGenericTypes());
 
+        System.out.println(targetClass + " -> " + modelClass);
+
         @NotNull List<Class<?>> hierarchy = getClassHierarchy(targetClass, modelClass);
         if (hierarchy.isEmpty()) return false;
+        System.out.println(hierarchy);
 
         for (int i = 0; i < hierarchy.size() - 1; i++) {
             Class<?> current = hierarchy.get(i);
@@ -45,7 +48,7 @@ public final class GenericsUtils {
                                 return matcher.matches() && matcher.group(1).equals(next.getName());
                             })
                             .findFirst().orElseThrow(IllegalStateException::new) :
-                    next.getGenericSuperclass();
+                    current.getGenericSuperclass();
 
             Matcher matcher = GENERICS_CLASS_PATTERN.matcher(superClass.getTypeName());
             matcher.matches();
