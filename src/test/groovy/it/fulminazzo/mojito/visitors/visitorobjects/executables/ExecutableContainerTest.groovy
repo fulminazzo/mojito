@@ -30,6 +30,20 @@ class ExecutableContainerTest extends Specification {
 
     }
 
+    def 'test that return type of constructor throws'() {
+        given:
+        def container = ExecutableContainer.of(
+                GenericClass.getConstructor()
+        )
+
+        when:
+        container.returnType
+
+        then:
+        def e = thrown(ExecutableException)
+        e.message == ExecutableException.noReturnType(container.class).message
+    }
+
     def 'test that return type of parameterized method is correct'() {
         given:
         def container = ExecutableContainer.of(
