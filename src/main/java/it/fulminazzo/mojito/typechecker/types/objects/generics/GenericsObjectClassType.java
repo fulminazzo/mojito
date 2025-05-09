@@ -1,19 +1,14 @@
 package it.fulminazzo.mojito.typechecker.types.objects.generics;
 
 import it.fulminazzo.mojito.typechecker.types.ClassType;
-import it.fulminazzo.mojito.typechecker.types.ParameterTypes;
 import it.fulminazzo.mojito.typechecker.types.Type;
-import it.fulminazzo.mojito.typechecker.types.TypeException;
 import it.fulminazzo.mojito.typechecker.types.objects.CustomObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.visitors.visitorobjects.GenericsContainer;
-import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObjectException;
-import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -62,18 +57,6 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
         if (type.is(GenericsObjectType.class))
             return GenericsUtils.checkCompatibility(this, (GenericsObjectType) type);
         else return super.compatibleWith(type);
-    }
-
-    @Override
-    public @NotNull Type newObject(@NotNull ParameterTypes parameters) throws VisitorObjectException {
-        //TODO:
-        return super.newObject(parameters);
-    }
-
-    @Override
-    public @NotNull Type newObject(@NotNull ExecutableContainer<Constructor<?>> constructor, @NotNull ParameterTypes parameterTypes) throws TypeException {
-        //TODO:
-        return super.newObject(constructor, parameterTypes);
     }
 
     @Override
