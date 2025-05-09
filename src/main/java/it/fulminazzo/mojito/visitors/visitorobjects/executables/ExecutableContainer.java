@@ -3,62 +3,63 @@ package it.fulminazzo.mojito.visitors.visitorobjects.executables;
 import it.fulminazzo.mojito.visitors.visitorobjects.GenericsContainer;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 
 /**
- * Holds critical information about a method.
+ * Holds critical information about an executable.
  */
-public interface ExecutableContainer {
+public interface ExecutableContainer<E extends Executable> {
 
     /**
-     * Gets the method modifiers.
+     * Gets the executable modifiers.
      *
      * @return the modifiers
      */
     int getModifiers();
 
     /**
-     * Gets the method return type.
+     * Gets the executable return type.
      *
      * @return the return type
      */
     @NotNull Class<?> getReturnType();
 
     /**
-     * Gets the method name.
+     * Gets the executable name.
      *
      * @return the name
      */
     @NotNull String getName();
 
     /**
-     * Get the method parameter types.
+     * Get the executable parameter types.
      *
      * @return an array containing the classes of the parameters
      */
     @NotNull Class<?>[] getParameterTypes();
 
     /**
-     * Checks if the method accepts variable arguments.
+     * Checks if the executable accepts variable arguments.
      *
      * @return true if it does
      */
     boolean isVarArgs();
 
     /**
-     * Gets the actual method contained in this method.
+     * Gets the actual executable contained in this executable.
      *
-     * @return the method
+     * @return the executable
      */
-    @NotNull Method getActualExecutable();
+    @NotNull E getActualExecutable();
 
     /**
      * Gets an instance of a {@link ExecutableContainer} from the given method.
      *
      * @param method the method
-     * @return the method container
+     * @return the executable container
      */
-    static @NotNull ExecutableContainer of(final @NotNull Method method) {
+    static @NotNull ExecutableContainer<Method> of(final @NotNull Method method) {
         return new MethodContainerImpl(method);
     }
 
@@ -68,9 +69,9 @@ public interface ExecutableContainer {
      *
      * @param method            the method
      * @param genericsContainer the generics container
-     * @return the method container
+     * @return the executable container
      */
-    static @NotNull ExecutableContainer of(final @NotNull Method method,
+    static @NotNull ExecutableContainer<Method> of(final @NotNull Method method,
                                            final @NotNull GenericsContainer<?> genericsContainer) {
         return new GenericsMethodContainerImpl<>(method, genericsContainer);
     }
