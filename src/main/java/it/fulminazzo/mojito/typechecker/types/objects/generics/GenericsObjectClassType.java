@@ -48,7 +48,8 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
                 Map<String, ClassType> genericTypes = genericsObjectType.getGenericTypes();
                 for (String key : this.genericTypes.keySet()) {
                     ClassType genericType = genericTypes.get(key);
-                    this.genericTypes.get(key).check(genericType);
+                    if (genericType != null)
+                        this.genericTypes.get(key).check(genericType);
                 }
             }
         }
