@@ -21,6 +21,17 @@ import java.util.regex.Pattern;
 public final class GenericsUtils {
     public static final @NotNull Pattern GENERICS_CLASS_PATTERN = Pattern.compile("([^<]+)<(.*)>");
 
+    /**
+     * Checks whether the given {@link GenericsObjectType} is compatible with
+     * {@link GenericsObjectClassType}. It does so by converting every parameterized type name of the first
+     * with the names specified in the latter.
+     * As an example, {@link Collection} uses <i>E</i> as type name, but {@link Iterable} specified <i>T</i>.
+     * Therefore, the types saved as <i>E</i> are translated to <i>T</i>, before checking.
+     *
+     * @param model  the class type
+     * @param target the object type
+     * @return true if they are compatible
+     */
     public static boolean checkCompatibility(
             final @NotNull GenericsObjectClassType model,
             final @NotNull GenericsObjectType target
@@ -31,11 +42,8 @@ public final class GenericsUtils {
         Class<?> targetClass = target.getInnerClass();
         Map<String, ClassType> targetGenericTypes = new LinkedHashMap<>(target.getGenericTypes());
 
-        System.out.println(targetClass + " -> " + modelClass);
-
         @NotNull List<Class<?>> hierarchy = getClassHierarchy(targetClass, modelClass);
         if (hierarchy.isEmpty()) return false;
-        System.out.println(hierarchy);
 
         for (int i = 0; i < hierarchy.size() - 1; i++) {
             Class<?> current = hierarchy.get(i);
@@ -51,6 +59,7 @@ public final class GenericsUtils {
                     current.getGenericSuperclass();
 
             Matcher matcher = GENERICS_CLASS_PATTERN.matcher(superClass.getTypeName());
+            // Already checked in previous steps
             matcher.matches();
             String[] types = StringUtils.quoteSplitter(matcher.group(2), ", *", "<", ">");
 
