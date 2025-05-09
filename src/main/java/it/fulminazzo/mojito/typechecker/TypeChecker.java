@@ -225,7 +225,9 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
                 if (!componentType.isAssignableFrom(variableType))
                     throw TypeCheckerException.invalidType(componentType.toClass(), variableType);
             } else {
-                ClassType iterable = ClassType.of(Iterator.class, Arrays.asList(variableType));
+                Type actualVariableType = variableType.toType();
+                if (actualVariableType.isPrimitive()) actualVariableType = actualVariableType.toWrapper();
+                ClassType iterable = ClassType.of(Iterator.class, Collections.singletonList(actualVariableType.toClass()));
                 expressionType.checkAssignableFrom(iterable);
             }
 
