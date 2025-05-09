@@ -119,6 +119,7 @@ will return the parsed variable `name` (`fulminazzo`) in the _returnedValue_
 - [x] `final` keyword;
 - [x] `instanceof` keyword;
 - [ ] lambda expressions;
+- [ ] `.class` for classes;
 - [ ] Java 17 features (section to be expanded).
 
 ## Grammar
