@@ -1068,6 +1068,26 @@ class JavaParserTest extends Specification {
         e.message == ParserException.invalidValueProvided(this.parser, 'a').message
     }
 
+    def 'test parse literal no consume exception for JaCoCo coverage'() {
+        given:
+        def parser = Spy(JavaParser)
+
+        and:
+        def literal = Mock(Literal)
+        literal.getLiteral() >> '+!?'
+        parser.getLiteralFromString(_) >> literal
+
+        and:
+        parser.input = 'Mock<String>'
+        parser.tokenizer.next()
+
+        when:
+        parser.parseLiteralNoConsume()
+
+        then:
+        thrown(IllegalStateException)
+    }
+
     def 'test parse literal RuntimeException'() {
         when:
         this.parser.createLiteral(MockLiteral, 'a')
