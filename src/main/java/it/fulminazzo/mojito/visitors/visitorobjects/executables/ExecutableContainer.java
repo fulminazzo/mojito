@@ -65,6 +65,19 @@ public interface ExecutableContainer<E extends Executable> {
     }
 
     /**
+     * Gets an instance of a {@link ExecutableContainer} from the given constructor.
+     * It supports generics types, thanks to the given container.
+     *
+     * @param constructor       the constructor
+     * @param genericsContainer the generics container
+     * @return the executable container
+     */
+    static @NotNull ExecutableContainer<Constructor<?>> of(final @NotNull Constructor<?> constructor,
+                                                           final @NotNull GenericsContainer<?> genericsContainer) {
+        return new GenericsConstructorContainerImpl<>(constructor, genericsContainer);
+    }
+
+    /**
      * Gets an instance of a {@link ExecutableContainer} from the given method.
      *
      * @param method the method
