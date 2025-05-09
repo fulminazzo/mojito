@@ -79,6 +79,8 @@ String stW = "Hello world";
 String stWCast = (String) stW;
 String stWCastNull = (String) null;
 
+boW = stW instanceof String;
+
 // Binary operations
 i = i + 1 - 1 * 1 / 1 % 2 & 1 | 1 ^ 1 << 2 >> 1 >>> 1;
 i = ((((i + 1) - (1 * 1)) / ((1 % 2) & (1 | 1))) ^ ((1 << 2) >> (1 >>> 1)));
