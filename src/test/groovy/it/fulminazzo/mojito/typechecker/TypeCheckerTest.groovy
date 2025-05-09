@@ -401,6 +401,11 @@ class TypeCheckerTest extends Specification {
         this.environment.declare(ObjectClassType.of(List), 'list', ObjectType.of(List))
         this.environment.declare(ObjectClassType.of(Collection), 'collection', ObjectType.of(Collection))
         this.environment.declare(ObjectClassType.of(Set), 'set', ObjectType.of(Set))
+        this.environment.declare(
+                ObjectClassType.of(List, [ClassType.of(Integer)]),
+                'parameterizedList',
+                ObjectType.of(List, [ClassType.of(Integer)])
+        )
 
         and:
         def varType = Literal.of('int')
@@ -426,6 +431,7 @@ class TypeCheckerTest extends Specification {
         Types.NO_TYPE         | CODE_BLOCK_BREAK | Literal.of('list')
         Types.NO_TYPE         | CODE_BLOCK_BREAK | Literal.of('set')
         Types.NO_TYPE         | CODE_BLOCK_BREAK | Literal.of('collection')
+        Types.NO_TYPE         | CODE_BLOCK_BREAK | Literal.of('parameterizedList')
     }
 
     def 'test visit enhanced for statement of non-iterable'() {
