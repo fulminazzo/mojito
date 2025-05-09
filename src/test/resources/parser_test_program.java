@@ -77,8 +77,6 @@ String stW = "Hello world";
 String stWCast = (String) stW;
 String stWCastNull = (String) null;
 
-List<String> list = new ArrayList<>();
-
 // Binary operations
 i = i + 1 - 1 * 1 / 1 % 2 & 1 | 1 ^ 1 << 2 >> 1 >>> 1;
 i = ((((i + 1) - (1 * 1)) / ((1 % 2) & (1 | 1))) ^ ((1 << 2) >> (1 >>> 1)));
@@ -260,6 +258,13 @@ for (int[] a : arrayOfArray) {
     if (a == null) break;
     else continue;
 }
+
+List<String> list = new ArrayList<>();
+list.add("Hello");
+list.add("World");
+
+for (String str : list)
+    System.out.println(str);
 
 // This
 System.out.println("The previous value was " + this.publicField);
