@@ -734,6 +734,28 @@ class ExecutorTest extends Specification {
         BOOL_LIT_FALSE | NUMBER_LIT | STRING_LIT | ObjectValue.of('Hello, world!')
     }
 
+    def 'test #left instanceof #right returns #expected'() {
+        given:
+        this.environment.declare(ObjectClassValue.STRING, 'string', ObjectValue.of('Hello'))
+        this.environment.declare(ObjectClassValue.INTEGER, 'integer', ObjectValue.of(1))
+        this.environment.declare(PrimitiveClassValue.INT, 'i', PrimitiveValue.of(1))
+
+        and:
+        def type = this.executor.visitInstanceOf(left, right)
+
+        expect:
+        type == expected
+
+        where:
+        left                  | right                 | expected
+        Literal.of('string')  | Literal.of('String')  | PrimitiveValue.of(true)
+        Literal.of('string')  | Literal.of('Integer') | PrimitiveValue.of(false)
+        Literal.of('i')       | Literal.of('Integer') | PrimitiveValue.of(true)
+        Literal.of('i')       | Literal.of('String')  | PrimitiveValue.of(false)
+        Literal.of('integer') | Literal.of('Integer') | PrimitiveValue.of(true)
+        Literal.of('integer') | Literal.of('String')  | PrimitiveValue.of(false)
+    }
+
     def 'test equal'() {
         given:
         def result = this.executor.visitEqual(first, second)
