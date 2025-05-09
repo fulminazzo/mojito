@@ -32,6 +32,7 @@ public final class GenericsUtils {
      * @param target the object type
      * @return true if they are compatible
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static boolean checkCompatibility(
             final @NotNull GenericsObjectClassType model,
             final @NotNull GenericsObjectType target
@@ -53,7 +54,9 @@ public final class GenericsUtils {
                     Arrays.stream(current.getGenericInterfaces())
                             .filter(t -> {
                                 Matcher matcher = GENERICS_CLASS_PATTERN.matcher(t.getTypeName());
-                                return matcher.matches() && matcher.group(1).equals(next.getName());
+                                // Already checked in previous steps
+                                matcher.matches();
+                                return matcher.group(1).equals(next.getName());
                             })
                             .findFirst().orElseThrow(IllegalStateException::new) :
                     current.getGenericSuperclass();
