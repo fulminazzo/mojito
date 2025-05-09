@@ -123,8 +123,8 @@ public final class GenericsUtils {
      * @param genericTypes the generic types
      * @return the final map
      */
-    public static Map<String, ClassType> genericTypesToMap(final @NotNull Class<?> clazz,
-                                                           final @NotNull Collection<ClassType> genericTypes) {
+    public static @NotNull Map<String, ClassType> genericTypesToMap(final @NotNull Class<?> clazz,
+                                                                    final @NotNull Collection<ClassType> genericTypes) {
         Map<String, ClassType> finalMap = new LinkedHashMap<>();
         TypeVariable<? extends Class<?>>[] typeParameters = clazz.getTypeParameters();
 
@@ -139,8 +139,7 @@ public final class GenericsUtils {
             for (java.lang.reflect.Type bound : bounds)
                 try {
                     actualType.checkExtends(ClassType.of(bound.getTypeName()));
-                } catch (TypeException e) {
-                    throw TypeCheckerException.of(e);
+                } catch (TypeException ignored) {
                 }
             finalMap.put(expectedParameter.getName(), actualType);
         }

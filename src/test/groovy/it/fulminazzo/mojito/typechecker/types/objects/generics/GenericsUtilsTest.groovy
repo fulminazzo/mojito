@@ -93,5 +93,4 @@ class GenericsUtilsTest extends Specification {
         ClassType.of(GenericsTestClass.Decimal) | ClassType.of(GenericsTestClass.Numeric)
     }
 
-
 }
