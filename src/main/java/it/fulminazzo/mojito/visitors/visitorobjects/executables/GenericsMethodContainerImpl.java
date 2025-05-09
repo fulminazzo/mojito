@@ -25,11 +25,11 @@ class GenericsMethodContainerImpl<C extends ClassVisitorObject<C, ?, ?>> extends
     /**
      * Instantiates a new Generics method container.
      *
-     * @param method            the method
+     * @param method            the method to create from
      * @param genericsContainer the generics container to get the parameters from
      */
-    public GenericsMethodContainerImpl(@NotNull Method method,
-                                       @NotNull GenericsContainer<C> genericsContainer) {
+    public GenericsMethodContainerImpl(final @NotNull Method method,
+                                       final @NotNull GenericsContainer<C> genericsContainer) {
         super(method);
         final Map<String, C> types = new LinkedHashMap<>(genericsContainer.getGenericTypes());
         Arrays.stream(method.getTypeParameters())
