@@ -1,17 +1,17 @@
 package it.fulminazzo.mojito.parser
 
-import groovy.transform.Final
+
 import it.fulminazzo.mojito.parser.node.*
 import it.fulminazzo.mojito.parser.node.arrays.DynamicArray
 import it.fulminazzo.mojito.parser.node.arrays.StaticArray
 import it.fulminazzo.mojito.parser.node.container.CodeBlock
 import it.fulminazzo.mojito.parser.node.literals.*
-import it.fulminazzo.mojito.parser.node.operators.binary.*
-import it.fulminazzo.mojito.parser.node.operators.ternary.TernaryOperator
-import it.fulminazzo.mojito.parser.node.operators.unary.Decrement
-import it.fulminazzo.mojito.parser.node.operators.unary.Increment
-import it.fulminazzo.mojito.parser.node.operators.unary.Minus
-import it.fulminazzo.mojito.parser.node.operators.unary.Not
+import it.fulminazzo.mojito.parser.node.operations.binary.*
+import it.fulminazzo.mojito.parser.node.operations.ternary.TernaryOperator
+import it.fulminazzo.mojito.parser.node.operations.unary.Decrement
+import it.fulminazzo.mojito.parser.node.operations.unary.Increment
+import it.fulminazzo.mojito.parser.node.operations.unary.Minus
+import it.fulminazzo.mojito.parser.node.operations.unary.Not
 import it.fulminazzo.mojito.parser.node.statements.*
 import it.fulminazzo.mojito.parser.node.values.*
 import it.fulminazzo.mojito.tokenizer.TokenType

@@ -21,9 +21,9 @@ import it.fulminazzo.mojito.parser.node.literals.ArrayLiteral
 import it.fulminazzo.mojito.parser.node.literals.EmptyLiteral
 import it.fulminazzo.mojito.parser.node.literals.Literal
 import it.fulminazzo.mojito.parser.node.literals.ThisLiteral
-import it.fulminazzo.mojito.parser.node.operators.binary.*
-import it.fulminazzo.mojito.parser.node.operators.unary.Decrement
-import it.fulminazzo.mojito.parser.node.operators.unary.Increment
+import it.fulminazzo.mojito.parser.node.operations.binary.*
+import it.fulminazzo.mojito.parser.node.operations.unary.Decrement
+import it.fulminazzo.mojito.parser.node.operations.unary.Increment
 import it.fulminazzo.mojito.parser.node.statements.*
 import it.fulminazzo.mojito.parser.node.values.*
 import spock.lang.Specification

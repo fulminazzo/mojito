@@ -12,10 +12,10 @@ import it.fulminazzo.mojito.parser.node.MethodInvocation
 import it.fulminazzo.mojito.parser.node.container.CodeBlock
 import it.fulminazzo.mojito.parser.node.container.JavaProgram
 import it.fulminazzo.mojito.parser.node.literals.*
-import it.fulminazzo.mojito.parser.node.operators.binary.ArrayIndex
-import it.fulminazzo.mojito.parser.node.operators.binary.Field
-import it.fulminazzo.mojito.parser.node.operators.binary.NewObject
-import it.fulminazzo.mojito.parser.node.operators.unary.Increment
+import it.fulminazzo.mojito.parser.node.operations.binary.ArrayIndex
+import it.fulminazzo.mojito.parser.node.operations.binary.Field
+import it.fulminazzo.mojito.parser.node.operations.binary.NewObject
+import it.fulminazzo.mojito.parser.node.operations.unary.Increment
 import it.fulminazzo.mojito.parser.node.statements.*
 import it.fulminazzo.mojito.parser.node.values.*
 import it.fulminazzo.mojito.typechecker.types.*

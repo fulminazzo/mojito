@@ -24,7 +24,7 @@ import it.fulminazzo.mojito.parser.node.literals.EmptyLiteral
 import it.fulminazzo.mojito.parser.node.literals.Literal
 import it.fulminazzo.mojito.parser.node.literals.NullLiteral
 import it.fulminazzo.mojito.parser.node.literals.ThisLiteral
-import it.fulminazzo.mojito.parser.node.operators.binary.Field
+import it.fulminazzo.mojito.parser.node.operations.binary.Field
 import it.fulminazzo.mojito.parser.node.statements.Return
 import it.fulminazzo.mojito.parser.node.statements.Statement
 import it.fulminazzo.mojito.parser.node.values.*
