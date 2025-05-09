@@ -6,9 +6,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -30,8 +27,7 @@ class GenericsMethodContainerImpl<C extends ClassVisitorObject<C, ?, ?>> extends
     public GenericsMethodContainerImpl(final @NotNull Method method,
                                        final @NotNull GenericsContainer<C> genericsContainer) {
         super(method);
-        final Map<String, C> types = new LinkedHashMap<>(genericsContainer.getGenericTypes());
-        Arrays.stream(method.getTypeParameters()).map(Type::getTypeName).forEach(types::remove);
+        final Map<String, C> types = genericsContainer.getGenericTypes(method);
 
         this.returnType = GenericsExecutableUtils.getClassFromType(method.getGenericReturnType(), types, method.getReturnType());
 
