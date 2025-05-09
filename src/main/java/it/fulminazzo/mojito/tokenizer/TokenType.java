@@ -31,6 +31,7 @@ public enum TokenType {
     ELSE("else"),
 
     FINAL("final"),
+    INSTANCEOF("instanceof"),
 
     // Expr
     ASSIGN("="),
