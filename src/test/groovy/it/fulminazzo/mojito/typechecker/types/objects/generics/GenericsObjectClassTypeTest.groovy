@@ -8,6 +8,22 @@ import spock.lang.Specification
 
 class GenericsObjectClassTypeTest extends Specification {
 
+    def 'test cast of #cast to #type should return #cast'() {
+        when:
+        def actual = cast.cast(type)
+
+        then:
+        actual == cast.toType()
+
+        where:
+        cast                                                                             | type
+        new GenericsObjectClassType(ObjectType.of(Collection), [ObjectClassType.STRING]) | new GenericsObjectType(List, [ObjectClassType.STRING])
+        new GenericsObjectClassType(ObjectType.of(List), [ObjectClassType.STRING])       | new GenericsObjectType(List, [ObjectClassType.STRING])
+        new GenericsObjectClassType(ObjectType.of(LinkedList), [ObjectClassType.STRING]) | new GenericsObjectType(List, [ObjectClassType.STRING])
+        new GenericsObjectClassType(ObjectType.of(ArrayList), [ObjectClassType.STRING])  | new GenericsObjectType(List, [ObjectClassType.STRING])
+        new GenericsObjectClassType(ObjectType.of(ArrayList), [ObjectClassType.STRING])  | Types.NULL_TYPE
+    }
+
     def 'test that class type is compatible with #type'() {
         given:
         def classType = new GenericsObjectClassType(ObjectType.of(List),
