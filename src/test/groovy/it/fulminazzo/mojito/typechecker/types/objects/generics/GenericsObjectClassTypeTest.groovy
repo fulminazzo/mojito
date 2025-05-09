@@ -1,5 +1,6 @@
 package it.fulminazzo.mojito.typechecker.types.objects.generics
 
+import it.fulminazzo.mojito.typechecker.TypeCheckerException
 import it.fulminazzo.mojito.typechecker.types.ClassType
 import it.fulminazzo.mojito.typechecker.types.ParameterTypes
 import it.fulminazzo.mojito.typechecker.types.TypeException
@@ -67,6 +68,21 @@ class GenericsObjectClassTypeTest extends Specification {
                 new GenericsObjectType(SecondGenericsTestClass, [ObjectClassType.of(GenericsTestClass.MockTestClass), ObjectClassType.STRING])
         new GenericsObjectClassType(ObjectType.of(SecondGenericsTestClass), [ObjectClassType.of(GenericsTestClass.MockTestClass), ObjectClassType.STRING]) |
                 new GenericsObjectType(GenericsTestClass, [ObjectClassType.of(GenericsTestClass.MockTestClass)])
+    }
+
+    def 'test cast of wrong generic type should throw'() {
+        given:
+        def cast = new GenericsObjectClassType(ObjectType.of(List), [ObjectClassType.STRING])
+
+        and:
+        def type = new GenericsObjectType(Set, [ObjectClassType.STRING])
+
+        when:
+        cast.cast(type)
+
+        then:
+        def e = thrown(TypeCheckerException)
+        e.message == TypeCheckerException.invalidCast(cast, type).message
     }
 
     def 'test Iterable compatibility with #clazz'() {
