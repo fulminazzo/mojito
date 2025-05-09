@@ -571,13 +571,28 @@ public class JavaParser extends Parser {
      * @return the node
      */
     protected @NotNull Node parseTernaryOperator() {
-        Node expr = parseBinaryComparison();
+        Node expr = parseInstanceOf();
         if (lastToken() == QUESTION_MARK) {
             consume(QUESTION_MARK);
             Node left = parseExpression();
             consume(COLON);
             Node right = parseExpression();
             expr = new TernaryOperator(expr, left, right);
+        }
+        return expr;
+    }
+
+    /**
+     * INSTANCE_OF := AND ( instanceof LITERAL )?
+     *
+     * @return the node
+     */
+    protected @NotNull Node parseInstanceOf() {
+        Node expr = parseBinaryComparison();
+        if (lastToken() == INSTANCEOF) {
+            consume(INSTANCEOF);
+            Literal literal = parseLiteral();
+            expr = new InstanceOf(expr, literal);
         }
         return expr;
     }
