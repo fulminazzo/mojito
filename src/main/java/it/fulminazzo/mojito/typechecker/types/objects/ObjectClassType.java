@@ -4,8 +4,11 @@ import it.fulminazzo.fulmicollection.utils.ReflectionUtils;
 import it.fulminazzo.fulmicollection.utils.StringUtils;
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.*;
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
 
 /**
  * Represents the wrappers, {@link String} and {@link Object} classes.
@@ -125,6 +128,30 @@ public enum ObjectClassType implements ClassType {
         } catch (IllegalArgumentException e) {
             return new CustomObjectClassType(type);
         }
+    }
+
+    /**
+     * Gets a new {@link ClassType} from the given {@link ClassType} that supports generic typing.
+     *
+     * @param classType    the class type
+     * @param genericTypes the generic types
+     * @return the class type
+     */
+    public static @NotNull ClassType of(final @NotNull ClassType classType,
+                                        final @NotNull Collection<ClassType> genericTypes) {
+        return of(ObjectType.of(classType.toJavaClass()), genericTypes);
+    }
+
+    /**
+     * Gets a new {@link ClassType} from the given {@link ObjectType} that supports generic typing.
+     *
+     * @param type         the type
+     * @param genericTypes the generic types
+     * @return the class type
+     */
+    public static @NotNull ClassType of(final @NotNull ObjectType type,
+                                        final @NotNull Collection<ClassType> genericTypes) {
+        return new GenericsObjectClassType(type, genericTypes);
     }
 
 }

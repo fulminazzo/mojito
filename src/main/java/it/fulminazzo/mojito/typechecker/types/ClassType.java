@@ -1,9 +1,9 @@
 package it.fulminazzo.mojito.typechecker.types;
 
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
-import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType;
 import it.fulminazzo.mojito.utils.StringUtils;
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
 import org.jetbrains.annotations.NotNull;
@@ -86,13 +86,25 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
     }
 
     /**
-     * Gets a new {@link GenericsObjectClassType} from the given class name.
+     * Gets a new {@link ClassType} that supports generic typing from the given class type.
+     *
+     * @param classType    the class type
+     * @param genericTypes the generic types
+     * @return the class type
+     */
+    static @NotNull ClassType of(final @NotNull ClassType classType,
+                                 final @NotNull List<ClassType> genericTypes) {
+        return ObjectClassType.of(classType, genericTypes);
+    }
+
+    /**
+     * Gets a new {@link ClassType} that supports generic typing from the given class name.
      * It uses the given <b>genericTypes</b> as list of parameters, which are
      * then each passed to {@link #of(String)}.
      *
      * @param className    the class name
      * @param genericTypes the generic types
-     * @return class type
+     * @return the class type
      * @throws TypeException the exception thrown in case a class is not found
      */
     static @NotNull ClassType of(final @NotNull String className,
@@ -100,7 +112,7 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
         String[] types = StringUtils.quoteSplitter(genericTypes, ", *", "<", ">");
         List<ClassType> classTypes = new LinkedList<>();
         for (String type : types) classTypes.add(of(type));
-        return new GenericsObjectClassType(ObjectType.of(className), classTypes);
+        return ObjectClassType.of(ObjectType.of(className), classTypes);
     }
 
     /**
