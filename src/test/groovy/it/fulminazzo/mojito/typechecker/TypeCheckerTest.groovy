@@ -1235,6 +1235,15 @@ class TypeCheckerTest extends Specification {
         Literal.of('integer') | Literal.of('String')  | PrimitiveType.BOOLEAN
     }
 
+    def 'test instanceof strictly requires variable'() {
+        when:
+        this.typeChecker.visitInstanceOf(NUMBER_LIT, Literal.of('Integer'))
+
+        then:
+        def e = thrown(TypeCheckerException)
+        e.message == TypeCheckerException.invalidType(Literal.class, NUMBER_LIT).message
+    }
+
     def 'test equal'() {
         given:
         def type = this.typeChecker.visitEqual(NUMBER_LIT, NUMBER_LIT)
