@@ -32,6 +32,8 @@ public final class GenericsUtils {
         Map<String, ClassType> targetGenericTypes = new LinkedHashMap<>(target.getGenericTypes());
 
         @NotNull List<Class<?>> hierarchy = getClassHierarchy(targetClass, modelClass);
+        if (hierarchy.isEmpty()) return false;
+
         for (int i = 0; i < hierarchy.size() - 1; i++) {
             Class<?> current = hierarchy.get(i);
             Class<?> next = hierarchy.get(i + 1);
