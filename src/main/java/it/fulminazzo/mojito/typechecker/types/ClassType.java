@@ -85,19 +85,7 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
     }
 
     /**
-     * Gets a new {@link ClassType} that supports generic typing from the given class type.
-     *
-     * @param classType    the class type
-     * @param genericTypes the generic types
-     * @return the class type
-     */
-    static @NotNull ClassType of(final @NotNull ClassType classType,
-                                 final @NotNull List<ClassType> genericTypes) {
-        return ObjectClassType.of(classType, genericTypes);
-    }
-
-    /**
-     * Gets a new {@link ClassType} that supports generic typing from the given class type.
+     * Gets a new {@link ClassType} that supports generic typing from the given class.
      *
      * @param clazz        the class
      * @param genericTypes the generic types

@@ -131,18 +131,6 @@ public enum ObjectClassType implements ClassType {
     }
 
     /**
-     * Gets a new {@link ClassType} from the given {@link ClassType} that supports generic typing.
-     *
-     * @param classType    the class type
-     * @param genericTypes the generic types
-     * @return the class type
-     */
-    public static @NotNull ClassType of(final @NotNull ClassType classType,
-                                        final @NotNull Collection<ClassType> genericTypes) {
-        return of(classType.toJavaClass(), genericTypes);
-    }
-
-    /**
      * Gets a new {@link ClassType} from the given {@link Class} that supports generic typing.
      *
      * @param clazz        the class
