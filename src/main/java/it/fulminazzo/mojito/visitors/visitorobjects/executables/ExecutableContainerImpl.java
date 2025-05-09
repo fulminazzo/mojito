@@ -10,16 +10,16 @@ import java.lang.reflect.Method;
  * A general implementation of {@link ExecutableContainer} for {@link Executable}s.
  */
 @Getter
-abstract class ExecutableContainerImpl implements ExecutableContainer {
-    protected final @NotNull Method actualExecutable;
+abstract class ExecutableContainerImpl<E extends Executable> implements ExecutableContainer<E> {
+    protected final @NotNull E actualExecutable;
 
     /**
-     * Instantiates a new Method container.
+     * Instantiates a new Executable container.
      *
-     * @param method the method to create from
+     * @param executable the executable to create from
      */
-    public ExecutableContainerImpl(final @NotNull Method method) {
-        this.actualExecutable = method;
+    public ExecutableContainerImpl(final @NotNull E executable) {
+        this.actualExecutable = executable;
     }
 
     @Override
