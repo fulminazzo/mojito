@@ -1,12 +1,48 @@
 package it.fulminazzo.mojito.typechecker.types.objects.generics
 
 import it.fulminazzo.mojito.typechecker.types.ClassType
+import it.fulminazzo.mojito.typechecker.types.ParameterTypes
+import it.fulminazzo.mojito.typechecker.types.TypeException
 import it.fulminazzo.mojito.typechecker.types.Types
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import spock.lang.Specification
 
 class GenericsObjectClassTypeTest extends Specification {
+
+    def 'test valid newObject (#parameters)'() {
+        when:
+        def actual = classType.newObject(parameters)
+
+        then:
+        actual == expected
+
+        where:
+        classType                                                                        | expected                                                                          | parameters
+        ClassType.of(GenericsTestClass, [ClassType.of(GenericsTestClass.MockTestClass)]) | ObjectType.of(GenericsTestClass, [ClassType.of(GenericsTestClass.MockTestClass)]) |
+                new ParameterTypes([ObjectType.of(GenericsTestClass.MockTestClass), ObjectType.INTEGER])
+        //TODO: type inference
+//        ClassType.of(GenericsTestClass) | ObjectType.of(GenericsTestClass, [ClassType.of(GenericsTestClass.MockTestClass)]) |
+//                new ParameterTypes([ObjectType.of(GenericsTestClass.MockTestClass), ObjectType.INTEGER])
+        ClassType.of(ArrayList, [ObjectClassType.INTEGER])                               | ObjectType.of(ArrayList, [ObjectClassType.INTEGER])                               |
+                new ParameterTypes([ObjectType.of(List, [ObjectClassType.INTEGER])])
+        //TODO: type inference
+//        ClassType.of(ArrayList)                               | ObjectType.of(ArrayList, [ObjectClassType.INTEGER])                               |
+//                new ParameterTypes([ObjectType.of(List, [ObjectClassType.INTEGER])])
+    }
+
+    def 'test newObject should throw types mismatch'() {
+        given:
+        def classType = ClassType.of(GenericsTestClass, [ClassType.of(GenericsTestClass.MockTestClass)])
+        def parameters = new ParameterTypes([ObjectType.STRING, ObjectType.INTEGER])
+
+        when:
+        classType.newObject(parameters)
+
+        then:
+        def e = thrown(TypeException)
+        e.message == TypeException.typesMismatch(classType, GenericsTestClass.getConstructor(GenericsTestClass.Numeric, Integer), parameters).message
+    }
 
     def 'test cast of #cast to #type should return #cast'() {
         when:
