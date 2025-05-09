@@ -909,7 +909,7 @@ public class JavaParser extends Parser {
                 try {
                     return new GenericsLiteral(l.getLiteral(), literals);
                 } catch (NodeException ignored) {
-                    // Unreachable code
+                    throw new IllegalStateException("Unreachable code");
                 }
             }
         }
