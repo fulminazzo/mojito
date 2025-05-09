@@ -179,4 +179,16 @@ class ClassTypeTest extends Specification {
         e.message == TypeException.methodNotFound(this.classType, '<init>', mockParameters).message
     }
 
+    def 'test of IllegalStateException for JaCoCo coverage'() {
+        given:
+        def type = Mock(java.lang.reflect.Type)
+        type.getTypeName() >> 'NotExistingAtAll'
+
+        when:
+        ClassType.of(type)
+
+        then:
+        thrown(IllegalStateException)
+    }
+
 }
