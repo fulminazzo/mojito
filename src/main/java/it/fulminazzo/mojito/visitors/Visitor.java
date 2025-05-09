@@ -492,6 +492,18 @@ public interface Visitor<
     @NotNull O visitTernaryOperator(@NotNull Node expression, @NotNull Node first, @NotNull Node second);
 
     /**
+     * Converts instance of and its fields to this visitor type.
+     *
+     * @param left  the first operand
+     * @param right the class
+     * @return the result of the operation
+     */
+    default @NotNull O visitInstanceOf(@NotNull Node left, @NotNull Node right) {
+        boolean instanceOf = left.accept(this).isAssignableFrom(right.accept(this).checkClass());
+        return visitBooleanValueLiteral(String.valueOf(instanceOf));
+    }
+
+    /**
      * Converts and and its fields to this visitor type.
      *
      * @param left  the left
