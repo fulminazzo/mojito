@@ -10,6 +10,15 @@ class GenericsTestClass<F extends GenericsTestClass.Numeric & GenericsTestClass.
     public F first;
     public Integer second;
 
+    public GenericsTestClass() {
+
+    }
+
+    public GenericsTestClass(F first, Integer second) {
+        this.first = first;
+        this.second = second;
+    }
+
     interface Numeric {
 
     }
