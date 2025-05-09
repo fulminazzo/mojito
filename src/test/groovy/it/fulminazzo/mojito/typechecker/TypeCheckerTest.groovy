@@ -1213,6 +1213,28 @@ class TypeCheckerTest extends Specification {
         STRING_LIT | ObjectType.STRING
     }
 
+    def 'test #left instanceof #right returns #expected'() {
+        given:
+        this.environment.declare(ObjectClassType.STRING, 'string', ObjectType.STRING)
+        this.environment.declare(ObjectClassType.INTEGER, 'integer', ObjectType.INTEGER)
+        this.environment.declare(PrimitiveClassType.INT, 'i', PrimitiveType.INT)
+
+        and:
+        def type = this.typeChecker.visitInstanceOf(left, right)
+
+        expect:
+        type == expected
+
+        where:
+        left                  | right                 | expected
+        Literal.of('string')  | Literal.of('String')  | PrimitiveType.BOOLEAN
+        Literal.of('string')  | Literal.of('Integer') | PrimitiveType.BOOLEAN
+        Literal.of('i')       | Literal.of('Integer') | PrimitiveType.BOOLEAN
+        Literal.of('i')       | Literal.of('String')  | PrimitiveType.BOOLEAN
+        Literal.of('integer') | Literal.of('Integer') | PrimitiveType.BOOLEAN
+        Literal.of('integer') | Literal.of('String')  | PrimitiveType.BOOLEAN
+    }
+
     def 'test equal'() {
         given:
         def type = this.typeChecker.visitEqual(NUMBER_LIT, NUMBER_LIT)
