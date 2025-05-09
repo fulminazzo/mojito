@@ -40,8 +40,19 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
 
     @Override
     public @NotNull Type cast(@NotNull Type type) {
-        //TODO:
-        throw new IllegalStateException("Not implemented yet");
+        if (type.is(GenericsObjectType.class)) {
+            GenericsObjectType genericsObjectType = (GenericsObjectType) type;
+            Class<?> typeClass = genericsObjectType.getInnerClass();
+            Class<?> currentClass = toJavaClass();
+            if (currentClass.isAssignableFrom(typeClass) || typeClass.isAssignableFrom(currentClass)) {
+                Map<String, ClassType> genericTypes = genericsObjectType.getGenericTypes();
+                for (String key : this.genericTypes.keySet()) {
+                    ClassType genericType = genericTypes.get(key);
+                    this.genericTypes.get(key).check(genericType);
+                }
+            }
+        }
+        return super.cast(type);
     }
 
     @Override
