@@ -7,6 +7,7 @@ import it.fulminazzo.mojito.executor.values.objects.ObjectClassValue;
 import it.fulminazzo.mojito.executor.values.objects.ObjectValue;
 import it.fulminazzo.mojito.executor.values.primitivevalue.PrimitiveValue;
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
@@ -80,10 +81,10 @@ public interface ClassValue<V> extends Value<Class<V>>, ClassVisitorObject<Class
     }
 
     @Override
-    default @NotNull Value<?> newObject(final @NotNull Constructor<?> constructor,
+    default @NotNull Value<?> newObject(final @NotNull ExecutableContainer<Constructor<?>> constructor,
                                         final @NotNull ParameterValues parameterValues) {
         Object[] parameters = parameterValues.stream().map(Value::getValue).toArray(Object[]::new);
-        Object object = new Refl<>(constructor).invokeMethod("newInstance", (Object) parameters);
+        Object object = new Refl<>(constructor.getActualExecutable()).invokeMethod("newInstance", (Object) parameters);
         return Value.of(object);
     }
 

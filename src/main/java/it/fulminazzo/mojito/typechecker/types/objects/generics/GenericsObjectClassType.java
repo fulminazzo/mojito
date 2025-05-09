@@ -9,6 +9,7 @@ import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.visitors.visitorobjects.GenericsContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObjectException;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,7 +71,7 @@ public class GenericsObjectClassType extends CustomObjectClassType implements Cl
     }
 
     @Override
-    public @NotNull Type newObject(@NotNull Constructor<?> constructor, @NotNull ParameterTypes parameterTypes) throws TypeException {
+    public @NotNull Type newObject(@NotNull ExecutableContainer<Constructor<?>> constructor, @NotNull ParameterTypes parameterTypes) throws TypeException {
         //TODO:
         return super.newObject(constructor, parameterTypes);
     }

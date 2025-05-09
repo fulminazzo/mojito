@@ -7,6 +7,7 @@ import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectCla
 import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsUtils;
 import it.fulminazzo.mojito.utils.StringUtils;
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
@@ -37,10 +38,10 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
     }
 
     @Override
-    default @NotNull Type newObject(final @NotNull Constructor<?> constructor,
+    default @NotNull Type newObject(final @NotNull ExecutableContainer<Constructor<?>> constructor,
                                     final @NotNull ParameterTypes parameterTypes) throws TypeException {
         if (!Modifier.isPublic(constructor.getModifiers()))
-            throw TypeException.cannotAccessMethod(this, constructor);
+            throw TypeException.cannotAccessMethod(this, constructor.getActualExecutable());
         else return toType();
     }
 

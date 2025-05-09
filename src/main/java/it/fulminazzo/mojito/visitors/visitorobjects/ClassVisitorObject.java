@@ -3,10 +3,10 @@ package it.fulminazzo.mojito.visitors.visitorobjects;
 import it.fulminazzo.fulmicollection.objects.Refl;
 import it.fulminazzo.fulmicollection.utils.ReflectionUtils;
 import it.fulminazzo.mojito.environment.Info;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,23 +62,27 @@ public interface ClassVisitorObject<
         try {
             Class<?> javaClass = classVisitorObject.toJavaClass();
             // Lookup constructors from parameters count
-            @NotNull List<Constructor<?>> constructors = Arrays.stream(javaClass.getDeclaredConstructors())
+            @NotNull List<ExecutableContainer<Constructor<?>>> constructors = Arrays.stream(javaClass.getDeclaredConstructors())
                     .filter(c -> VisitorObjectUtils.verifyExecutable(parameters, c))
+                    .map(c -> this instanceof GenericsContainer<?> ?
+                            ExecutableContainer.of(c, (GenericsContainer<?>) this) :
+                            ExecutableContainer.of(c)
+                    )
                     .collect(Collectors.toList());
             if (constructors.isEmpty()) throw new IllegalArgumentException();
 
             Refl<?> refl = new Refl<>(ReflectionUtils.class);
             Class<?> @NotNull [] parametersTypes = parameters.toJavaClassArray();
 
-            for (Constructor<?> constructor : constructors) {
+            for (ExecutableContainer<Constructor<?>> constructor : constructors) {
                 // For each one, validate its parameters
                 if (Boolean.TRUE.equals(refl.invokeMethod("validateParameters",
-                        new Class[]{Class[].class, Executable.class},
-                        parametersTypes, constructor)))
+                        new Class[]{Class[].class, Class[].class, boolean.class},
+                        parametersTypes, constructor.getParameterTypes(), constructor.isVarArgs())))
                     return newObject(constructor, parameters);
             }
 
-            throw typesMismatch(classVisitorObject, constructors.get(0), parameters);
+            throw typesMismatch(classVisitorObject, constructors.get(0).getActualExecutable(), parameters);
         } catch (IllegalArgumentException e) {
             throw methodNotFound(classVisitorObject, methodName, parameters);
         }
@@ -93,7 +97,7 @@ public interface ClassVisitorObject<
      * @return the object associated with this class
      * @throws VisitorObjectException the exception thrown in case of errors
      */
-    @NotNull O newObject(final @NotNull Constructor<?> constructor,
+    @NotNull O newObject(final @NotNull ExecutableContainer<Constructor<?>> constructor,
                          final @NotNull P parameters) throws VisitorObjectException;
 
     /**
