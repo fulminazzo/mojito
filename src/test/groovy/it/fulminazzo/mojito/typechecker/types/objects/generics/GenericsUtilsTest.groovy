@@ -3,9 +3,22 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics
 import it.fulminazzo.mojito.typechecker.TypeCheckerException
 import it.fulminazzo.mojito.typechecker.types.ClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
+import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import spock.lang.Specification
 
 class GenericsUtilsTest extends Specification {
+
+    def 'test compatibility'() {
+        given:
+        def parameters = [ObjectClassType.STRING]
+
+        and:
+        def model = new GenericsObjectClassType(ObjectType.of(Iterable), parameters)
+        def target = new GenericsObjectType(Collection, parameters)
+
+        expect:
+        GenericsUtils.checkCompatibility(model, target)
+    }
 
     def 'test that getClassHierarchy works'() {
         given:
