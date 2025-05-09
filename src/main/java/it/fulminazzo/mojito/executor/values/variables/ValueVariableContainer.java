@@ -8,6 +8,7 @@ import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContai
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Support interface for classes of this package.
@@ -66,7 +67,7 @@ interface ValueVariableContainer<V> extends Value<V> {
     }
 
     @Override
-    default @NotNull Value<?> invokeMethod(@NotNull ExecutableContainer method, @NotNull ParameterValues parameters) throws ValueException {
+    default @NotNull Value<?> invokeMethod(@NotNull ExecutableContainer<Method> method, @NotNull ParameterValues parameters) throws ValueException {
         return getVariable().invokeMethod(method, parameters);
     }
     

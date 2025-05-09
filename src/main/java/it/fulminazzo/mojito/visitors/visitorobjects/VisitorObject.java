@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -131,7 +132,7 @@ public interface VisitorObject<
         C classVisitorObject = is(ClassVisitorObject.class) ? (C) this : toClass();
         try {
             // Lookup methods from name and parameters count
-            List<ExecutableContainer> methods = ReflectionUtils.getMethods(classVisitorObject.toJavaClass(), m ->
+            List<ExecutableContainer<Method>> methods = ReflectionUtils.getMethods(classVisitorObject.toJavaClass(), m ->
                             m.getName().equals(methodName) && VisitorObjectUtils.verifyExecutable(parameters, m)).stream()
                     .map(m -> this instanceof GenericsContainer<?> ?
                             ExecutableContainer.of(m, (GenericsContainer<?>) this) :
@@ -143,7 +144,7 @@ public interface VisitorObject<
             Refl<?> refl = new Refl<>(ReflectionUtils.class);
             Class<?> @NotNull [] parametersTypes = parameters.toJavaClassArray();
 
-            for (ExecutableContainer method : methods) {
+            for (ExecutableContainer<Method> method : methods) {
                 // For each one, validate its parameters
                 if (Boolean.TRUE.equals(refl.invokeMethod("validateParameters",
                         new Class[]{Class[].class, Class[].class, boolean.class},
@@ -166,7 +167,7 @@ public interface VisitorObject<
      * @return the returned object from the method
      * @throws VisitorObjectException the exception thrown in case of errors
      */
-    @NotNull O invokeMethod(final @NotNull ExecutableContainer method, final @NotNull P parameters) throws VisitorObjectException;
+    @NotNull O invokeMethod(final @NotNull ExecutableContainer<Method> method, final @NotNull P parameters) throws VisitorObjectException;
 
     /**
      * Converts the current object to its primitive associated object.

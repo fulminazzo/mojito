@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
@@ -112,7 +113,7 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
     }
 
     @Override
-    default @NotNull Type invokeMethod(final @NotNull ExecutableContainer method,
+    default @NotNull Type invokeMethod(final @NotNull ExecutableContainer<Method> method,
                                        final @NotNull ParameterTypes parameterTypes) throws TypeException {
         ClassType classType = isClassType() ? (ClassType) this : toClass();
         if (!Modifier.isPublic(method.getModifiers()))

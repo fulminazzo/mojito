@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -124,7 +125,7 @@ public interface Value<V> extends VisitorObject<ClassValue<?>, Value<?>, Paramet
     }
 
     @Override
-    default @NotNull Value<?> invokeMethod(final @NotNull ExecutableContainer method,
+    default @NotNull Value<?> invokeMethod(final @NotNull ExecutableContainer<Method> method,
                                            final @NotNull ParameterValues parameters) throws ValueException {
         Refl<V> executor = new Refl<>(getValue());
         List<Object> parametersList = new ArrayList<>();

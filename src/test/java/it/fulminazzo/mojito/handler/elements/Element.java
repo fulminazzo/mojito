@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 @SuppressWarnings("unchecked")
@@ -56,7 +57,7 @@ public interface Element extends VisitorObject<ClassElement, Element, ParameterE
     }
 
     @Override
-    default @NotNull Element invokeMethod(@NotNull ExecutableContainer method, @NotNull ParameterElements parameters) throws VisitorObjectException {
+    default @NotNull Element invokeMethod(@NotNull ExecutableContainer<Method> method, @NotNull ParameterElements parameters) throws VisitorObjectException {
         Refl<?> refl = new Refl<>(getElement());
         Object returned = refl.invokeMethod(method.getReturnType(), method.getName(), method.getParameterTypes(),
                 parameters.stream().map(Element::getElement).toArray(Object[]::new));
