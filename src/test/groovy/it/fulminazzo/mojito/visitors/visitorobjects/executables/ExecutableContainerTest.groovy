@@ -2,6 +2,7 @@ package it.fulminazzo.mojito.visitors.visitorobjects.executables
 
 import it.fulminazzo.mojito.handler.elements.ClassElement
 import it.fulminazzo.mojito.visitors.visitorobjects.GenericsContainer
+import org.jetbrains.annotations.NotNull
 import spock.lang.Specification
 
 import java.lang.reflect.Array
@@ -15,6 +16,7 @@ class ExecutableContainerTest extends Specification {
     void setup() {
         this.type = new GenericsContainer<ClassElement>() {
 
+            @NotNull
             @Override
             Map<String, ClassElement> getGenericTypes() {
                 return [

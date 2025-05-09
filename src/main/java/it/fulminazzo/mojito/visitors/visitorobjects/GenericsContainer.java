@@ -1,5 +1,7 @@
 package it.fulminazzo.mojito.visitors.visitorobjects;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 /**
@@ -14,6 +16,6 @@ public interface GenericsContainer<C extends ClassVisitorObject<C, ?, ?>> {
      *
      * @return the generic types
      */
-    Map<String, C> getGenericTypes();
+    @NotNull Map<String, C> getGenericTypes();
 
 }
