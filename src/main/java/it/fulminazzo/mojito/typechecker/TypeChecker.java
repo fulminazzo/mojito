@@ -375,8 +375,10 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
 
     @Override
     public @NotNull Type visitGenericsLiteral(@NotNull List<Literal> types, @NotNull String value) {
-        //TODO: complete several checks
-        return visitLiteralImpl(value);
+        ClassType classType = visitLiteralImpl(value).checkClass();
+        final List<ClassType> genericTypes = new LinkedList<>();
+        for (Literal type : types) genericTypes.add(type.accept(this).checkClass());
+        return ClassType.of(classType, genericTypes);
     }
 
     @Override
