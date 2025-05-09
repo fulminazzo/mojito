@@ -337,6 +337,13 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
     }
 
     @Override
+    public @NotNull Type visitInstanceOf(@NotNull Node left, @NotNull Node right) {
+        if (left.is(Literal.class))
+            return Visitor.super.visitInstanceOf(left, right);
+        else throw TypeCheckerException.invalidType(Literal.class, left);
+    }
+
+    @Override
     public @NotNull Type visitNullLiteral() {
         return Types.NULL_TYPE;
     }
