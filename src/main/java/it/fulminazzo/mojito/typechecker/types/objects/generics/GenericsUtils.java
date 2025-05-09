@@ -2,7 +2,6 @@ package it.fulminazzo.mojito.typechecker.types.objects.generics;
 
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.ClassType;
-import it.fulminazzo.mojito.typechecker.types.TypeException;
 import it.fulminazzo.mojito.utils.StringUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -137,10 +136,7 @@ public final class GenericsUtils {
             ClassType actualType = types.get(i);
             java.lang.reflect.Type[] bounds = expectedParameter.getBounds();
             for (java.lang.reflect.Type bound : bounds)
-                try {
-                    actualType.checkExtends(ClassType.of(bound.getTypeName()));
-                } catch (TypeException ignored) {
-                }
+                actualType.checkExtends(ClassType.of(bound));
             finalMap.put(expectedParameter.getName(), actualType);
         }
 
