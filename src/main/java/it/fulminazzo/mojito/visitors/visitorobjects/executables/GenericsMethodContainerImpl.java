@@ -31,16 +31,11 @@ class GenericsMethodContainerImpl<C extends ClassVisitorObject<C, ?, ?>> extends
                                        final @NotNull GenericsContainer<C> genericsContainer) {
         super(method);
         final Map<String, C> types = new LinkedHashMap<>(genericsContainer.getGenericTypes());
-        Arrays.stream(method.getTypeParameters())
-                .map(Type::getTypeName)
-                .forEach(types::remove);
+        Arrays.stream(method.getTypeParameters()).map(Type::getTypeName).forEach(types::remove);
 
         this.returnType = GenericsExecutableUtils.getClassFromType(method.getGenericReturnType(), types, method.getReturnType());
 
-        this.parameterTypes = method.getParameterTypes();
-        Type[] genericParameterTypes = method.getGenericParameterTypes();
-        for (int i = 0; i < genericParameterTypes.length; i++)
-            this.parameterTypes[i] = GenericsExecutableUtils.getClassFromType(genericParameterTypes[i], types, this.parameterTypes[i]);
+        this.parameterTypes = GenericsExecutableUtils.getActualParameterTypes(types, method);
     }
 
 }

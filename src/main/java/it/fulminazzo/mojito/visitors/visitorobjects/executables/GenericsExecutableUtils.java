@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Type;
 import java.util.Map;
 
@@ -14,6 +15,27 @@ import java.util.Map;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class GenericsExecutableUtils {
+
+    /**
+     * Gets the correct parameter types from the given executable.
+     * If a type is parameterized and matches inside the {@link Map} types,
+     * it is replaced with {@link #getClassFromType(Type, Map, Class)}.
+     *
+     * @param <C>      the type of the class visitor object
+     * @param types      the types
+     * @param executable the executable
+     * @return the parameter types
+     */
+    public static <C extends ClassVisitorObject<C, ?, ?>> @NotNull Class<?>[] getActualParameterTypes(
+            final @NotNull Map<String, C> types,
+            final @NotNull Executable executable
+    ) {
+        Class<?>[] parameterTypes = executable.getParameterTypes();
+        Type[] genericParameterTypes = executable.getGenericParameterTypes();
+        for (int i = 0; i < genericParameterTypes.length; i++)
+            parameterTypes[i] = getClassFromType(genericParameterTypes[i], types, parameterTypes[i]);
+        return parameterTypes;
+    }
 
     /**
      * Checks if the given {@link Type} is a {@link Class}.
