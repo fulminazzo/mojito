@@ -227,7 +227,7 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
             } else {
                 Type actualVariableType = variableType.toType();
                 if (actualVariableType.isPrimitive()) actualVariableType = actualVariableType.toWrapper();
-                ClassType iterable = ClassType.of(Iterator.class, Collections.singletonList(actualVariableType.toClass()));
+                ClassType iterable = ClassType.of(Iterable.class, Collections.singletonList(actualVariableType.toClass()));
                 expressionType.checkAssignableFrom(iterable);
             }
 
