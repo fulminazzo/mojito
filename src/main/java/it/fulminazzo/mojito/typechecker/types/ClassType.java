@@ -63,6 +63,21 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
     }
 
     /**
+     * Gets a new {@link ClassType} from the given {@link java.lang.reflect.Type}.
+     * Uses {@link #of(String)} to handle generic types.
+     *
+     * @param type the type
+     * @return the class type
+     */
+    static @NotNull ClassType of(final @NotNull java.lang.reflect.Type type) {
+        try {
+            return of(type.getTypeName());
+        } catch (TypeException e) {
+            throw new IllegalStateException("Unreachable code");
+        }
+    }
+
+    /**
      * Gets a new {@link ClassType} from the given class name.
      * First checks if the given name comprehends a generic notation (%name%&lt;%parameters%&gt;).
      * If it does, a {@link GenericsObjectClassType} is returned.
