@@ -16,12 +16,21 @@ class GenericsObjectClassTypeTest extends Specification {
         actual == cast.toType()
 
         where:
-        cast                                                                             | type
-        new GenericsObjectClassType(ObjectType.of(Collection), [ObjectClassType.STRING]) | new GenericsObjectType(List, [ObjectClassType.STRING])
-        new GenericsObjectClassType(ObjectType.of(List), [ObjectClassType.STRING])       | new GenericsObjectType(List, [ObjectClassType.STRING])
-        new GenericsObjectClassType(ObjectType.of(LinkedList), [ObjectClassType.STRING]) | new GenericsObjectType(List, [ObjectClassType.STRING])
-        new GenericsObjectClassType(ObjectType.of(ArrayList), [ObjectClassType.STRING])  | new GenericsObjectType(List, [ObjectClassType.STRING])
-        new GenericsObjectClassType(ObjectType.of(ArrayList), [ObjectClassType.STRING])  | Types.NULL_TYPE
+        cast                                                                                                                                               | type
+        new GenericsObjectClassType(ObjectType.of(Collection), [ObjectClassType.STRING])                                                                   |
+                new GenericsObjectType(List, [ObjectClassType.STRING])
+        new GenericsObjectClassType(ObjectType.of(List), [ObjectClassType.STRING])                                                                         |
+                new GenericsObjectType(List, [ObjectClassType.STRING])
+        new GenericsObjectClassType(ObjectType.of(LinkedList), [ObjectClassType.STRING])                                                                   |
+                new GenericsObjectType(List, [ObjectClassType.STRING])
+        new GenericsObjectClassType(ObjectType.of(ArrayList), [ObjectClassType.STRING])                                                                    |
+                new GenericsObjectType(List, [ObjectClassType.STRING])
+        new GenericsObjectClassType(ObjectType.of(ArrayList), [ObjectClassType.STRING])                                                                    |
+                Types.NULL_TYPE
+        new GenericsObjectClassType(ObjectType.of(GenericsTestClass), [ObjectClassType.of(GenericsTestClass.MockTestClass)])                               |
+                new GenericsObjectType(SecondGenericsTestClass, [ObjectClassType.of(GenericsTestClass.MockTestClass), ObjectClassType.STRING])
+        new GenericsObjectClassType(ObjectType.of(SecondGenericsTestClass), [ObjectClassType.of(GenericsTestClass.MockTestClass), ObjectClassType.STRING]) |
+                new GenericsObjectType(GenericsTestClass, [ObjectClassType.of(GenericsTestClass.MockTestClass)])
     }
 
     def 'test that class type is compatible with #type'() {
