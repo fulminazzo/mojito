@@ -769,6 +769,25 @@ class TypeCheckerTest extends Specification {
         Literal.of('short')     | FLOAT_LIT
     }
 
+    def 'test that assigning inferred variable converts to correct type'() {
+        given:
+        def nodeExecutor = new GenericsLiteral(LinkedList.canonicalName, [])
+        def methodInvocation = new MethodInvocation([])
+
+        when:
+        this.typeChecker.visitAssignment(
+                new GenericsLiteral('List', [Literal.of('String')]),
+                Literal.of('list'),
+                new NewObject(nodeExecutor, methodInvocation)
+        )
+
+        and:
+        def variable = this.environment.lookup('list')
+
+        then:
+        variable == ObjectType.of(LinkedList, [ObjectClassType.STRING])
+    }
+
     def 'test visit new object supports inferred types'() {
         given:
         def nodeExecutor = new GenericsLiteral(LinkedList.canonicalName, [])
