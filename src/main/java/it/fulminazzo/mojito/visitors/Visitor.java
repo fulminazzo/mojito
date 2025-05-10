@@ -807,6 +807,14 @@ public interface Visitor<
     @NotNull O visitGenericsLiteral(@NotNull List<Literal> types, @NotNull String value);
 
     /**
+     * Converts wildcard super and its fields to this visitor type.
+     *
+     * @param classLiteral the class literal
+     * @return the literal
+     */
+    @NotNull O visitWildcardSuper(@NotNull Literal classLiteral);
+
+    /**
      * Converts literal and its fields to this visitor type.
      *
      * @param value the value
@@ -852,10 +860,7 @@ public interface Visitor<
      * {@link ClassVisitorObject} search logic.
      *
      * @param literal the literal
-     * @return if a {@link ClassVisitorObject} is found, the tuple key and value will both be equal to the value itself.
-     * If a variable is found, the tuple key will have the value in which the variable was declared,
-     * while the value its actual value.
-     * Otherwise, the tuple will be empty.
+     * @return if a {@link ClassVisitorObject} is found, the tuple key and value will both be equal to the value itself. If a variable is found, the tuple key will have the value in which the variable was declared, while the value its actual value. Otherwise, the tuple will be empty.
      */
     default @NotNull Tuple<C, O> getObjectFromLiteral(final @NotNull String literal) {
         Tuple<C, O> tuple = new Tuple<>();
