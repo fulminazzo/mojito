@@ -2,6 +2,7 @@ package it.fulminazzo.mojito.typechecker
 
 import it.fulminazzo.fulmicollection.objects.Refl
 import it.fulminazzo.mojito.TestClass
+import it.fulminazzo.mojito.environment.Environment
 import it.fulminazzo.mojito.environment.MockEnvironment
 import it.fulminazzo.mojito.environment.NamedEntity
 import it.fulminazzo.mojito.environment.ScopeException
@@ -1748,6 +1749,28 @@ class TypeCheckerTest extends Specification {
         exception                | expected
         IllegalArgumentException | IllegalArgumentException
         IOException              | TypeCheckerException
+    }
+
+    def 'test visitNewAssignment exception for JaCoCo coverage'() {
+        given:
+        def environment = Spy(Environment)
+        environment.lookup(_) >> {
+            throw ScopeException.noSuchVariable(NamedEntity.of('list'))
+        }
+
+        and:
+        def typeChecker = new TypeChecker(null)
+        new Refl<>(typeChecker).setFieldObject('environment', environment)
+
+        when:
+        typeChecker.visitAssignment(
+                new GenericsLiteral('List', [Literal.of('String')]),
+                Literal.of('list'),
+                new NewObject(Literal.of('LinkedList'), new MethodInvocation([]))
+        )
+
+        then:
+        thrown(IllegalStateException)
     }
 
 }
