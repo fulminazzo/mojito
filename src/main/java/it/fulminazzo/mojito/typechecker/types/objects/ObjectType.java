@@ -6,6 +6,8 @@ import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.*;
 import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectType;
 import it.fulminazzo.mojito.wrappers.ObjectWrapper;
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -36,6 +38,10 @@ public class ObjectType extends ObjectWrapper<Class<?>> implements Type {
             Map.class.getPackage().getName(),
             IOException.class.getPackage().getName()
     };
+
+    @Getter
+    @Setter
+    private boolean inferred;
 
     /**
      * Instantiates a new Object type.
