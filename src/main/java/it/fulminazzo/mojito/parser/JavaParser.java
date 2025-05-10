@@ -894,9 +894,33 @@ public class JavaParser extends Parser {
 
             List<Literal> literals = new LinkedList<>();
             while (lastToken() == LITERAL || lastToken() == QUESTION_MARK) {
-                Literal readLiteral = lastToken() == QUESTION_MARK ? new EmptyLiteral() : parseLiteralNoConsume();
-                literals.add(readLiteral);
-                buffer.add(readLiteral.getLiteral());
+                if (lastToken() == QUESTION_MARK) {
+                    buffer.add(tokenizer.lastRead());
+                    buffer.add(readSpaces());
+
+                    //TODO: extends
+                    //TODO: if nothing specified, extends Object
+                    if (lastToken() == SUPER) {
+                        // super
+                        buffer.add(tokenizer.lastRead());
+                        next();
+
+                        // at least one space
+                        buffer.add(tokenizer.lastRead());
+                        match(SPACE);
+
+                        buffer.add(readSpaces());
+
+                        // class
+                        Literal superClass = parseLiteralNoConsume();
+                        literals.add(new WildcardSuper(superClass));
+                        buffer.add(tokenizer.lastRead());
+                    }
+                } else {
+                    Literal readLiteral = parseLiteralNoConsume();
+                    literals.add(readLiteral);
+                    buffer.add(readLiteral.getLiteral());
+                }
                 buffer.add(readSpaces());
                 if (lastToken() == COMMA) {
                     buffer.add(tokenizer.lastRead());
