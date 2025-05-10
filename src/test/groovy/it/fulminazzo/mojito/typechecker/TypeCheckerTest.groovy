@@ -769,6 +769,19 @@ class TypeCheckerTest extends Specification {
         Literal.of('short')     | FLOAT_LIT
     }
 
+    def 'test visit new object supports inferred types'() {
+        given:
+        def nodeExecutor = new GenericsLiteral(LinkedList.canonicalName, [])
+        def methodInvocation = new MethodInvocation([])
+
+        when:
+        def type = this.typeChecker.visitNewObject(nodeExecutor, methodInvocation)
+
+        then:
+        type == ObjectType.of(LinkedList)
+        type.check(ObjectType).inferred
+    }
+
     def 'test visit new object #parameters'() {
         given:
         def nodeExecutor = Literal.of(TestClass.canonicalName)
