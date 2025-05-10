@@ -417,6 +417,12 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
     }
 
     @Override
+    public @NotNull Type visitWildcardSuper(@NotNull Literal classLiteral) {
+        //TODO:
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
     public @NotNull LiteralVariableContainer<ClassType, Type, ParameterTypes> newLiteralObject(@NotNull String value) {
         return new TypeLiteralVariableContainer(this.environment, value);
     }

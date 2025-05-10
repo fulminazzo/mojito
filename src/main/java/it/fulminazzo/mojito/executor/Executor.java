@@ -321,6 +321,11 @@ public class Executor implements Visitor<ClassValue<?>, Value<?>, ParameterValue
     }
 
     @Override
+    public @NotNull Value<?> visitWildcardSuper(@NotNull Literal classLiteral) {
+        return classLiteral.accept(this);
+    }
+
+    @Override
     public @NotNull Tuple<ClassValue<?>, Value<?>> getObjectFromLiteral(@NotNull String literal) {
         try {
             Tuple<ClassValue<?>, Value<?>> tuple = new Tuple<>();

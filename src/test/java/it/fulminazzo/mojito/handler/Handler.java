@@ -184,6 +184,11 @@ public class Handler implements Visitor<ClassElement, Element, ParameterElements
     }
 
     @Override
+    public @NotNull Element visitWildcardSuper(@NotNull Literal classLiteral) {
+        return classLiteral.accept(this);
+    }
+
+    @Override
     public @NotNull LiteralVariableContainer<ClassElement, Element, ParameterElements> newLiteralObject(@NotNull String value) {
         return new ElementLiteralVariableContainer(this.environment, ClassElement.of(null), value, visitNullLiteral());
     }
