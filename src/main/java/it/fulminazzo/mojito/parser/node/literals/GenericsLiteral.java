@@ -15,13 +15,28 @@ public class GenericsLiteral extends LiteralImpl implements Literal {
     private final @NotNull List<Literal> types;
 
     /**
-     * Instantiates a new Literal.
+     * Instantiates a new Generics Literal.
      *
      * @param rawValue the raw value
+     * @param types    the types
+     * @throws NodeException the node exception
      */
     public GenericsLiteral(@NotNull String rawValue, @NotNull List<Literal> types) throws NodeException {
         super(rawValue);
         this.types = types;
+    }
+
+    /**
+     * Converts the current literal to a generic {@link Literal}.
+     *
+     * @return literal
+     */
+    public @NotNull Literal toLiteral() {
+        try {
+            return Literal.of(getLiteral());
+        } catch (NodeException e) {
+            throw new IllegalStateException("Unreachable code");
+        }
     }
 
     @Override
