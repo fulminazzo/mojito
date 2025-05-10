@@ -6,6 +6,7 @@ import it.fulminazzo.mojito.environment.ScopeException;
 import it.fulminazzo.mojito.environment.scopetypes.ScopeType;
 import it.fulminazzo.mojito.parser.node.Node;
 import it.fulminazzo.mojito.parser.node.container.CodeBlock;
+import it.fulminazzo.mojito.parser.node.literals.GenericsLiteral;
 import it.fulminazzo.mojito.parser.node.literals.Literal;
 import it.fulminazzo.mojito.parser.node.statements.CaseStatement;
 import it.fulminazzo.mojito.parser.node.statements.CatchStatement;
@@ -288,6 +289,19 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
             if (variableValue.is(PrimitiveType.INT) || variableValue.is(PrimitiveType.CHAR))
                 return variableType.toType();
         return variableValue;
+    }
+
+    @Override
+    public @NotNull Type visitNewObject(@NotNull Node left, @NotNull Node right) {
+        if (left.is(GenericsLiteral.class)) {
+            GenericsLiteral literal = (GenericsLiteral) left;
+            // Check if inferred types
+            if (literal.getTypes().isEmpty()) {
+                left = literal.toLiteral();
+                return Visitor.super.visitNewObject(left, right).check(ObjectType.class).setInferred(true);
+            }
+        }
+        return Visitor.super.visitNewObject(left, right);
     }
 
     @Override
