@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @NoArgsConstructor
 public class EmptyLiteral extends NodeImpl implements Literal {
+
     @Override
     public @NotNull String getLiteral() {
         return "";
