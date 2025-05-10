@@ -11,6 +11,21 @@ import spock.lang.Specification
  */
 class FullTests extends Specification {
 
+    def 'test that list of numbers can support both doubles and numbers'() {
+        given:
+        def code = 'List<Number> list = new ArrayList<>();' +
+                'list.add(1);' +
+                'list.add(2L);' +
+                'list.add(3.0d);' +
+                'list.add(4.0f);'
+
+        when:
+        Mojito.newRunner().run(code)
+
+        then:
+        noExceptionThrown()
+    }
+
     def 'test invalid enhanced for statement throws correct exception'() {
         given:
         def code = 'List<String> list = new ArrayList<String>();' +
