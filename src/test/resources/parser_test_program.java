@@ -259,16 +259,23 @@ for (int[] a : arrayOfArray) {
     else continue;
 }
 
+// This
+System.out.println("The previous value was " + this.publicField);
+this.publicField = 10;
+System.out.println("Now it has been updated to " + this.publicField);
+
+// Generics
 List<String> list = new ArrayList<>();
 list.add("Hello");
 list.add("World");
 
 for (String str : list)
-    System.out.println(str);
+        System.out.println(str);
 
-// This
-System.out.println("The previous value was " + this.publicField);
-this.publicField = 10;
-System.out.println("Now it has been updated to " + this.publicField);
+List<? super Integer> superList = new ArrayList<>();
+superList.add(10);
+//TODO: replace with instanceof
+if (!superList.get(0).getClass().getSimpleName().equals("Object"))
+    throw new IllegalStateException("Super is not working correctly!");
 
 return bW.toString().toString().toString();
