@@ -7,7 +7,6 @@ import it.fulminazzo.mojito.typechecker.types.*;
 import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectType;
 import it.fulminazzo.mojito.wrappers.ObjectWrapper;
 import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -22,15 +21,45 @@ import java.util.Map;
  * is mandatory for correct functioning of casts, operations, null assignments and more.
  */
 public class ObjectType extends ObjectWrapper<Class<?>> implements Type {
+    /**
+     * The constant BYTE.
+     */
     public static final ObjectType BYTE = new ObjectType(Byte.class);
+    /**
+     * The constant SHORT.
+     */
     public static final ObjectType SHORT = new ObjectType(Short.class);
+    /**
+     * The constant CHARACTER.
+     */
     public static final ObjectType CHARACTER = new ObjectType(Character.class);
+    /**
+     * The constant INTEGER.
+     */
     public static final ObjectType INTEGER = new ObjectType(Integer.class);
+    /**
+     * The constant LONG.
+     */
     public static final ObjectType LONG = new ObjectType(Long.class);
+    /**
+     * The constant FLOAT.
+     */
     public static final ObjectType FLOAT = new ObjectType(Float.class);
+    /**
+     * The constant DOUBLE.
+     */
     public static final ObjectType DOUBLE = new ObjectType(Double.class);
+    /**
+     * The constant BOOLEAN.
+     */
     public static final ObjectType BOOLEAN = new ObjectType(Boolean.class);
+    /**
+     * The constant STRING.
+     */
     public static final ObjectType STRING = new ObjectType(String.class);
+    /**
+     * The constant OBJECT.
+     */
     public static final ObjectType OBJECT = new ObjectType(Object.class);
 
     private static final String[] IMPLIED_PACKAGES = new String[]{
@@ -40,7 +69,6 @@ public class ObjectType extends ObjectWrapper<Class<?>> implements Type {
     };
 
     @Getter
-    @Setter
     private boolean inferred;
 
     /**
@@ -59,6 +87,17 @@ public class ObjectType extends ObjectWrapper<Class<?>> implements Type {
      */
     public Class<?> getInnerClass() {
         return this.object;
+    }
+
+    /**
+     * Sets the current object type to inferred.
+     *
+     * @param inferred the inferred
+     * @return this object type
+     */
+    public @NotNull ObjectType setInferred(final boolean inferred) {
+        this.inferred = inferred;
+        return this;
     }
 
     @Override
@@ -142,6 +181,7 @@ public class ObjectType extends ObjectWrapper<Class<?>> implements Type {
      *
      * @param clazz        the class
      * @param genericTypes the generic types
+     * @return the object type
      */
     public static @NotNull ObjectType of(final @NotNull Class<?> clazz,
                                          final @NotNull Collection<ClassType> genericTypes) {
