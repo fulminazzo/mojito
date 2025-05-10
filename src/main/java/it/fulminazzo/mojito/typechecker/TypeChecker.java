@@ -16,6 +16,7 @@ import it.fulminazzo.mojito.typechecker.types.arrays.ArrayClassType;
 import it.fulminazzo.mojito.typechecker.types.arrays.ArrayType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.variables.ArrayTypeVariableContainer;
 import it.fulminazzo.mojito.typechecker.types.variables.TypeLiteralVariableContainer;
 import it.fulminazzo.mojito.visitors.Visitor;
@@ -289,6 +290,28 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
             if (variableValue.is(PrimitiveType.INT) || variableValue.is(PrimitiveType.CHAR))
                 return variableType.toType();
         return variableValue;
+    }
+
+    @Override
+    public @NotNull Type visitAssignment(@NotNull Node type, @NotNull Literal name, @NotNull Node value) {
+        Type assignmentType = Visitor.super.visitAssignment(type, name, value);
+        try {
+            TypeLiteralVariableContainer variableContainer = name.accept(this).check(TypeLiteralVariableContainer.class);
+            Type savedType = this.environment.lookup(variableContainer.namedEntity());
+            if (savedType.is(ObjectType.class)) {
+                ObjectType savedObjectType = savedType.check(ObjectType.class);
+                if (savedObjectType.isInferred()) {
+                    ClassType info = (ClassType) this.environment.lookupInfo(variableContainer.namedEntity());
+                    GenericsObjectClassType classType = info.check(GenericsObjectClassType.class);
+                    Type newType = ObjectType.of(savedObjectType.getInnerClass(), classType.getGenericTypes().values());
+                    this.environment.update(variableContainer.namedEntity(), newType);
+                    return newType;
+                }
+            }
+            return assignmentType;
+        } catch (ScopeException e) {
+            throw new IllegalStateException("Unreachable code");
+        }
     }
 
     @Override
