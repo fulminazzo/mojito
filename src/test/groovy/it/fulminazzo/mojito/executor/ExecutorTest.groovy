@@ -17,12 +17,7 @@ import it.fulminazzo.mojito.parser.node.MethodInvocation
 import it.fulminazzo.mojito.parser.node.arrays.StaticArray
 import it.fulminazzo.mojito.parser.node.container.CodeBlock
 import it.fulminazzo.mojito.parser.node.container.JavaProgram
-import it.fulminazzo.mojito.parser.node.literals.ArrayLiteral
-import it.fulminazzo.mojito.parser.node.literals.EmptyLiteral
-import it.fulminazzo.mojito.parser.node.literals.GenericsLiteral
-import it.fulminazzo.mojito.parser.node.literals.Literal
-import it.fulminazzo.mojito.parser.node.literals.NullLiteral
-import it.fulminazzo.mojito.parser.node.literals.ThisLiteral
+import it.fulminazzo.mojito.parser.node.literals.*
 import it.fulminazzo.mojito.parser.node.operations.binary.*
 import it.fulminazzo.mojito.parser.node.operations.unary.Decrement
 import it.fulminazzo.mojito.parser.node.operations.unary.Increment
@@ -1244,6 +1239,26 @@ class ExecutorTest extends Specification {
         BOOL_LIT_FALSE                    | BooleanValue.FALSE
         // String
         STRING_LIT                        | ObjectValue.of('Hello, world!')
+    }
+
+    def 'test getClass should return Value containing class'() {
+        when:
+        def value = this.executor.visitMethodCall(
+                STRING_LIT,
+                'getClass',
+                new MethodInvocation([])
+        )
+
+        then:
+        value == ObjectValue.of(String)
+    }
+
+    def 'test .class should return Value containing class'() {
+        when:
+        def value = this.executor.visitLiteralImpl('String.class')
+
+        then:
+        value == ObjectValue.of(String)
     }
 
     def 'test visitScoped with exception #exception should throw #expected'() {
