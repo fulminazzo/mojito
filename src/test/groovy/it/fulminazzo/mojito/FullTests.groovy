@@ -25,6 +25,17 @@ class FullTests extends Specification {
         runner.latestResult().orElse(null) == 'String'
     }
 
+    def 'test valid instanceof on class variable'() {
+        given:
+        def runner = Mojito.newRunner()
+
+        when:
+        runner.run('Class<String> c = String.class; return c instanceof Class')
+
+        then:
+        runner.latestResult().orElse(null) == true
+    }
+
     def 'test invalid instanceof on class'() {
         given:
         def runner = Mojito.newRunner()
