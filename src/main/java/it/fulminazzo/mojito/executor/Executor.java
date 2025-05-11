@@ -332,7 +332,8 @@ public class Executor implements Visitor<ClassValue<?>, Value<?>, ParameterValue
             Tuple<ClassValue<?>, Value<?>> tuple = new Tuple<>();
             if (literal.endsWith(".class")) {
                 ClassValue<?> type = ClassValue.of(literal.substring(0, literal.length() - 6));
-                tuple.set(type.toClass(), type.toClass());
+                Value<?> actualValue = ObjectValue.of(type.getValue());
+                tuple.set(actualValue.toClass(), actualValue);
             } else {
                 ClassValue<?> type = ClassValue.of(literal);
                 tuple.set(type, type);
