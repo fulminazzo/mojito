@@ -69,7 +69,7 @@ final class MojitoRunner implements Runner {
         typeChecker.visitProgram(parsed);
 
         try {
-            this.latestResult = executor.visitProgram(parsed).orElse(null);
+            this.latestResult = executor.visitProgram(parsed).map(Value::getValue).orElse(null);
             return latestResult();
         } catch (ExceptionWrapper e) {
             throw RunnerException.of(e.getActualException().getValue());

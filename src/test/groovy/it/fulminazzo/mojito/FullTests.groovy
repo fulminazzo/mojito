@@ -1,6 +1,6 @@
 package it.fulminazzo.mojito
 
-import it.fulminazzo.mojito.executor.values.Value
+
 import it.fulminazzo.mojito.typechecker.TypeCheckerException
 import it.fulminazzo.mojito.typechecker.types.ClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
@@ -22,10 +22,7 @@ class FullTests extends Specification {
                 'return s.getClass().getSimpleName();')
 
         then:
-        runner.latestResult()
-                .map(v -> (Value) v)
-                .map(v -> v.getValue())
-                .orElse(null) == 'String'
+        runner.latestResult().orElse(null) == 'String'
     }
 
     def 'test invalid instanceof on class'() {
@@ -54,10 +51,7 @@ class FullTests extends Specification {
         runner.run(code)
 
         then:
-        runner.latestResult()
-                .map { (Value) it}
-                .map { it.value }
-                .get() == 2.0
+        runner.latestResult().orElse(null) == 2.0
     }
 
     def 'test that list of numbers can support both doubles and numbers'() {

@@ -4,7 +4,6 @@ import it.fulminazzo.fulmicollection.objects.Refl;
 import it.fulminazzo.mojito.exceptions.FormatException;
 import it.fulminazzo.mojito.executor.Executor;
 import it.fulminazzo.mojito.executor.ExecutorException;
-import it.fulminazzo.mojito.executor.values.Value;
 import it.fulminazzo.mojito.parser.JavaParser;
 import it.fulminazzo.mojito.parser.ParserException;
 import it.fulminazzo.mojito.parser.node.Node;
@@ -94,7 +93,7 @@ public final class Mojito {
             }
 
             info("Program execution returned:");
-            Optional<?> result = ((Optional<Value<?>>) runner.latestResult()).map(Value::getValue);
+            Optional<?> result = runner.latestResult();
             System.out.println(result.isPresent() ? result.get() : "Nothing was returned");
         } catch (ArgumentsException e) {
             System.out.println("Usage:");
