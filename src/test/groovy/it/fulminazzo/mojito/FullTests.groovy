@@ -5,12 +5,25 @@ import it.fulminazzo.mojito.typechecker.TypeCheckerException
 import it.fulminazzo.mojito.typechecker.types.ClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
+import it.fulminazzo.mojito.visitors.visitorobjects.variables.VariableContainer
 import spock.lang.Specification
 
 /**
  * This class will handle tests for Parser, Typechecker and Executor all together.
  */
 class FullTests extends Specification {
+
+    def 'test invalid instanceof on class'() {
+        given:
+        def runner = Mojito.newRunner()
+
+        when:
+        runner.run('return String instanceof String')
+
+        then:
+        def e = thrown(TypeCheckerException)
+        e.message == TypeCheckerException.invalidType(VariableContainer, ObjectClassType.of(String)).message
+    }
 
     def 'test that list of TestClass returns correct object'() {
         given:
