@@ -13,6 +13,21 @@ import spock.lang.Specification
  */
 class FullTests extends Specification {
 
+    def 'test Class methods'() {
+        given:
+        def runner = Mojito.newRunner()
+
+        when:
+        runner.run('String s = "Hello, world!";' +
+                'return s.getClass().getSimpleName();')
+
+        then:
+        runner.latestResult()
+                .map(v -> (Value) v)
+                .map(v -> v.getValue())
+                .orElse(null) == 'String'
+    }
+
     def 'test invalid instanceof on class'() {
         given:
         def runner = Mojito.newRunner()
