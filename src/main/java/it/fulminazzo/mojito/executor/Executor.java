@@ -331,12 +331,12 @@ public class Executor implements Visitor<ClassValue<?>, Value<?>, ParameterValue
         try {
             Tuple<ClassValue<?>, Value<?>> tuple = new Tuple<>();
             if (literal.endsWith(".class")) {
-                ClassValue<?> type = ClassValue.of(literal.substring(0, literal.length() - 6));
-                Value<?> actualValue = ObjectValue.of(type.getValue());
+                ClassValue<?> value = ClassValue.of(literal.substring(0, literal.length() - 6));
+                Value<?> actualValue = ObjectValue.of(value.getValue());
                 tuple.set(actualValue.toClass(), actualValue);
             } else {
-                ClassValue<?> type = ClassValue.of(literal);
-                tuple.set(type, type);
+                ClassValue<?> value = ClassValue.of(literal);
+                tuple.set(value, value);
             }
             return tuple;
         } catch (ValueException e) {
