@@ -441,7 +441,8 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
             Tuple<ClassType, Type> tuple = new Tuple<>();
             if (literal.endsWith(".class")) {
                 ClassType type = ClassType.of(literal.substring(0, literal.length() - 6));
-                tuple.set(type.toClass(), type.toClass());
+                Type actualType = ObjectType.of(Class.class, Arrays.asList(type));
+                tuple.set(actualType.toClass(), actualType);
             } else {
                 ClassType type = ClassType.of(literal);
                 tuple.set(type, type);
