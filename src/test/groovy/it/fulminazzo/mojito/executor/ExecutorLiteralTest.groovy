@@ -38,7 +38,7 @@ class ExecutorLiteralTest extends Specification {
         'int'                                                       | PrimitiveClassValue.INT
         'String'                                                    | ObjectClassValue.STRING
         'System'                                                    | ClassValue.of(System)
-        'System.class'                                              | ClassValue.of(Class)
+        'System.class'                                              | ObjectValue.of(System)
         'System.out'                                                | ObjectValue.of(System.out)
         'var'                                                       | PrimitiveValue.of(1)
         'var.TYPE'                                                  | ObjectValue.of(int)
