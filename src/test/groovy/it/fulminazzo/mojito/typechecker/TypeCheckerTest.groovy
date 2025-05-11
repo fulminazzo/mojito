@@ -26,6 +26,7 @@ import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import it.fulminazzo.mojito.typechecker.types.variables.ArrayTypeVariableContainer
 import it.fulminazzo.mojito.typechecker.types.variables.TypeLiteralVariableContainer
+import it.fulminazzo.mojito.visitors.visitorobjects.variables.VariableContainer
 import spock.lang.Specification
 
 import java.util.concurrent.Callable
@@ -1293,7 +1294,7 @@ class TypeCheckerTest extends Specification {
 
         then:
         def e = thrown(TypeCheckerException)
-        e.message == TypeCheckerException.invalidType(Literal.class, NUMBER_LIT).message
+        e.message == TypeCheckerException.invalidType(VariableContainer, PrimitiveType.INT).message
     }
 
     def 'test equal'() {
