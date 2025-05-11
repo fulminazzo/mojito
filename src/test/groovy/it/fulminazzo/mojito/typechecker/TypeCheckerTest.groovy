@@ -1752,6 +1752,18 @@ class TypeCheckerTest extends Specification {
                 new MethodInvocation([]))                | Literal.of('Object')                    | ObjectType.OBJECT
     }
 
+    def 'test getClass should return Generics type'() {
+        when:
+        def type = this.typeChecker.visitMethodCall(
+                STRING_LIT,
+                'getClass',
+                new MethodInvocation([])
+        )
+
+        then:
+        type == ObjectType.of(Class, [ObjectClassType.STRING])
+    }
+
     def 'test .class should return Generics type'() {
         when:
         def type = this.typeChecker.visitLiteralImpl('String.class')
