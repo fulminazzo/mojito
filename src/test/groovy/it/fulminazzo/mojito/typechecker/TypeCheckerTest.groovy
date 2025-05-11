@@ -1752,6 +1752,14 @@ class TypeCheckerTest extends Specification {
                 new MethodInvocation([]))                | Literal.of('Object')                    | ObjectType.OBJECT
     }
 
+    def 'test .class should return Generics type'() {
+        when:
+        def type = this.typeChecker.visitLiteralImpl('String.class')
+
+        then:
+        type == ObjectType.of(Class, [ObjectClassType.STRING])
+    }
+
     def 'test invalid visit cast #target to #cast'() {
         given:
         this.environment.declare(PrimitiveClassType.INT, 'cast', PrimitiveType.INT)
