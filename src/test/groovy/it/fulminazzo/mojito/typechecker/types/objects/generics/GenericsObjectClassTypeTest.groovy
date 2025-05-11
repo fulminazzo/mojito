@@ -22,14 +22,8 @@ class GenericsObjectClassTypeTest extends Specification {
         classType                                                                        | expected                                                                          | parameters
         ClassType.of(GenericsTestClass, [ClassType.of(GenericsTestClass.MockTestClass)]) | ObjectType.of(GenericsTestClass, [ClassType.of(GenericsTestClass.MockTestClass)]) |
                 new ParameterTypes([ObjectType.of(GenericsTestClass.MockTestClass), ObjectType.INTEGER])
-        //TODO: type inference
-//        ClassType.of(GenericsTestClass) | ObjectType.of(GenericsTestClass, [ClassType.of(GenericsTestClass.MockTestClass)]) |
-//                new ParameterTypes([ObjectType.of(GenericsTestClass.MockTestClass), ObjectType.INTEGER])
         ClassType.of(ArrayList, [ObjectClassType.INTEGER])                               | ObjectType.of(ArrayList, [ObjectClassType.INTEGER])                               |
                 new ParameterTypes([ObjectType.of(List, [ObjectClassType.INTEGER])])
-        //TODO: type inference
-//        ClassType.of(ArrayList)                               | ObjectType.of(ArrayList, [ObjectClassType.INTEGER])                               |
-//                new ParameterTypes([ObjectType.of(List, [ObjectClassType.INTEGER])])
     }
 
     def 'test newObject should throw types mismatch'() {
