@@ -10,14 +10,14 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Represents a {@link ObjectClassType} with a class different from the default types.
  */
-class CustomObjectClassType extends TypeWrapper implements ClassType {
+public class CustomObjectClassType extends TypeWrapper implements ClassType {
 
     /**
      * Instantiates a new Custom class object type.
      *
      * @param internalType the internal type
      */
-    public CustomObjectClassType(@NotNull ObjectType internalType) {
+    protected CustomObjectClassType(@NotNull ObjectType internalType) {
         super(internalType);
     }
 
@@ -40,7 +40,7 @@ class CustomObjectClassType extends TypeWrapper implements ClassType {
 
     @Override
     public boolean compatibleWith(@NotNull Type type) {
-        if (type instanceof ObjectType)
+        if (type.is(ObjectType.class))
             return toJavaClass().isAssignableFrom(((ObjectType) type).getInnerClass());
         else return type.equals(Types.NULL_TYPE);
     }

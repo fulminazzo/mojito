@@ -204,7 +204,7 @@ METHOD_INVOCATION := \( (EXPR)? (, EXPR)* \)
 ATOM := NULL | THIS | ARRAY_LITERAL | TYPE_VALUE
 NULL := null
 THIS := this
-LITERAL := [a-zA-Z_](?:[a-zA-Z0-9._]*[a-zA-Z0-9_])*
+LITERAL := [a-zA-Z_](?:[a-zA-Z0-9._]*[a-zA-Z0-9_])* (< (LITERAL, )* (LITERAL)? >)?
 
 TYPE_VALUE := NUMBER_VALUE | LONG_VALUE | DOUBLE_VALUE | FLOAT_VALUE |
               BOOLEAN_VALUE | CHAR_VALUE | STRING_VALUE

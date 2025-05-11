@@ -4,6 +4,7 @@ import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.ParameterTypes;
 import it.fulminazzo.mojito.typechecker.types.Type;
 import it.fulminazzo.mojito.typechecker.types.TypeException;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -40,7 +41,7 @@ interface TypeVariableContainer extends Type {
     }
 
     @Override
-    default @NotNull Type invokeMethod(@NotNull Method method, @NotNull ParameterTypes parameterTypes) throws TypeException {
+    default @NotNull Type invokeMethod(@NotNull ExecutableContainer<Method> method, @NotNull ParameterTypes parameterTypes) throws TypeException {
         return getVariable().invokeMethod(method, parameterTypes);
     }
 

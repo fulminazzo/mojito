@@ -1,7 +1,10 @@
 package it.fulminazzo.mojito.executor.values.variables;
 
-import it.fulminazzo.mojito.executor.values.*;
 import it.fulminazzo.mojito.executor.values.ClassValue;
+import it.fulminazzo.mojito.executor.values.ParameterValues;
+import it.fulminazzo.mojito.executor.values.Value;
+import it.fulminazzo.mojito.executor.values.ValueException;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -64,7 +67,7 @@ interface ValueVariableContainer<V> extends Value<V> {
     }
 
     @Override
-    default @NotNull Value<?> invokeMethod(@NotNull Method method, @NotNull ParameterValues parameters) throws ValueException {
+    default @NotNull Value<?> invokeMethod(@NotNull ExecutableContainer<Method> method, @NotNull ParameterValues parameters) throws ValueException {
         return getVariable().invokeMethod(method, parameters);
     }
     

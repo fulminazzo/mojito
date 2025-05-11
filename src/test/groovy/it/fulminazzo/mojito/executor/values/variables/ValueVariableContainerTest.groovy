@@ -5,6 +5,7 @@ import it.fulminazzo.mojito.executor.values.ClassValue
 import it.fulminazzo.mojito.executor.values.ParameterValues
 import it.fulminazzo.mojito.TestClass
 import it.fulminazzo.mojito.executor.values.Value
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer
 import org.jetbrains.annotations.NotNull
 import spock.lang.Specification
 
@@ -80,7 +81,7 @@ class ValueVariableContainerTest extends Specification {
         def container = generateContainer(variable)
 
         and:
-        def method = TestClass.getMethod('publicMethod')
+        def method = ExecutableContainer.of(TestClass.getMethod('publicMethod'))
         def values = new ParameterValues([])
 
         when:

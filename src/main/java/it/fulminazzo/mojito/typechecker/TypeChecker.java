@@ -6,6 +6,7 @@ import it.fulminazzo.mojito.environment.ScopeException;
 import it.fulminazzo.mojito.environment.scopetypes.ScopeType;
 import it.fulminazzo.mojito.parser.node.Node;
 import it.fulminazzo.mojito.parser.node.container.CodeBlock;
+import it.fulminazzo.mojito.parser.node.literals.GenericsLiteral;
 import it.fulminazzo.mojito.parser.node.literals.Literal;
 import it.fulminazzo.mojito.parser.node.statements.CaseStatement;
 import it.fulminazzo.mojito.parser.node.statements.CatchStatement;
@@ -15,6 +16,7 @@ import it.fulminazzo.mojito.typechecker.types.arrays.ArrayClassType;
 import it.fulminazzo.mojito.typechecker.types.arrays.ArrayType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.variables.ArrayTypeVariableContainer;
 import it.fulminazzo.mojito.typechecker.types.variables.TypeLiteralVariableContainer;
 import it.fulminazzo.mojito.visitors.Visitor;
@@ -23,10 +25,7 @@ import it.fulminazzo.mojito.visitors.visitorobjects.variables.VariableContainer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A {@link Visitor} that checks and verifies all the types of the parsed code.
@@ -228,8 +227,9 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
                 if (!componentType.isAssignableFrom(variableType))
                     throw TypeCheckerException.invalidType(componentType.toClass(), variableType);
             } else {
-                //TODO: Iterable generic should check for type
-                ClassType iterable = ObjectClassType.of(Iterable.class);
+                Type actualVariableType = variableType.toType();
+                if (actualVariableType.isPrimitive()) actualVariableType = actualVariableType.toWrapper();
+                ClassType iterable = ClassType.of(Iterable.class, Collections.singletonList(actualVariableType.toClass()));
                 expressionType.checkAssignableFrom(iterable);
             }
 
@@ -290,6 +290,41 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
             if (variableValue.is(PrimitiveType.INT) || variableValue.is(PrimitiveType.CHAR))
                 return variableType.toType();
         return variableValue;
+    }
+
+    @Override
+    public @NotNull Type visitAssignment(@NotNull Node type, @NotNull Literal name, @NotNull Node value) {
+        Type assignmentType = Visitor.super.visitAssignment(type, name, value);
+        try {
+            TypeLiteralVariableContainer variableContainer = name.accept(this).check(TypeLiteralVariableContainer.class);
+            Type savedType = this.environment.lookup(variableContainer.namedEntity());
+            if (savedType.is(ObjectType.class)) {
+                ObjectType savedObjectType = savedType.check(ObjectType.class);
+                if (savedObjectType.isInferred()) {
+                    ClassType info = (ClassType) this.environment.lookupInfo(variableContainer.namedEntity());
+                    GenericsObjectClassType classType = info.check(GenericsObjectClassType.class);
+                    Type newType = ObjectType.of(savedObjectType.getInnerClass(), classType.getGenericTypes().values());
+                    this.environment.update(variableContainer.namedEntity(), newType);
+                    return newType;
+                }
+            }
+            return assignmentType;
+        } catch (ScopeException e) {
+            throw new IllegalStateException("Unreachable code");
+        }
+    }
+
+    @Override
+    public @NotNull Type visitNewObject(@NotNull Node left, @NotNull Node right) {
+        if (left.is(GenericsLiteral.class)) {
+            GenericsLiteral literal = (GenericsLiteral) left;
+            // Check if inferred types
+            if (literal.getTypes().isEmpty()) {
+                left = literal.toLiteral();
+                return Visitor.super.visitNewObject(left, right).check(ObjectType.class).setInferred(true);
+            }
+        }
+        return Visitor.super.visitNewObject(left, right);
     }
 
     @Override
@@ -386,6 +421,14 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
     @Override
     public @NotNull Type visitStringValueLiteral(@NotNull String rawValue) {
         return ObjectType.STRING;
+    }
+
+    @Override
+    public @NotNull Type visitGenericsLiteral(@NotNull List<Literal> types, @NotNull String value) {
+        ClassType classType = visitLiteralImpl(value).checkClass();
+        final List<ClassType> genericTypes = new LinkedList<>();
+        for (Literal type : types) genericTypes.add(type.accept(this).checkClass());
+        return ClassType.of(classType.toJavaClass(), genericTypes);
     }
 
     @Override

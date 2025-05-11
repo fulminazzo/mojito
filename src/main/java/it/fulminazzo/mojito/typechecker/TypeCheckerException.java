@@ -4,6 +4,7 @@ import it.fulminazzo.mojito.exceptions.FormatRuntimeException;
 import it.fulminazzo.mojito.tokenizer.TokenType;
 import it.fulminazzo.mojito.typechecker.types.ClassType;
 import it.fulminazzo.mojito.typechecker.types.Type;
+import it.fulminazzo.mojito.typechecker.types.TypeException;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -213,6 +214,22 @@ public final class TypeCheckerException extends FormatRuntimeException {
                                                                       final @NotNull ClassType type) {
         return new TypeCheckerException("Types in a multi-catch must be disjoint: '%s' is a subclass of '%s'",
                 subtype, type);
+    }
+
+    /**
+     * Generates a {@link TypeCheckerException} with message:
+     * <i>Invalid generic parameters passed for type %type%: it requires %expectedSize% types, but %actualSize% were given.</i>
+     *
+     * @param type    the type
+     * @param expectedSize the expected size
+     * @param actualSize   the actual size
+     * @return type checker exception
+     */
+    public static @NotNull TypeCheckerException invalidGenericTypeSize(final @NotNull ClassType type,
+                                                                       final int expectedSize,
+                                                                       final int actualSize) {
+        return new TypeCheckerException("Invalid generic parameters passed for type %s: it requires %s types, but %s were given.",
+                type, expectedSize, actualSize);
     }
 
 }

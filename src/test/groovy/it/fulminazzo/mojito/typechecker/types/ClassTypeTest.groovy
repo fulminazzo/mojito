@@ -2,6 +2,7 @@ package it.fulminazzo.mojito.typechecker.types
 
 import it.fulminazzo.fulmicollection.objects.Refl
 import it.fulminazzo.mojito.TestClass
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject
@@ -15,6 +16,41 @@ class ClassTypeTest extends Specification {
 
     void setup() {
         this.classType = ClassType.of(TestClass)
+    }
+
+    def 'test that generic class is correctly recognized'() {
+        given:
+        def className = 'Map'
+        def parameterTypes = 'Map<Integer, List<String>>, TreeMap<Number, Double>'
+
+        when:
+        def classType = ClassType.of("${className}<${parameterTypes}>")
+
+        then:
+        classType == new GenericsObjectClassType(
+                ObjectType.of(className),
+                [
+                        new GenericsObjectClassType(
+                                ObjectType.of('Map'),
+                                [
+                                        ObjectClassType.INTEGER,
+                                        new GenericsObjectClassType(
+                                                ObjectType.of('List'),
+                                                [
+                                                        ObjectClassType.STRING
+                                                ]
+                                        )
+                                ]
+                        ),
+                        new GenericsObjectClassType(
+                                ObjectType.of('TreeMap'),
+                                [
+                                        ObjectClassType.of('Number'),
+                                        ObjectClassType.DOUBLE
+                                ]
+                        )
+                ]
+        )
     }
 
     def 'test method #toClass should always return a wrapper for java.lang.Class'() {
@@ -141,6 +177,18 @@ class ClassTypeTest extends Specification {
         then:
         def e = thrown(TypeException)
         e.message == TypeException.methodNotFound(this.classType, '<init>', mockParameters).message
+    }
+
+    def 'test of IllegalStateException for JaCoCo coverage'() {
+        given:
+        def type = Mock(java.lang.reflect.Type)
+        type.getTypeName() >> 'NotExistingAtAll'
+
+        when:
+        ClassType.of(type)
+
+        then:
+        thrown(IllegalStateException)
     }
 
 }

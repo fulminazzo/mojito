@@ -4,6 +4,7 @@ import it.fulminazzo.fulmicollection.objects.Refl;
 import it.fulminazzo.fulmicollection.utils.ReflectionUtils;
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObjectException;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
@@ -30,7 +31,7 @@ public class ClassElement extends ElementImpl implements ClassVisitorObject<Clas
     }
 
     @Override
-    public @NotNull Element newObject(@NotNull Constructor<?> constructor, @NotNull ParameterElements parameters) throws VisitorObjectException {
+    public @NotNull Element newObject(@NotNull ExecutableContainer<Constructor<?>> constructor, @NotNull ParameterElements parameters) throws VisitorObjectException {
         Refl<?> refl = new Refl<>(toJavaClass(), constructor.getParameterTypes(), parameters.stream()
                 .map(Element::getElement).toArray(Object[]::new));
         return Element.of(refl.getObject());

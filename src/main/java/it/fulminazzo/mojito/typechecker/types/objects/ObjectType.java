@@ -4,11 +4,14 @@ import it.fulminazzo.fulmicollection.objects.Refl;
 import it.fulminazzo.fulmicollection.utils.ReflectionUtils;
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.*;
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectType;
 import it.fulminazzo.mojito.wrappers.ObjectWrapper;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -17,16 +20,46 @@ import java.util.Map;
  * The distinction between these and {@link PrimitiveClassType}
  * is mandatory for correct functioning of casts, operations, null assignments and more.
  */
-public final class ObjectType extends ObjectWrapper<Class<?>> implements Type {
+public class ObjectType extends ObjectWrapper<Class<?>> implements Type {
+    /**
+     * The constant BYTE.
+     */
     public static final ObjectType BYTE = new ObjectType(Byte.class);
+    /**
+     * The constant SHORT.
+     */
     public static final ObjectType SHORT = new ObjectType(Short.class);
+    /**
+     * The constant CHARACTER.
+     */
     public static final ObjectType CHARACTER = new ObjectType(Character.class);
+    /**
+     * The constant INTEGER.
+     */
     public static final ObjectType INTEGER = new ObjectType(Integer.class);
+    /**
+     * The constant LONG.
+     */
     public static final ObjectType LONG = new ObjectType(Long.class);
+    /**
+     * The constant FLOAT.
+     */
     public static final ObjectType FLOAT = new ObjectType(Float.class);
+    /**
+     * The constant DOUBLE.
+     */
     public static final ObjectType DOUBLE = new ObjectType(Double.class);
+    /**
+     * The constant BOOLEAN.
+     */
     public static final ObjectType BOOLEAN = new ObjectType(Boolean.class);
+    /**
+     * The constant STRING.
+     */
     public static final ObjectType STRING = new ObjectType(String.class);
+    /**
+     * The constant OBJECT.
+     */
     public static final ObjectType OBJECT = new ObjectType(Object.class);
 
     private static final String[] IMPLIED_PACKAGES = new String[]{
@@ -35,12 +68,36 @@ public final class ObjectType extends ObjectWrapper<Class<?>> implements Type {
             IOException.class.getPackage().getName()
     };
 
-    private ObjectType(final @NotNull Class<?> innerClass) {
+    @Getter
+    private boolean inferred;
+
+    /**
+     * Instantiates a new Object type.
+     *
+     * @param innerClass the inner class
+     */
+    protected ObjectType(final @NotNull Class<?> innerClass) {
         super(innerClass);
     }
 
-    Class<?> getInnerClass() {
+    /**
+     * Gets the inner class.
+     *
+     * @return the inner class
+     */
+    public Class<?> getInnerClass() {
         return this.object;
+    }
+
+    /**
+     * Sets the current object type to inferred.
+     *
+     * @param inferred the inferred
+     * @return this object type
+     */
+    public @NotNull ObjectType setInferred(final boolean inferred) {
+        this.inferred = inferred;
+        return this;
     }
 
     @Override
@@ -112,11 +169,23 @@ public final class ObjectType extends ObjectWrapper<Class<?>> implements Type {
     /**
      * Obtains an instance of {@link ObjectType} from the given class name.
      *
-     * @param clazz the clazz
+     * @param clazz the class
      * @return the object type
      */
     public static @NotNull ObjectType of(final @NotNull Class<?> clazz) {
         return new ObjectType(clazz);
+    }
+
+    /**
+     * Obtains an instance of {@link GenericsObjectType} to work with generics.
+     *
+     * @param clazz        the class
+     * @param genericTypes the generic types
+     * @return the object type
+     */
+    public static @NotNull ObjectType of(final @NotNull Class<?> clazz,
+                                         final @NotNull Collection<ClassType> genericTypes) {
+        return new GenericsObjectType(clazz, genericTypes);
     }
 
     /**

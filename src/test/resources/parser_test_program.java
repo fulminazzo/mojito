@@ -267,6 +267,13 @@ for (int[] a : arrayOfArray) {
     else continue;
 }
 
+List<String> list = new ArrayList<>();
+list.add("Hello");
+list.add("World");
+
+for (String str : list)
+    System.out.println(str);
+
 // This
 System.out.println("The previous value was " + this.publicField);
 this.publicField = 10;

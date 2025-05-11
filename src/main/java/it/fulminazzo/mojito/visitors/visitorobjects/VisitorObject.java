@@ -3,6 +3,7 @@ package it.fulminazzo.mojito.visitors.visitorobjects;
 import it.fulminazzo.fulmicollection.objects.Refl;
 import it.fulminazzo.fulmicollection.utils.ReflectionUtils;
 import it.fulminazzo.mojito.visitors.Visitor;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.variables.FieldContainer;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The object that will be returned by a {@link Visitor} instance.
@@ -129,24 +131,28 @@ public interface VisitorObject<
         if (isPrimitive()) return toWrapper().invokeMethod(methodName, parameters);
         C classVisitorObject = is(ClassVisitorObject.class) ? (C) this : toClass();
         try {
-            Class<?> javaClass = classVisitorObject.toJavaClass();
             // Lookup methods from name and parameters count
-            @NotNull List<Method> methods = ReflectionUtils.getMethods(javaClass, m ->
-                    m.getName().equals(methodName) && VisitorObjectUtils.verifyExecutable(parameters, m));
+            List<ExecutableContainer<Method>> methods = ReflectionUtils.getMethods(classVisitorObject.toJavaClass(), m ->
+                            m.getName().equals(methodName) && VisitorObjectUtils.verifyExecutable(parameters, m)).stream()
+                    .map(m -> this instanceof GenericsContainer<?> ?
+                            ExecutableContainer.of(m, (GenericsContainer<?>) this) :
+                            ExecutableContainer.of(m)
+                    )
+                    .collect(Collectors.toList());
             if (methods.isEmpty()) throw new IllegalArgumentException();
 
             Refl<?> refl = new Refl<>(ReflectionUtils.class);
             Class<?> @NotNull [] parametersTypes = parameters.toJavaClassArray();
 
-            for (Method method : methods) {
+            for (ExecutableContainer<Method> method : methods) {
                 // For each one, validate its parameters
                 if (Boolean.TRUE.equals(refl.invokeMethod("validateParameters",
-                        new Class[]{Class[].class, Executable.class},
-                        parametersTypes, method)))
+                        new Class[]{Class[].class, Class[].class, boolean.class},
+                        parametersTypes, method.getParameterTypes(), method.isVarArgs())))
                     return invokeMethod(method, parameters);
             }
 
-            throw typesMismatch(classVisitorObject, methods.get(0), parameters);
+            throw typesMismatch(classVisitorObject, methods.get(0).getActualExecutable(), parameters);
         } catch (IllegalArgumentException e) {
             throw methodNotFound(classVisitorObject, methodName, parameters);
         }
@@ -161,7 +167,7 @@ public interface VisitorObject<
      * @return the returned object from the method
      * @throws VisitorObjectException the exception thrown in case of errors
      */
-    @NotNull O invokeMethod(final @NotNull Method method, final @NotNull P parameters) throws VisitorObjectException;
+    @NotNull O invokeMethod(final @NotNull ExecutableContainer<Method> method, final @NotNull P parameters) throws VisitorObjectException;
 
     /**
      * Converts the current object to its primitive associated object.

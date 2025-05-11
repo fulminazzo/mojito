@@ -52,13 +52,6 @@ class TokenizerInputStream extends InputStream {
             this.buffer.addFirst((int) chars[i]);
     }
 
-    /**
-     * Clears any previously cached data in the buffer.
-     */
-    public void flush() {
-        this.buffer.clear();
-    }
-
     @Override
     public int read(byte @NotNull [] bytes) throws IOException {
         return read(bytes, 0, bytes.length);

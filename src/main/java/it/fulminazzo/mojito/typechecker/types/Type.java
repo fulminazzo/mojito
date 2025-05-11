@@ -4,6 +4,7 @@ import it.fulminazzo.mojito.tokenizer.TokenType;
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.typechecker.types.variables.TypeFieldContainer;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -112,11 +113,11 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
     }
 
     @Override
-    default @NotNull Type invokeMethod(final @NotNull Method method,
+    default @NotNull Type invokeMethod(final @NotNull ExecutableContainer<Method> method,
                                        final @NotNull ParameterTypes parameterTypes) throws TypeException {
         ClassType classType = isClassType() ? (ClassType) this : toClass();
         if (!Modifier.isPublic(method.getModifiers()))
-            throw TypeException.cannotAccessMethod(classType, method);
+            throw TypeException.cannotAccessMethod(classType, method.getActualExecutable());
         else if (isClassType() && !Modifier.isStatic(method.getModifiers()))
             throw TypeException.cannotAccessStaticMethod(classType, method.getName(), parameterTypes);
         return ClassType.of(method.getReturnType()).toType();

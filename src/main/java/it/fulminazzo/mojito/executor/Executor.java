@@ -322,6 +322,11 @@ public class Executor implements Visitor<ClassValue<?>, Value<?>, ParameterValue
     }
 
     @Override
+    public @NotNull Value<?> visitGenericsLiteral(@NotNull List<Literal> types, @NotNull String value) {
+        return visitLiteralImpl(value);
+    }
+
+    @Override
     public @NotNull Tuple<ClassValue<?>, Value<?>> getObjectFromLiteral(@NotNull String literal) {
         try {
             Tuple<ClassValue<?>, Value<?>> tuple = new Tuple<>();

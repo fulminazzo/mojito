@@ -838,6 +838,15 @@ public interface Visitor<
     @NotNull O visitStringValueLiteral(@NotNull String rawValue);
 
     /**
+     * Converts generics literal and its fields to this visitor type.
+     *
+     * @param types the generic types
+     * @param value the value
+     * @return the literal
+     */
+    @NotNull O visitGenericsLiteral(@NotNull List<Literal> types, @NotNull String value);
+
+    /**
      * Converts literal and its fields to this visitor type.
      *
      * @param value the value

@@ -3,6 +3,7 @@ package it.fulminazzo.mojito.typechecker.types.variables
 import it.fulminazzo.fulmicollection.structures.tuples.Tuple
 import it.fulminazzo.mojito.TestClass
 import it.fulminazzo.mojito.typechecker.types.*
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer
 import org.jetbrains.annotations.NotNull
 import spock.lang.Specification
 
@@ -79,7 +80,7 @@ class TypeVariableContainerTest extends Specification {
         def container = generateContainer(variable)
 
         and:
-        def method = TestClass.getMethod('publicMethod')
+        def method = ExecutableContainer.of(TestClass.getMethod('publicMethod'))
         def types = new ParameterTypes([])
 
         when:

@@ -2,6 +2,7 @@ package it.fulminazzo.mojito.typechecker
 
 import it.fulminazzo.fulmicollection.objects.Refl
 import it.fulminazzo.mojito.TestClass
+import it.fulminazzo.mojito.environment.Environment
 import it.fulminazzo.mojito.environment.MockEnvironment
 import it.fulminazzo.mojito.environment.NamedEntity
 import it.fulminazzo.mojito.environment.ScopeException
@@ -397,10 +398,10 @@ class TypeCheckerTest extends Specification {
     def 'test visit enhanced for statement of (#expression) #codeBlock should return #expected'() {
         given:
         this.environment.declare(new ArrayClassType(PrimitiveClassType.INT), 'arr', new ArrayType(PrimitiveType.INT))
-        this.environment.declare(ObjectClassType.of(Iterable), 'iterable', ObjectType.of(Iterable))
-        this.environment.declare(ObjectClassType.of(List), 'list', ObjectType.of(List))
-        this.environment.declare(ObjectClassType.of(Collection), 'collection', ObjectType.of(Collection))
-        this.environment.declare(ObjectClassType.of(Set), 'set', ObjectType.of(Set))
+        this.environment.declare(ObjectClassType.of(Iterable, [ClassType.of(Integer)]), 'iterable', ObjectType.of(Iterable, [ClassType.of(Integer)]))
+        this.environment.declare(ObjectClassType.of(List, [ClassType.of(Integer)]), 'list', ObjectType.of(List, [ClassType.of(Integer)]))
+        this.environment.declare(ObjectClassType.of(Collection, [ClassType.of(Integer)]), 'collection', ObjectType.of(Collection, [ClassType.of(Integer)]))
+        this.environment.declare(ObjectClassType.of(Set, [ClassType.of(Integer)]), 'set', ObjectType.of(Set, [ClassType.of(Integer)]))
 
         and:
         def varType = Literal.of('int')
@@ -426,6 +427,7 @@ class TypeCheckerTest extends Specification {
         Types.NO_TYPE         | CODE_BLOCK_BREAK | Literal.of('list')
         Types.NO_TYPE         | CODE_BLOCK_BREAK | Literal.of('set')
         Types.NO_TYPE         | CODE_BLOCK_BREAK | Literal.of('collection')
+        Types.NO_TYPE         | CODE_BLOCK_BREAK | Literal.of('parameterizedList')
     }
 
     def 'test visit enhanced for statement of non-iterable'() {
@@ -438,7 +440,7 @@ class TypeCheckerTest extends Specification {
 
         then:
         def e = thrown(TypeCheckerException)
-        e.message == TypeCheckerException.invalidType(ObjectClassType.of(Iterable), PrimitiveType.INT).message
+        e.message == TypeCheckerException.invalidType(ObjectClassType.of(Iterable, [ObjectClassType.INTEGER]), PrimitiveType.INT).message
     }
 
     def 'test visit enhanced for statement of array with invalid type'() {
@@ -456,6 +458,24 @@ class TypeCheckerTest extends Specification {
         then:
         def e = thrown(TypeCheckerException)
         e.message == TypeCheckerException.invalidType(classType.componentsType, PrimitiveClassType.BOOLEAN).message
+    }
+
+    def 'test visit enhanced for statement of iterable with invalid type'() {
+        given:
+        def classType = ClassType.of(Collection, [ObjectClassType.INTEGER])
+        def type = ObjectType.of(Collection, [ObjectClassType.INTEGER])
+        this.environment.declare(classType, 'coll', type)
+
+        and:
+        def varType = Literal.of('boolean')
+        def varName = Literal.of('i')
+
+        when:
+        this.typeChecker.visitEnhancedForStatement(varType, varName, CODE_BLOCK_BREAK, Literal.of('coll'))
+
+        then:
+        def e = thrown(TypeCheckerException)
+        e.message == TypeCheckerException.invalidType(ClassType.of(Iterable, [ObjectClassType.BOOLEAN]), type).message
     }
 
     def 'test visit for statement of (#expression) #codeBlock should return #expected'() {
@@ -748,6 +768,38 @@ class TypeCheckerTest extends Specification {
         Literal.of('double')    | STRING_LIT
         Literal.of('byte')      | LONG_LIT
         Literal.of('short')     | FLOAT_LIT
+    }
+
+    def 'test that assigning inferred variable converts to correct type'() {
+        given:
+        def nodeExecutor = new GenericsLiteral(LinkedList.canonicalName, [])
+        def methodInvocation = new MethodInvocation([])
+
+        when:
+        this.typeChecker.visitAssignment(
+                new GenericsLiteral('List', [Literal.of('String')]),
+                Literal.of('list'),
+                new NewObject(nodeExecutor, methodInvocation)
+        )
+
+        and:
+        def variable = this.environment.lookup('list')
+
+        then:
+        variable == ObjectType.of(LinkedList, [ObjectClassType.STRING])
+    }
+
+    def 'test visit new object supports inferred types'() {
+        given:
+        def nodeExecutor = new GenericsLiteral(LinkedList.canonicalName, [])
+        def methodInvocation = new MethodInvocation([])
+
+        when:
+        def type = this.typeChecker.visitNewObject(nodeExecutor, methodInvocation)
+
+        then:
+        type == ObjectType.of(LinkedList)
+        type.check(ObjectType).inferred
     }
 
     def 'test visit new object #parameters'() {
@@ -1741,6 +1793,28 @@ class TypeCheckerTest extends Specification {
         exception                | expected
         IllegalArgumentException | IllegalArgumentException
         IOException              | TypeCheckerException
+    }
+
+    def 'test visitNewAssignment exception for JaCoCo coverage'() {
+        given:
+        def environment = Spy(Environment)
+        environment.lookup(_) >> {
+            throw ScopeException.noSuchVariable(NamedEntity.of('list'))
+        }
+
+        and:
+        def typeChecker = new TypeChecker(null)
+        new Refl<>(typeChecker).setFieldObject('environment', environment)
+
+        when:
+        typeChecker.visitAssignment(
+                new GenericsLiteral('List', [Literal.of('String')]),
+                Literal.of('list'),
+                new NewObject(Literal.of('LinkedList'), new MethodInvocation([]))
+        )
+
+        then:
+        thrown(IllegalStateException)
     }
 
 }

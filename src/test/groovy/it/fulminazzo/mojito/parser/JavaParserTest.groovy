@@ -1082,12 +1082,60 @@ class JavaParserTest extends Specification {
         e.message == ParserException.unexpectedToken(this.parser, TokenType.LITERAL).message
     }
 
-    def 'test parse literal'() {
+    def 'test parse boolean literal'() {
         when:
         def literal = this.parser.createLiteral(BooleanValueLiteral, 'true')
 
         then:
         literal == new BooleanValueLiteral('true')
+    }
+
+    def 'test parse generics literal with expression: #code'() {
+        given:
+        startReading(code)
+
+        when:
+        def literal = this.parser.parseLiteral()
+
+        then:
+        literal == expected
+
+        where:
+        code                                              | expected
+        'List<?>'                                         | new GenericsLiteral('List', [new EmptyLiteral()])
+        'List<String>'                                    | new GenericsLiteral('List', [Literal.of('String')])
+        'Map<String, Integer>'                            | new GenericsLiteral('Map', [
+                Literal.of('String'), Literal.of('Integer')
+        ])
+        'TernaryOperator<String, List, Integer>'          | new GenericsLiteral('TernaryOperator', [
+                Literal.of('String'), Literal.of('List'), Literal.of('Integer')
+        ])
+        'TernaryOperator<String, List<Boolean>, Integer>' | new GenericsLiteral('TernaryOperator', [
+                Literal.of('String'),
+                new GenericsLiteral('List', [Literal.of('Boolean')]),
+                Literal.of('Integer')
+        ])
+    }
+
+    def 'test parse literal with expression: #exp'() {
+        given:
+        startReading(exp)
+
+        when:
+        def literal = this.parser.parseLiteral()
+
+        then:
+        literal.literal == 'lit'
+
+        where:
+        exp << [
+                'lit', 'lit <',
+                'lit < hello',
+                'lit < hello, world',
+                'lit < hello, world 1',
+                'lit < hello, world, friend',
+                'lit < hello, world, friend true',
+        ]
     }
 
     def 'test parse literal LiteralException'() {
@@ -1101,6 +1149,26 @@ class JavaParserTest extends Specification {
         then:
         def e = thrown(ParserException)
         e.message == ParserException.invalidValueProvided(this.parser, 'a').message
+    }
+
+    def 'test parse literal no consume exception for JaCoCo coverage'() {
+        given:
+        def parser = Spy(JavaParser)
+
+        and:
+        def literal = Mock(Literal)
+        literal.getLiteral() >> '+!?'
+        parser.getLiteralFromString(_) >> literal
+
+        and:
+        parser.input = 'Mock<String>'
+        parser.tokenizer.next()
+
+        when:
+        parser.parseLiteralNoConsume()
+
+        then:
+        thrown(IllegalStateException)
     }
 
     def 'test parse literal RuntimeException'() {

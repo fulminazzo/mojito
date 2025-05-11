@@ -2,11 +2,19 @@ package it.fulminazzo.mojito.typechecker.types;
 
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
+import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsObjectClassType;
+import it.fulminazzo.mojito.typechecker.types.objects.generics.GenericsUtils;
+import it.fulminazzo.mojito.utils.StringUtils;
 import it.fulminazzo.mojito.visitors.visitorobjects.ClassVisitorObject;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * Represents the class of a {@link Type}.
@@ -30,10 +38,10 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
     }
 
     @Override
-    default @NotNull Type newObject(final @NotNull Constructor<?> constructor,
+    default @NotNull Type newObject(final @NotNull ExecutableContainer<Constructor<?>> constructor,
                                     final @NotNull ParameterTypes parameterTypes) throws TypeException {
         if (!Modifier.isPublic(constructor.getModifiers()))
-            throw TypeException.cannotAccessMethod(this, constructor);
+            throw TypeException.cannotAccessMethod(this, constructor.getActualExecutable());
         else return toType();
     }
 
@@ -55,8 +63,25 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
     }
 
     /**
+     * Gets a new {@link ClassType} from the given {@link java.lang.reflect.Type}.
+     * Uses {@link #of(String)} to handle generic types.
+     *
+     * @param type the type
+     * @return the class type
+     */
+    static @NotNull ClassType of(final @NotNull java.lang.reflect.Type type) {
+        try {
+            return of(type.getTypeName());
+        } catch (TypeException e) {
+            throw new IllegalStateException("Unreachable code");
+        }
+    }
+
+    /**
      * Gets a new {@link ClassType} from the given class name.
-     * Tries first to obtain from {@link PrimitiveClassType}.
+     * First checks if the given name comprehends a generic notation (%name%&lt;%parameters%&gt;).
+     * If it does, a {@link GenericsObjectClassType} is returned.
+     * Then, it tries to obtain from {@link PrimitiveClassType}.
      * If it fails, uses the fields of {@link ObjectClassType}.
      * Otherwise, a new type is created.
      *
@@ -65,12 +90,44 @@ public interface ClassType extends Type, ClassVisitorObject<ClassType, Type, Par
      * @throws TypeException the exception thrown in case the class is not found
      */
     static @NotNull ClassType of(final @NotNull String className) throws TypeException {
+        Matcher matcher = GenericsUtils.GENERICS_CLASS_PATTERN.matcher(className);
+        if (matcher.matches()) return of(matcher.group(1), matcher.group(2));
         try {
             String lowerCase = className.toLowerCase();
             if (lowerCase.equals(className)) return PrimitiveClassType.valueOf(className.toUpperCase());
         } catch (IllegalArgumentException ignored) {
         }
         return ObjectClassType.of(className);
+    }
+
+    /**
+     * Gets a new {@link ClassType} that supports generic typing from the given class.
+     *
+     * @param clazz        the class
+     * @param genericTypes the generic types
+     * @return the class type
+     */
+    static @NotNull ClassType of(final @NotNull Class<?> clazz,
+                                 final @NotNull List<ClassType> genericTypes) {
+        return ObjectClassType.of(clazz, genericTypes);
+    }
+
+    /**
+     * Gets a new {@link ClassType} that supports generic typing from the given class name.
+     * It uses the given <b>genericTypes</b> as list of parameters, which are
+     * then each passed to {@link #of(String)}.
+     *
+     * @param className    the class name
+     * @param genericTypes the generic types
+     * @return the class type
+     * @throws TypeException the exception thrown in case a class is not found
+     */
+    static @NotNull ClassType of(final @NotNull String className,
+                                 final @NotNull String genericTypes) throws TypeException {
+        String[] types = StringUtils.quoteSplitter(genericTypes, ", *", "<", ">");
+        List<ClassType> classTypes = new LinkedList<>();
+        for (String type : types) classTypes.add(of(type));
+        return ObjectClassType.of(ObjectType.of(className), classTypes);
     }
 
     /**

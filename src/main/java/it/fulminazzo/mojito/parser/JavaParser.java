@@ -905,14 +905,61 @@ public class JavaParser extends Parser {
     }
 
     /**
-     * LITERAL := {@link TokenType#LITERAL}
+     * LITERAL := {@link TokenType#LITERAL} (< (LITERAL, )* (LITERAL)? >)?
      *
      * @return the node
      */
     protected @NotNull Literal parseLiteral() {
-        final String literal = getTokenizer().lastRead();
+        Literal l = parseLiteralNoConsume();
+        nextSpaceless();
+        return l;
+    }
+
+    /**
+     * Support method for {@link #parseLiteral()}.
+     * Executes the logic behind literal parsing by not
+     * reading the next token.
+     *
+     * @return the read literal
+     */
+    protected @NotNull Literal parseLiteralNoConsume() {
+        final @NotNull Tokenizer tokenizer = getTokenizer();
+        final String literal = tokenizer.lastRead();
         Literal l = getLiteralFromString(literal);
-        consume(LITERAL);
+
+        // Generics start
+        List<String> buffer = new LinkedList<>();
+        buffer.add(readSpaces());
+
+        buffer.add(tokenizer.lastRead());
+        if (lastToken() == LESS_THAN) {
+            buffer.add(readSpaces());
+
+            List<Literal> literals = new LinkedList<>();
+            while (lastToken() == LITERAL || lastToken() == QUESTION_MARK) {
+                Literal readLiteral = lastToken() == QUESTION_MARK ? new EmptyLiteral() : parseLiteralNoConsume();
+                literals.add(readLiteral);
+                buffer.add(readLiteral.getLiteral());
+                buffer.add(readSpaces());
+                if (lastToken() == COMMA) {
+                    buffer.add(tokenizer.lastRead());
+                    buffer.add(readSpaces());
+                } else break;
+            }
+
+            buffer.add(tokenizer.lastRead());
+            if (lastToken() == GREATER_THAN) {
+                try {
+                    return new GenericsLiteral(l.getLiteral(), literals);
+                } catch (NodeException ignored) {
+                    throw new IllegalStateException("Unreachable code");
+                }
+            }
+        }
+
+        tokenizer.pushback(buffer.toArray(new String[0]));
+        // Generics end
+
         return l;
     }
 
@@ -929,6 +976,21 @@ public class JavaParser extends Parser {
         } catch (NodeException e) {
             throw ParserException.invalidValueProvided(this, literal);
         }
+    }
+
+    /**
+     * Reads all the available spaces after the next token.
+     *
+     * @return all the read spaces
+     */
+    protected @NotNull String readSpaces() {
+        StringBuilder builder = new StringBuilder();
+        next();
+        while (lastToken() == SPACE) {
+            builder.append(getTokenizer().lastRead());
+            next();
+        }
+        return builder.toString();
     }
 
     /**
