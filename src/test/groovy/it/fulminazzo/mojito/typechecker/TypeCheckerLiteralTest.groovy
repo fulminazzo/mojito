@@ -36,7 +36,7 @@ class TypeCheckerLiteralTest extends Specification {
         'int'                                                       | PrimitiveClassType.INT
         'String'                                                    | ObjectClassType.STRING
         'System'                                                    | ClassType.of(System)
-        'System.class'                                              | ClassType.of(Class)
+        'System.class'                                              | ObjectType.of(Class, [ClassType.of(System)])
         'System.out'                                                | ObjectType.of(PrintStream.canonicalName)
         'var'                                                       | PrimitiveType.INT
         'var.TYPE'                                                  | ObjectType.of('Class')
