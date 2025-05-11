@@ -12,6 +12,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 
 /**
  * Represents a general type parsed by the {@link it.fulminazzo.mojito.typechecker.TypeChecker}.
@@ -120,7 +121,9 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
             throw TypeException.cannotAccessMethod(classType, method.getActualExecutable());
         else if (isClassType() && !Modifier.isStatic(method.getModifiers()))
             throw TypeException.cannotAccessStaticMethod(classType, method.getName(), parameterTypes);
-        return ClassType.of(method.getReturnType()).toType();
+        if (method.getName().equals("getClass"))
+            return ObjectType.of(method.getReturnType(), Arrays.asList(toClass()));
+        else return ClassType.of(method.getReturnType()).toType();
     }
 
     @Override
