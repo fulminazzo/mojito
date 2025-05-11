@@ -114,7 +114,7 @@ will return the parsed variable `name` (`fulminazzo`) in the _returnedValue_
 ## Roadmap
 
 - [x] ternary operator (`a ? b : c`);
-- [ ] diamond operator (generics);
+- [x] diamond operator (generics);
 - [ ] advanced wildcard handling (`super` and `extends`);
 - [x] `final` keyword;
 - [x] `instanceof` keyword;
