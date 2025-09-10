@@ -941,6 +941,30 @@ class JavaParserTest extends Specification {
         '>>>'     | URShift
     }
 
+    def 'test parseLambda: #code'() {
+        when:
+        startReading(code)
+        def parsed = this.parser.parseExpression()
+
+        then:
+        parsed == expected
+
+        where:
+        code                           | expected
+        'a -> 10'                      | new Lambda(Literal.of('a'), new NumberValueLiteral('10'))
+        'a -> {\ncontinue;\n}'         | new Lambda(Literal.of('a'), new CodeBlock(new Continue()))
+        '(a) -> 10'                    | new Lambda(Literal.of('a'), new NumberValueLiteral('10'))
+        '(a) -> {\ncontinue;\n}'       | new Lambda(Literal.of('a'), new CodeBlock(new Continue()))
+        '(a, b) -> 10'                 | new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]),
+                new NumberValueLiteral('10'))
+        '(a, b) -> {\ncontinue;\n}'    | new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]),
+                new CodeBlock(new Continue()))
+        '(a, b, c) -> 10'              | new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b'), Literal.of('c')]),
+                new NumberValueLiteral('10'))
+        '(a, b, c) -> {\ncontinue;\n}' | new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b'), Literal.of('c')]),
+                new CodeBlock(new Continue()))
+    }
+
     def 'test parseAtom: #code'() {
         when:
         startReading(code)
