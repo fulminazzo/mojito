@@ -665,9 +665,8 @@ public class JavaParser extends Parser {
             Node node = parseBinaryOperation(nextOperation);
             while (lastToken() == operation) {
                 if (operation == SUBTRACT) {
-                    next();
-                    if (lastToken() == GREATER_THAN) return parseLambda(node);
-                    else if (lastToken() == SPACE) nextSpaceless();
+                    @Nullable Lambda lambda = parseLambda(node);
+                    if (lambda != null) return lambda;
                 } else consume(operation);
                 TokenType lastToken = lastToken();
                 if (operation == ADD && lastToken == ADD) {
@@ -688,12 +687,6 @@ public class JavaParser extends Parser {
             }
             return node;
         }
-    }
-
-    private @NotNull Lambda parseLambda(Node node) {
-        consume(GREATER_THAN);
-        Node code = lastToken() == OPEN_BRACE ? parseCodeBlock() : parseExpression();
-        return new Lambda(node, code);
     }
 
     /**
@@ -775,7 +768,7 @@ public class JavaParser extends Parser {
     }
 
     /**
-     * CAST := (PAR_EXPR)* (EXPR | PAR_EXPR)
+     * CAST := ( (PAR_EXPR)* (EXPR | PAR_EXPR) ) | PAR_EXPR LAMBDA
      *
      * @return the node
      */
@@ -788,7 +781,8 @@ public class JavaParser extends Parser {
             if (lastToken() == ADD) expression = new Cast(expression, parseIncrement());
             else return new Add(expression, parseExpression());
         } else if (lastToken() == SUBTRACT) {
-            consume(SUBTRACT);
+            Lambda lambda = parseLambda(expression);
+            if (lambda != null) return lambda;
             if (lastToken() == SUBTRACT) expression = new Cast(expression, parseDecrement());
             else if (expression.is(Literal.class) &&
                     (lastToken().between(MODULO, SPACE) || lastToken() == OPEN_PAR))
@@ -796,6 +790,23 @@ public class JavaParser extends Parser {
             else return new Subtract(expression, parseExpression());
         }
         return expression;
+    }
+
+    /**
+     * LAMBDA := -> EXPR | CODE_BLOCK
+     *
+     * @param expression the expression
+     * @return the node if valid token found
+     */
+    protected @Nullable Lambda parseLambda(final @NotNull Node expression) {
+        next();
+        if (lastToken() == GREATER_THAN) {
+            consume(GREATER_THAN);
+            Node code = lastToken() == OPEN_BRACE ? parseCodeBlock() : parseExpression();
+            return new Lambda(expression, code);
+        }
+        else if (lastToken() == SPACE) nextSpaceless();
+        return null;
     }
 
     /**
