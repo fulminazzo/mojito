@@ -810,15 +810,15 @@ public class JavaParser extends Parser {
     }
 
     /**
-     * PAR_EXPR := \( EXPR \)
+     * PAR_EXPR := \( EXPR \) | METHOD_INVOCATION
      *
      * @return the node
      */
     protected @NotNull Node parseParenthesizedExpr() {
-        consume(OPEN_PAR);
-        Node expression = parseExpression();
-        consume(CLOSE_PAR);
-        return expression;
+        MethodInvocation expression = parseMethodInvocation();
+        @NotNull List<Node> parameters = expression.getParameters();
+        if (parameters.size() == 1) return parameters.get(0);
+        else return expression;
     }
 
     /**
