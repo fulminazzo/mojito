@@ -650,7 +650,7 @@ public class JavaParser extends Parser {
      * RSHIFT := URSHIFT ( (&gt;&gt; URSHIFT)* | (&gt;&gt;= URSHIFT) ) <br>
      * URSHIFT := ADD ( (&gt;&gt;&gt; ADD)* | (&gt;&gt;&gt;= ADD) ) <br>
      * ADD := SUB ( (+ SUB)* | (+= SUB) | ++ ) <br>
-     * SUB := MUL ( (- MUL)* | (-= MUL) | -- ) <br>
+     * SUB := MUL ( (- MUL)* | (-= MUL) | -- | LAMBDA ) <br>
      * MUL := DIV ( (* DIV)* | (*= DIV) ) <br>
      * DIV := MOD ( (/ MOD)* | (/= MOD) ) <br>
      * MOD := UNARY_OPERATION ( (% UNARY_OPERATION)* | (%= UNARY_OPERATION) )
@@ -664,7 +664,11 @@ public class JavaParser extends Parser {
             final TokenType nextOperation = TokenType.values()[operation.ordinal() + 1];
             Node node = parseBinaryOperation(nextOperation);
             while (lastToken() == operation) {
-                consume(operation);
+                if (operation == SUBTRACT) {
+                    next();
+                    if (lastToken() == GREATER_THAN) return parseLambda(node);
+                    else if (lastToken() == SPACE) nextSpaceless();
+                } else consume(operation);
                 TokenType lastToken = lastToken();
                 if (operation == ADD && lastToken == ADD) {
                     consume(ADD);
@@ -684,6 +688,12 @@ public class JavaParser extends Parser {
             }
             return node;
         }
+    }
+
+    private @NotNull Lambda parseLambda(Node node) {
+        consume(GREATER_THAN);
+        Node code = lastToken() == OPEN_BRACE ? parseCodeBlock() : parseExpression();
+        return new Lambda(node, code);
     }
 
     /**
