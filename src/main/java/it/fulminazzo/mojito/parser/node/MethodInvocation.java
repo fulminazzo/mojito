@@ -1,5 +1,6 @@
 package it.fulminazzo.mojito.parser.node;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 /**
  * Represents the parameters invoked during a method invocation.
  */
+@Getter
 public class MethodInvocation extends NodeImpl {
     private final @NotNull List<Node> parameters;
 
