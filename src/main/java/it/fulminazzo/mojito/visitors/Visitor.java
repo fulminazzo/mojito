@@ -732,6 +732,15 @@ public interface Visitor<
     }
 
     /**
+     * Converts lambda and its fields to this visitor type.
+     *
+     * @param parameters the parameters
+     * @param code       the code to execute
+     * @return the converted lambda
+     */
+    @NotNull O visitLambda(@NotNull Node parameters, @NotNull Node code);
+
+    /**
      * Converts cast and its fields to this visitor type.
      *
      * @param left  the left

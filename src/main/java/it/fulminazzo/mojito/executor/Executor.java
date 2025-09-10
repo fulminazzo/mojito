@@ -277,6 +277,12 @@ public class Executor implements Visitor<ClassValue<?>, Value<?>, ParameterValue
     }
 
     @Override
+    public @NotNull Value<?> visitLambda(@NotNull Node parameters, @NotNull Node code) {
+        //TODO:
+        return null;
+    }
+
+    @Override
     public @NotNull Value<?> visitNullLiteral() {
         return Values.NULL_VALUE;
     }

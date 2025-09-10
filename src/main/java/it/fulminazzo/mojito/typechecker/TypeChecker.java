@@ -378,6 +378,12 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
     }
 
     @Override
+    public @NotNull Type visitLambda(@NotNull Node parameters, @NotNull Node code) {
+        //TODO:
+        return null;
+    }
+
+    @Override
     public @NotNull Type visitNullLiteral() {
         return Types.NULL_TYPE;
     }

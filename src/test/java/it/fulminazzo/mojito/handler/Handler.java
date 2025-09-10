@@ -139,6 +139,11 @@ public class Handler implements Visitor<ClassElement, Element, ParameterElements
     }
 
     @Override
+    public @NotNull Element visitLambda(@NotNull Node parameters, @NotNull Node code) {
+        return code.accept(this);
+    }
+
+    @Override
     public @NotNull Element visitNullLiteral() {
         return Element.of(null);
     }
