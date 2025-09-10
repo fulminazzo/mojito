@@ -185,13 +185,14 @@ RSHIFT := URSHIFT ( (>> URSHIFT)* | (>>= URSHIFT) )
 URSHIFT := ADD ( (>>> ADD)* | (>>>= ADD) )
 
 ADD := SUB ( (+ SUB)* | (+= SUB) | ++ )
-SUB := MUL ( (- MUL)* | (-= MUL) | -- )
+SUB := MUL ( (- MUL)* | (-= MUL) | -- | LAMBDA )
 MUL := DIV ( (* DIV)* | (*= DIV) )
 DIV := MOD ( (/ MOD)* | (/= MOD) )
 MOD := UNARY_OPERATION ( (% UNARY_OPERATION)* | (%= UNARY_OPERATION) )
 
 UNARY_OPERATION := CAST | NOT | METHOD_CALL
 
+LAMBDA := -> EXPR | CODE_BLOCK
 CAST := (PAR_EXPR)* ( EXPR | PAR_EXPR )
 PAR_EXPR := \( EXPR \)
 
