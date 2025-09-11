@@ -41,6 +41,26 @@ public abstract class ParameterVisitorObjects<
     }
 
     /**
+     * Replaces the parameter at the given index.
+     *
+     * @param i         the index
+     * @param parameter the new parameter
+     */
+    public void set(int i, O parameter) {
+        this.object.set(i, parameter);
+    }
+
+    /**
+     * Gets the parameter at the given index.
+     *
+     * @param i the index
+     * @return the parameter
+     */
+    public O get(int i) {
+        return this.object.get(i);
+    }
+
+    /**
      * Converts this class to an array of Java {@link Class}es.
      *
      * @return the classes
