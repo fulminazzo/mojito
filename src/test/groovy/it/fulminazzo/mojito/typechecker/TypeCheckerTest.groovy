@@ -1591,7 +1591,7 @@ class TypeCheckerTest extends Specification {
     def 'test visit lambda method call: #node'() {
         when:
         this.typeChecker.visitMethodCall(
-                new NewObject(Literal.of(MockClassType.canonicalName)),
+                new NewObject(Literal.of(MockClassType.canonicalName), new MethodInvocation([])),
                 'accept',
                 node
         )
