@@ -4,8 +4,9 @@ import it.fulminazzo.mojito.tokenizer.TokenType;
 import it.fulminazzo.mojito.typechecker.TypeCheckerException;
 import it.fulminazzo.mojito.typechecker.types.objects.ObjectType;
 import it.fulminazzo.mojito.typechecker.types.variables.TypeFieldContainer;
-import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
+import it.fulminazzo.mojito.visitors.visitorobjects.IncorrectMethodException;
 import it.fulminazzo.mojito.visitors.visitorobjects.VisitorObject;
+import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Executable;
@@ -115,7 +116,19 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
 
     @Override
     default @NotNull Type invokeMethod(final @NotNull ExecutableContainer<Method> method,
-                                       final @NotNull ParameterTypes parameterTypes) throws TypeException {
+                                       final @NotNull ParameterTypes parameterTypes) throws TypeException, IncorrectMethodException {
+        @NotNull Class<?>[] actualParameterTypes = method.getParameterTypes();
+        for (int i = 0; i < actualParameterTypes.length; i++) {
+            Class<?> clazz = actualParameterTypes[i];
+            ClassType ct = ClassType.of(clazz);
+            if (ct.isFunctionalInterface())
+                try {
+                    Type actualType = parameterTypes.get(i).check(AbstractLambdaType.class).toActualType(ct);
+                    parameterTypes.set(i, actualType);
+                } catch (TypeCheckerException e) {
+                    throw new IncorrectMethodException();
+                }
+        }
         ClassType classType = isClassType() ? (ClassType) this : toClass();
         if (!Modifier.isPublic(method.getModifiers()))
             throw TypeException.cannotAccessMethod(classType, method.getActualExecutable());
