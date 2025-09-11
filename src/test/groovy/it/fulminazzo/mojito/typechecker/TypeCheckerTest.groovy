@@ -1593,7 +1593,7 @@ class TypeCheckerTest extends Specification {
         this.typeChecker.visitMethodCall(
                 new NewObject(Literal.of(MockClassType.canonicalName), new MethodInvocation([])),
                 'accept',
-                node
+                new MethodInvocation([node])
         )
 
         then:
