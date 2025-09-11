@@ -1590,23 +1590,22 @@ class TypeCheckerTest extends Specification {
 
     def 'test visit lambda method call: #node'() {
         when:
-        this.typeChecker.visitMethodCall(
-                new NewObject(Literal.of(MockClassType.canonicalName), new MethodInvocation([])),
+        def type = this.typeChecker.visitMethodCall(
+                new NewObject(Literal.of(LambdaTester.canonicalName), new MethodInvocation([])),
                 'accept',
                 new MethodInvocation([node])
         )
 
         then:
-        noExceptionThrown()
+        type == expected
 
         where:
-        node << [
-                new Lambda(new MethodInvocation([]), new CodeBlock()),
-                new Lambda(new MethodInvocation([Literal.of('a')]), new CodeBlock()),
-                new Lambda(new MethodInvocation([Literal.of('a')]), new NumberValueLiteral('1')),
-                new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new CodeBlock()),
-                new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new NumberValueLiteral('1'))
-        ]
+        node                                                                                              || expected
+        new Lambda(new MethodInvocation([]), new CodeBlock())                                             || PrimitiveType.INT
+        new Lambda(new MethodInvocation([Literal.of('a')]), new CodeBlock())                              || PrimitiveType.FLOAT
+        new Lambda(new MethodInvocation([Literal.of('a')]), new NumberValueLiteral('1'))                  || PrimitiveType.DOUBLE
+        new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new CodeBlock())             || PrimitiveType.BYTE
+        new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new NumberValueLiteral('1')) || PrimitiveType.SHORT
     }
 
     def 'test visit lambda assignment: #node'() {
