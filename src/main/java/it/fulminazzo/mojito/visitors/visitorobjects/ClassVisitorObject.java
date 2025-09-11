@@ -43,11 +43,13 @@ public interface ClassVisitorObject<
     }
 
     /**
-     * Checks whether the current class object implements a {@link FunctionalInterface} interface.
+     * Checks whether the current class object {@link #isInterface()}
+     * and extends a {@link FunctionalInterface} interface.
      *
      * @return true if it does
      */
     default boolean isFunctionalInterface() {
+        if (!isInterface()) return false;
         Class<?> clazz = toJavaClass();
         while (clazz != null) {
             if (clazz.isAnnotationPresent(FunctionalInterface.class)) return true;
