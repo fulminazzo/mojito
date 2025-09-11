@@ -269,6 +269,8 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
         // Test for uninitialized
         if (variable.is(visitEmptyLiteral()))
             variable = variableType.isPrimitive() ? variableType.toObject() : visitNullLiteral();
+        if (variableType.isFunctionalInterface() && variable instanceof AbstractLambdaType)
+            variable = visitAbstractLambdaType(variableType, (AbstractLambdaType) variable);
         variable = convertByteAndShort(variableType, variable).checkAssignableFrom(variableType);
         if (!variable.isPrimitive()) return variable;
         else if (variableType.isPrimitive()) return variableType.toType();
