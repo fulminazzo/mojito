@@ -404,6 +404,7 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
 
         this.environment.enterScope(ScopeType.CODE_BLOCK);
         visitScoped(ScopeType.CODE_BLOCK, () -> {
+            Class<?> returnType = functionalMethod.getReturnType();
             if (parametersCount > 0) {
                 GenericsObjectClassType classType = expectedType.check(GenericsObjectClassType.class);
                 List<ClassType> parameterTypes = new ArrayList<>(classType.getGenericTypes().values());
@@ -412,11 +413,13 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
                     ClassType c = parameterTypes.get(i);
                     this.environment.declare(c, parametersNames.get(i).namedEntity(), c.toType());
                 }
+                java.lang.reflect.Type genericReturnType = functionalMethod.getGenericReturnType();
+                if (!genericReturnType.equals(returnType))
+                    returnType = classType.getGenericTypes().get(genericReturnType.getTypeName()).toJavaClass();
             }
 
-            Class<?> returnType = functionalMethod.getReturnType();
             Type code = type.getCode().accept(this);
-            if (!returnType.equals(void.class)) code.check(ClassType.of(returnType));
+            if (!returnType.equals(void.class)) code.checkAssignableFrom(ClassType.of(returnType));
             else code.check(Types.NO_TYPE);
 
             return code;
