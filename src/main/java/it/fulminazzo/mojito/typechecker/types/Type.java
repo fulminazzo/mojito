@@ -122,21 +122,25 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
     @Override
     default @NotNull Type invokeMethod(final @NotNull ExecutableContainer<Method> method,
                                        final @NotNull ParameterTypes parameterTypes) throws TypeException, IncorrectMethodException {
-        java.lang.reflect.Type[] actualParameterTypes = method.getActualExecutable().getGenericParameterTypes();
+        // Lambda
+        @NotNull Class<?>[] actualParameterTypes = method.getParameterTypes();
+        java.lang.reflect.Type[] genericsParameterTypes = method.getActualExecutable().getGenericParameterTypes();
         for (int i = 0; i < actualParameterTypes.length; i++) {
-            String clazz = actualParameterTypes[i].getTypeName();
-            ClassType ct = ClassType.of(clazz);
+            ClassType classType = ClassType.of(actualParameterTypes[i]);
             Type parameter = parameterTypes.get(i);
-            if (ct.isFunctionalInterface())
+            if (classType.isFunctionalInterface() || parameter.is(AbstractLambdaType.class))
                 try {
-                    Type actualType = parameter.check(AbstractLambdaType.class).toActualType(ct);
+                    classType = ClassType.of(genericsParameterTypes[i]);
+                    if (!classType.isFunctionalInterface())
+                        throw TypeCheckerException.invalidType(parameter, classType);
+                    Type actualType = parameter.check(AbstractLambdaType.class).toActualType(classType);
+                    System.out.println(actualType);
                     parameterTypes.set(i, actualType);
                 } catch (TypeCheckerException e) {
                     throw new IncorrectMethodException();
                 }
-            else if (!parameter.isAssignableFrom(ClassType.of(clazz)))
-                throw new IncorrectMethodException();
         }
+
         ClassType classType = isClassType() ? (ClassType) this : toClass();
         if (!Modifier.isPublic(method.getModifiers()))
             throw TypeException.cannotAccessMethod(classType, method.getActualExecutable());
