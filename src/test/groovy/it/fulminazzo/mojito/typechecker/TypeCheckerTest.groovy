@@ -1588,6 +1588,27 @@ class TypeCheckerTest extends Specification {
         DOUBLE_LIT | PrimitiveType.DOUBLE
     }
 
+    def 'test visit lambda method call: #node'() {
+        when:
+        this.typeChecker.visitMethodCall(
+                new NewObject(Literal.of(MockClassType.canonicalName)),
+                'accept',
+                node
+        )
+
+        then:
+        noExceptionThrown()
+
+        where:
+        node << [
+                new Lambda(new MethodInvocation([]), new CodeBlock()),
+                new Lambda(new MethodInvocation([Literal.of('a')]), new CodeBlock()),
+                new Lambda(new MethodInvocation([Literal.of('a')]), new NumberValueLiteral('1')),
+                new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new CodeBlock()),
+                new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new NumberValueLiteral('1'))
+        ]
+    }
+
     def 'test visit lambda assignment: #node'() {
         when:
         this.typeChecker.visitAssignment(clazz, Literal.of('lambda'), node)
