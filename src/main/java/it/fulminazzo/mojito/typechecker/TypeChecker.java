@@ -270,7 +270,7 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
         if (variable.is(visitEmptyLiteral()))
             variable = variableType.isPrimitive() ? variableType.toObject() : visitNullLiteral();
         if (variableType.isFunctionalInterface() && variable instanceof AbstractLambdaType)
-            variable = visitAbstractLambdaType(variableType, (AbstractLambdaType) variable);
+            variable = ((AbstractLambdaType) variable).toActualType(variableType);
         variable = convertByteAndShort(variableType, variable).checkAssignableFrom(variableType);
         if (!variable.isPrimitive()) return variable;
         else if (variableType.isPrimitive()) return variableType.toType();
@@ -391,7 +391,7 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
             for (Node p : methodInvocation.getParameters())
                 parametersNames.add(p.accept(this).check(TypeLiteralVariableContainer.class));
         }
-        return new AbstractLambdaType(parametersNames, code);
+        return new AbstractLambdaType(this, parametersNames, code);
     }
 
     @NotNull Type visitAbstractLambdaType(@NotNull ClassType expectedType,
