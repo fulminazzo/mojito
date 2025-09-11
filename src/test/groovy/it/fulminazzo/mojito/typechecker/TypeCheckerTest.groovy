@@ -1608,6 +1608,37 @@ class TypeCheckerTest extends Specification {
         new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new NumberValueLiteral('1')) || PrimitiveType.SHORT
     }
 
+    def 'test visit lambda field assignment: #node'() {
+        when:
+        def type = this.typeChecker.visitReAssign(
+                new Field(
+                        new NewObject(Literal.of(LambdaTester.canonicalName), new MethodInvocation([])),
+                        Literal.of(fieldName)
+                ),
+                node)
+
+        then:
+        type == expected
+
+        where:
+        fieldName   | node                                                                                        || expected
+        'function1' |
+                new Lambda(new MethodInvocation([]), new CodeBlock())                                             ||
+                ObjectType.of(Runnable)
+        'function2' |
+                new Lambda(new MethodInvocation([Literal.of('a')]), new CodeBlock())                              ||
+                ObjectType.of(Consumer, [ObjectClassType.INTEGER])
+        'function3' |
+                new Lambda(new MethodInvocation([Literal.of('a')]), new NumberValueLiteral('1'))                  ||
+                ObjectType.of(Function, [ObjectClassType.INTEGER, ObjectClassType.INTEGER])
+        'function4' |
+                new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new CodeBlock())             ||
+                ObjectType.of(BiConsumer, [ObjectClassType.INTEGER, ObjectClassType.INTEGER])
+        'function5' |
+                new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new NumberValueLiteral('1')) ||
+                ObjectType.of(BiFunction, [ObjectClassType.INTEGER, ObjectClassType.INTEGER, ObjectClassType.INTEGER])
+    }
+
     def 'test visit lambda assignment: #node'() {
         when:
         this.typeChecker.visitAssignment(clazz, Literal.of('lambda'), node)
