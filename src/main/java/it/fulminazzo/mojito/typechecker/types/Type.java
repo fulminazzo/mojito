@@ -126,13 +126,16 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
         for (int i = 0; i < actualParameterTypes.length; i++) {
             Class<?> clazz = actualParameterTypes[i];
             ClassType ct = ClassType.of(clazz);
+            Type parameter = parameterTypes.get(i);
             if (ct.isFunctionalInterface())
                 try {
-                    Type actualType = parameterTypes.get(i).check(AbstractLambdaType.class).toActualType(ct);
+                    Type actualType = parameter.check(AbstractLambdaType.class).toActualType(ct);
                     parameterTypes.set(i, actualType);
                 } catch (TypeCheckerException e) {
                     throw new IncorrectMethodException();
                 }
+            else if (!parameter.isAssignableFrom(ClassType.of(actualParameterTypes[i])))
+                throw new IncorrectMethodException();
         }
         ClassType classType = isClassType() ? (ClassType) this : toClass();
         if (!Modifier.isPublic(method.getModifiers()))
