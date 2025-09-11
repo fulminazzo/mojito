@@ -1,6 +1,7 @@
 package it.fulminazzo.mojito.typechecker.types;
 
 import it.fulminazzo.mojito.parser.node.Node;
+import it.fulminazzo.mojito.typechecker.types.objects.ObjectClassType;
 import it.fulminazzo.mojito.typechecker.types.variables.TypeLiteralVariableContainer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +41,7 @@ public final class AbstractLambdaType implements Type {
 
     @Override
     public @NotNull ClassType toClass() {
-        throw new UnsupportedOperationException();
+        return ObjectClassType.OBJECT;
     }
 
 }
