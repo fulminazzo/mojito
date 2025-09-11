@@ -279,4 +279,9 @@ System.out.println("The previous value was " + this.publicField);
 this.publicField = 10;
 System.out.println("Now it has been updated to " + this.publicField);
 
+// Lambda
+Runnable run = () -> System.out.println("Printing from lambda!");
+System.out.println("Printing now lambda:");
+run.run();
+
 return bW.toString().toString().toString();
