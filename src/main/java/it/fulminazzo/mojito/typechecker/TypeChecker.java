@@ -4,6 +4,7 @@ import it.fulminazzo.fulmicollection.structures.tuples.Tuple;
 import it.fulminazzo.mojito.environment.Environment;
 import it.fulminazzo.mojito.environment.ScopeException;
 import it.fulminazzo.mojito.environment.scopetypes.ScopeType;
+import it.fulminazzo.mojito.parser.node.MethodInvocation;
 import it.fulminazzo.mojito.parser.node.Node;
 import it.fulminazzo.mojito.parser.node.container.CodeBlock;
 import it.fulminazzo.mojito.parser.node.literals.GenericsLiteral;
@@ -25,6 +26,7 @@ import it.fulminazzo.mojito.visitors.visitorobjects.variables.VariableContainer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -379,8 +381,30 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
 
     @Override
     public @NotNull Type visitLambda(@NotNull Node parameters, @NotNull Node code) {
-        //TODO:
-        return null;
+        //TODO: check variables
+        final int parametersCount;
+        if (parameters.is(Literal.class)) parametersCount = 1;
+        else {
+            MethodInvocation methodInvocation = (MethodInvocation) parameters;
+            parametersCount = methodInvocation.getParameters().size();
+        }
+        return new AbstractLambdaType(parametersCount, code);
+    }
+
+    @NotNull Type visitAbstractLambdaType(@NotNull ClassType expectedType,
+                                          @NotNull AbstractLambdaType type) {
+        Method functionalMethod = expectedType.getFunctionalMethod();
+
+        if (type.getParametersCount() != functionalMethod.getParameterCount())
+            throw TypeCheckerException.invalidType(expectedType, type);
+
+        Class<?> returnType = functionalMethod.getReturnType();
+        //TODO: assign variables
+        Type code = type.getCode().accept(this);
+        if (!returnType.equals(void.class)) code.check(ClassType.of(returnType));
+        else code.check(Types.NO_TYPE);
+
+        return expectedType.toType();
     }
 
     @Override
