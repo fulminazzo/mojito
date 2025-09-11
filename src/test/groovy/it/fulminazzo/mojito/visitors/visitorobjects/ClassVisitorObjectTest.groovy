@@ -8,6 +8,20 @@ import java.util.function.Function
 
 class ClassVisitorObjectTest extends Specification {
 
+    def 'test getFunctionalMethod should return #expected for #clazz'() {
+        when:
+        def element = ClassElement.of(clazz)
+
+        then:
+        element.functionalMethod == expected
+
+        where:
+        clazz    || expected
+        Runnable || Runnable.getMethod('run')
+        Consumer || Consumer.getMethod('accept', Object)
+        Function || Function.getMethod('apply', Object)
+    }
+
     def 'test isFunctionalInterface should return #expected for #clazz'() {
         when:
         def element = ClassElement.of(clazz)
