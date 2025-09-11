@@ -149,7 +149,9 @@ public interface VisitorObject<
                 if (Boolean.TRUE.equals(refl.invokeMethod("validateParameters",
                         new Class[]{Class[].class, Class[].class, boolean.class},
                         parametersTypes, method.getParameterTypes(), method.isVarArgs())))
-                    return invokeMethod(method, parameters);
+                    try {
+                        return invokeMethod(method, parameters);
+                    } catch (IncorrectMethodException ignored) {}
             }
 
             throw typesMismatch(classVisitorObject, methods.get(0).getActualExecutable(), parameters);
