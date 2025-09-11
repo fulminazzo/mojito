@@ -44,6 +44,15 @@ public interface ClassVisitorObject<
     }
 
     /**
+     * Checks whether the current class object is an interface.
+     *
+     * @return true if it is
+     */
+    default boolean isInterface() {
+        return toJavaClass().isInterface();
+    }
+
+    /**
      * Checks and converts the given object to the current class.
      *
      * @param object the object
