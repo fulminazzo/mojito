@@ -383,14 +383,15 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
 
     @Override
     public @NotNull Type visitLambda(@NotNull Node parameters, @NotNull Node code) {
-        //TODO: check variables
-        final int parametersCount;
-        if (parameters.is(Literal.class)) parametersCount = 1;
+        List<TypeLiteralVariableContainer> parametersNames = new ArrayList<>();
+        if (parameters.is(Literal.class))
+            parametersNames.add(parameters.accept(this).check(TypeLiteralVariableContainer.class));
         else {
             MethodInvocation methodInvocation = (MethodInvocation) parameters;
-            parametersCount = methodInvocation.getParameters().size();
+            for (Node p : methodInvocation.getParameters())
+                parametersNames.add(p.accept(this).check(TypeLiteralVariableContainer.class));
         }
-        return new AbstractLambdaType(parametersCount, code);
+        return new AbstractLambdaType(parametersNames, code);
     }
 
     @NotNull Type visitAbstractLambdaType(@NotNull ClassType expectedType,
