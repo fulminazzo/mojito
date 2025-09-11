@@ -6,11 +6,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class LambdaTester {
-    Runnable function1;
-    Consumer<Integer> function2;
-    Function<Integer, Integer> function3;
-    BiConsumer<Integer, Integer> function4;
-    BiFunction<Integer, Integer, Integer> function5;
+    public Runnable function1;
+    public Consumer<Integer> function2;
+    public Function<Integer, Integer> function3;
+    public BiConsumer<Integer, Integer> function4;
+    public BiFunction<Integer, Integer, Integer> function5;
 
     public LambdaTester() {
     }
