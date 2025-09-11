@@ -9,6 +9,7 @@ import it.fulminazzo.mojito.environment.ScopeException
 import it.fulminazzo.mojito.environment.scopetypes.ScopeType
 import it.fulminazzo.mojito.parser.node.Assignment
 import it.fulminazzo.mojito.parser.node.AssignmentBlock
+import it.fulminazzo.mojito.parser.node.Lambda
 import it.fulminazzo.mojito.parser.node.MethodInvocation
 import it.fulminazzo.mojito.parser.node.container.CodeBlock
 import it.fulminazzo.mojito.parser.node.container.JavaProgram
@@ -30,6 +31,10 @@ import it.fulminazzo.mojito.visitors.visitorobjects.variables.VariableContainer
 import spock.lang.Specification
 
 import java.util.concurrent.Callable
+import java.util.function.BiConsumer
+import java.util.function.BiFunction
+import java.util.function.Consumer
+import java.util.function.Function
 
 class TypeCheckerTest extends Specification {
     private static final BOOL_LIT = new BooleanValueLiteral('true')
@@ -1581,6 +1586,35 @@ class TypeCheckerTest extends Specification {
         LONG_LIT   | PrimitiveType.LONG
         FLOAT_LIT  | PrimitiveType.FLOAT
         DOUBLE_LIT | PrimitiveType.DOUBLE
+    }
+
+    def 'test visit lambda assignment: #node'() {
+        when:
+        this.typeChecker.visitAssignment(clazz, Literal.of('lambda'), node)
+
+        and:
+        def variable = this.environment.lookup('lambda')
+
+        then:
+        variable == expected
+
+        where:
+        clazz                                                                                                                | node || expected
+        Literal.of(Runnable.simpleName)                                                                                      |
+                new Lambda(new MethodInvocation([]), new CodeBlock())                                                               ||
+                ObjectType.of(Runnable)
+        new GenericsLiteral(Consumer.canonicalName, [Literal.of('Integer')])                                                 |
+                new Lambda(new MethodInvocation([Literal.of('a')]), new CodeBlock())                                                ||
+                ObjectType.of(Consumer, [ObjectClassType.INTEGER])
+        new GenericsLiteral(Function.canonicalName, [Literal.of('Integer'), Literal.of('Integer')])                          |
+                new Lambda(new MethodInvocation([Literal.of('a')]), new NumberValueLiteral('1'))                                    ||
+                ObjectType.of(Function, [ObjectClassType.INTEGER, ObjectClassType.INTEGER])
+        new GenericsLiteral(BiConsumer.canonicalName, [Literal.of('Integer'), Literal.of('Integer')])                        |
+                new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new CodeBlock())                               ||
+                ObjectType.of(BiConsumer, [ObjectClassType.INTEGER, ObjectClassType.INTEGER])
+        new GenericsLiteral(BiFunction.canonicalName, [Literal.of('Integer'), Literal.of('Integer'), Literal.of('Integer')]) |
+                new Lambda(new MethodInvocation([Literal.of('a'), Literal.of('b')]), new NumberValueLiteral('1'))                   ||
+                ObjectType.of(BiFunction, [ObjectClassType.INTEGER, ObjectClassType.INTEGER, ObjectClassType.INTEGER])
     }
 
     def 'test visit break with scope #scope should not throw exception'() {
