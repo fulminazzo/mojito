@@ -122,9 +122,9 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
     @Override
     default @NotNull Type invokeMethod(final @NotNull ExecutableContainer<Method> method,
                                        final @NotNull ParameterTypes parameterTypes) throws TypeException, IncorrectMethodException {
-        @NotNull Class<?>[] actualParameterTypes = method.getParameterTypes();
+        java.lang.reflect.Type[] actualParameterTypes = method.getActualExecutable().getGenericParameterTypes();
         for (int i = 0; i < actualParameterTypes.length; i++) {
-            Class<?> clazz = actualParameterTypes[i];
+            String clazz = actualParameterTypes[i].getTypeName();
             ClassType ct = ClassType.of(clazz);
             Type parameter = parameterTypes.get(i);
             if (ct.isFunctionalInterface())
@@ -134,7 +134,7 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
                 } catch (TypeCheckerException e) {
                     throw new IncorrectMethodException();
                 }
-            else if (!parameter.isAssignableFrom(ClassType.of(actualParameterTypes[i])))
+            else if (!parameter.isAssignableFrom(ClassType.of(clazz)))
                 throw new IncorrectMethodException();
         }
         ClassType classType = isClassType() ? (ClassType) this : toClass();
