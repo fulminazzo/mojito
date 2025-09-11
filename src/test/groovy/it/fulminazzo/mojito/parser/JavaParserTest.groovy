@@ -951,6 +951,8 @@ class JavaParserTest extends Specification {
 
         where:
         code                           | expected
+        '() -> {}'                     | new Lambda(new MethodInvocation([]), new CodeBlock())
+        '() -> 10'                     | new Lambda(new MethodInvocation([]), new NumberValueLiteral('10'))
         'a -> 10'                      | new Lambda(Literal.of('a'), new NumberValueLiteral('10'))
         'a -> {\ncontinue;\n}'         | new Lambda(Literal.of('a'), new CodeBlock(new Continue()))
         '(a) -> 10'                    | new Lambda(Literal.of('a'), new NumberValueLiteral('10'))
