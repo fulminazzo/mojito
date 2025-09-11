@@ -90,15 +90,16 @@ public interface Value<V> extends VisitorObject<ClassValue<?>, Value<?>, Paramet
     }
 
     @Override
+    default boolean isLambda() {
+        return false;
+    }
+
+    @Override
     default boolean isNull() {
         return is(Values.NULL_VALUE);
     }
 
-    /**
-     * Checks if the current value is primitive.
-     *
-     * @return true if it is
-     */
+    @Override
     default boolean isPrimitive() {
         return this instanceof PrimitiveValue;
     }

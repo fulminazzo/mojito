@@ -27,12 +27,17 @@ public interface Element extends VisitorObject<ClassElement, Element, ParameterE
     }
 
     @Override
-    default boolean isPrimitive() {
+    default boolean isLambda() {
         return false;
     }
 
     @Override
     default boolean isNull() {
+        return false;
+    }
+
+    @Override
+    default boolean isPrimitive() {
         return false;
     }
 

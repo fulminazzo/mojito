@@ -21,6 +21,11 @@ import java.util.Arrays;
 public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
 
     @Override
+    default boolean isLambda() {
+        return false;
+    }
+
+    @Override
     default boolean isNull() {
         return is(Types.NULL_TYPE);
     }
