@@ -398,14 +398,29 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
                                           @NotNull AbstractLambdaType type) {
         Method functionalMethod = expectedType.getFunctionalMethod();
 
-        if (type.getParametersCount() != functionalMethod.getParameterCount())
+        int parametersCount = type.getParametersCount();
+        if (parametersCount != functionalMethod.getParameterCount())
             throw TypeCheckerException.invalidType(expectedType, type);
 
-        Class<?> returnType = functionalMethod.getReturnType();
-        //TODO: assign variables
-        Type code = type.getCode().accept(this);
-        if (!returnType.equals(void.class)) code.check(ClassType.of(returnType));
-        else code.check(Types.NO_TYPE);
+        this.environment.enterScope(ScopeType.CODE_BLOCK);
+        visitScoped(ScopeType.CODE_BLOCK, () -> {
+            if (parametersCount > 0) {
+                GenericsObjectClassType classType = expectedType.check(GenericsObjectClassType.class);
+                List<ClassType> parameterTypes = new ArrayList<>(classType.getGenericTypes().values());
+                List<TypeLiteralVariableContainer> parametersNames = type.getParametersNames();
+                for (int i = 0; i < parametersCount; i++) {
+                    ClassType c = parameterTypes.get(i);
+                    this.environment.declare(c, parametersNames.get(i).namedEntity(), c.toType());
+                }
+            }
+
+            Class<?> returnType = functionalMethod.getReturnType();
+            Type code = type.getCode().accept(this);
+            if (!returnType.equals(void.class)) code.check(ClassType.of(returnType));
+            else code.check(Types.NO_TYPE);
+
+            return code;
+        });
 
         return expectedType.toType();
     }
