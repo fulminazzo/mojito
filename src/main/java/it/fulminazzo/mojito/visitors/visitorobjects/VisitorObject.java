@@ -30,6 +30,13 @@ public interface VisitorObject<
         > {
 
     /**
+     * Checks whether the current object is a lambda expression.
+     *
+     * @return true if it is
+     */
+    boolean isLambda();
+
+    /**
      * Checks whether the current object is a basic object of Java.
      *
      * @return true if it is
