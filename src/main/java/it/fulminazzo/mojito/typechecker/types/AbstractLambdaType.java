@@ -89,6 +89,11 @@ public final class AbstractLambdaType implements Type {
     }
 
     @Override
+    public boolean isLambda() {
+        return true;
+    }
+
+    @Override
     public @NotNull ClassType toClass() {
         return ObjectClassType.OBJECT;
     }
