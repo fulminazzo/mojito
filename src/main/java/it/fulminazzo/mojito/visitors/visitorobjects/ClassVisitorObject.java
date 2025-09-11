@@ -7,6 +7,7 @@ import it.fulminazzo.mojito.visitors.visitorobjects.executables.ExecutableContai
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,21 @@ public interface ClassVisitorObject<
         P extends ParameterVisitorObjects<C, O, P>
         >
         extends VisitorObject<C, O, P>, Info {
+
+    /**
+     * Gets the method that should be implemented by the classes
+     * implementing this interface, only if it {@link #isFunctionalInterface()}.
+     *
+     * @return the method
+     */
+    default @NotNull Method getFunctionalMethod() {
+        if (!isInterface() && !isFunctionalInterface())
+            throw new IllegalArgumentException(this + " is not an interface annotated with FunctionalInterface");
+        return Arrays.stream(toJavaClass().getMethods())
+                .filter(m -> !m.isDefault())
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
+    }
 
     /**
      * Checks whether the current class object implements a {@link FunctionalInterface} interface.
