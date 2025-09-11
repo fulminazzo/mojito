@@ -115,7 +115,7 @@ public interface Type extends VisitorObject<ClassType, Type, ParameterTypes> {
         if (!Modifier.isPublic(field.getModifiers())) throw TypeException.cannotAccessField(classType, field);
         else if (isClassType() && !Modifier.isStatic(field.getModifiers()))
             throw TypeException.cannotAccessStaticField(classType, field.getName());
-        ClassType fieldClassType = ClassType.of(field.getType());
+        ClassType fieldClassType = ClassType.of(field.getGenericType());
         return new TypeFieldContainer(this, fieldClassType, field.getName(), fieldClassType.toType());
     }
 
