@@ -67,7 +67,7 @@ public abstract class ParameterVisitorObjects<
      */
     public Class<?> @NotNull [] toJavaClassArray() {
         return this.object.stream()
-                .map(o -> o.isNull() ? null : o.toClass())
+                .map(o -> o.isNull() || o.isLambda() ? null : o.toClass())
                 .map(c -> c == null ? null : c.toJavaClass())
                 .toArray(Class[]::new);
     }
