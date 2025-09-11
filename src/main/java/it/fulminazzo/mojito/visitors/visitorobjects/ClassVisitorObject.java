@@ -27,6 +27,23 @@ public interface ClassVisitorObject<
         extends VisitorObject<C, O, P>, Info {
 
     /**
+     * Checks whether the current class object implements a {@link FunctionalInterface} interface.
+     *
+     * @return true if it does
+     */
+    default boolean isFunctionalInterface() {
+        Class<?> clazz = toJavaClass();
+        while (clazz != null) {
+            if (clazz.isAnnotationPresent(FunctionalInterface.class)) return true;
+            for (Class<?> i : clazz.getInterfaces())
+                if (i.isAnnotationPresent(FunctionalInterface.class))
+                    return true;
+            clazz = clazz.getSuperclass();
+        }
+        return false;
+    }
+
+    /**
      * Checks and converts the given object to the current class.
      *
      * @param object the object
