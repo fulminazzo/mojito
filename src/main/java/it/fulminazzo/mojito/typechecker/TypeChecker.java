@@ -26,7 +26,6 @@ import it.fulminazzo.mojito.visitors.visitorobjects.variables.VariableContainer;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -392,40 +391,6 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
                 parametersNames.add(p.accept(this).check(TypeLiteralVariableContainer.class));
         }
         return new AbstractLambdaType(this, parametersNames, code);
-    }
-
-    @NotNull Type visitAbstractLambdaType(@NotNull ClassType expectedType,
-                                          @NotNull AbstractLambdaType type) {
-        Method functionalMethod = expectedType.getFunctionalMethod();
-
-        int parametersCount = type.getParametersCount();
-        if (parametersCount != functionalMethod.getParameterCount())
-            throw TypeCheckerException.invalidType(expectedType, type);
-
-        this.environment.enterScope(ScopeType.CODE_BLOCK);
-        visitScoped(ScopeType.CODE_BLOCK, () -> {
-            Class<?> returnType = functionalMethod.getReturnType();
-            if (parametersCount > 0) {
-                GenericsObjectClassType classType = expectedType.check(GenericsObjectClassType.class);
-                List<ClassType> parameterTypes = new ArrayList<>(classType.getGenericTypes().values());
-                List<TypeLiteralVariableContainer> parametersNames = type.getParametersNames();
-                for (int i = 0; i < parametersCount; i++) {
-                    ClassType c = parameterTypes.get(i);
-                    this.environment.declare(c, parametersNames.get(i).namedEntity(), c.toType());
-                }
-                java.lang.reflect.Type genericReturnType = functionalMethod.getGenericReturnType();
-                if (!genericReturnType.equals(returnType))
-                    returnType = classType.getGenericTypes().get(genericReturnType.getTypeName()).toJavaClass();
-            }
-
-            Type code = type.getCode().accept(this);
-            if (!returnType.equals(void.class)) code.checkAssignableFrom(ClassType.of(returnType));
-            else code.check(Types.NO_TYPE, ObjectType.of(void.class));
-
-            return code;
-        });
-
-        return expectedType.toType();
     }
 
     @Override
