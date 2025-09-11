@@ -420,7 +420,7 @@ public class TypeChecker implements Visitor<ClassType, Type, ParameterTypes> {
 
             Type code = type.getCode().accept(this);
             if (!returnType.equals(void.class)) code.checkAssignableFrom(ClassType.of(returnType));
-            else code.check(Types.NO_TYPE);
+            else code.check(Types.NO_TYPE, ObjectType.of(void.class));
 
             return code;
         });
